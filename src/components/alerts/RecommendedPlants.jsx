@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
@@ -51,7 +50,7 @@ export default function RecommendedPlants({
             <span className="text-pink-700 font-medium">Generating personalized recommendations...</span>
           </div>
         </CardContent>
-        <style jsx>{`
+        <style>{`
           @keyframes shimmer {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
@@ -196,7 +195,7 @@ export default function RecommendedPlants({
           </div>
         </CardContent>
 
-      <style jsx global>{`
+      <style>{`
         :root {
           --liquid-glass-blur-min: 12px;
           --liquid-glass-blur-max: 18px;

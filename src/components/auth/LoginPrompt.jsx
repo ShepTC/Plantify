@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Button } from '@/components/ui/button';
@@ -60,7 +59,7 @@ export default function LoginPrompt() {
 
   return (
     <>
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           33% { transform: translateY(-10px) rotate(-2deg); }

@@ -5,10 +5,12 @@ import { User } from "@/entities/User";
 import {
   Calendar,
   Home,
+  Leaf,
   BookOpen,
   Settings,
   Sprout,
   Sun,
+  Moon,
   Clock,
   Sparkles } from
 "lucide-react";
@@ -23,8 +25,10 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
-  SidebarProvider } from
+  SidebarProvider,
+  SidebarTrigger } from
 "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BottomNavBar from "./components/layout/BottomNavBar";
 import PremiumBadge from "./components/premium/PremiumBadge";
@@ -197,7 +201,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <SidebarProvider>
-      <style jsx global>{`
+      <style>{`
         :root {
           --background: 0 0% 100%;
           --foreground: 240 10% 3.9%;

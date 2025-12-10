@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -38,7 +37,7 @@ export default function UpgradePage() {
 
   return (
     <>
-      <style jsx>{`
+      <style>{`
         .glow-text {
           text-shadow: 0 0 20px hsl(var(--primary) / 0.3), 
                        0 0 40px hsl(var(--primary) / 0.2),

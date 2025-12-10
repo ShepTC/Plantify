@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 
 export default function LoadingSpinner({ message = "Loading...", size = "large" }) {
@@ -33,7 +32,7 @@ export default function LoadingSpinner({ message = "Loading...", size = "large" 
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <style jsx>{`
+      <style>{`
         @keyframes bounce {
           0%, 100% {
             transform: translateY(-15%);
