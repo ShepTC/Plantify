@@ -497,7 +497,7 @@ export default function Layout({ children, currentPageName }) {
         <main className="flex-1 flex flex-col min-h-0">
           {/* Mobile Header - Hidden on Assistant page */}
           {currentPageName !== "Assistant" &&
-                          <header className="bg-card/80 px-4 py-2 backdrop-blur-sm border-b border-border md:hidden flex items-center justify-between flex-shrink-0 z-50">
+          <header className="bg-card/80 px-4 py-3 backdrop-blur-sm border-b border-border md:hidden flex items-center justify-between flex-shrink-0 z-50">
               <div className="flex items-center gap-2">
                 <div className="w-9 h-9 flex items-center justify-center">
                   <img
@@ -514,9 +514,9 @@ export default function Layout({ children, currentPageName }) {
             user.is_premium ?
             <Popover>
                                     <PopoverTrigger asChild>
-                                      <button className="focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-100 via-pink-100 to-orange-100 dark:from-purple-950/50 dark:via-pink-950/50 dark:to-purple-950/50 px-3 py-1.5 border border-purple-200 dark:border-purple-800">
+                                      <button className="touch-manipulation active:scale-95 transition-transform focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-100 via-pink-100 to-orange-100 dark:from-purple-950/50 dark:via-pink-950/50 dark:to-purple-950/50 px-4 py-2.5 min-h-[44px] border border-purple-200 dark:border-purple-800">
                                                                   <PremiumBadge size="small" showText={false} />
-                                                                  <span className="text-xs font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 dark:from-purple-400 dark:via-pink-400 dark:to-orange-400 bg-clip-text text-transparent">Pro</span>
+                                                                  <span className="text-sm font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 dark:from-purple-400 dark:via-pink-400 dark:to-orange-400 bg-clip-text text-transparent">Pro</span>
                                                                 </button>
                                     </PopoverTrigger>
                     <PopoverContent className="p-3 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-card text-popover-foreground mr-4 px-4 py-4 z-50 outline-none w-[80vw] max-w-xs rounded-xl shadow-xl border border-border">
@@ -525,12 +525,12 @@ export default function Layout({ children, currentPageName }) {
                     </PopoverContent>
                   </Popover> :
 
-            <Link to={createPageUrl("Upgrade")}>
-                                                      <button className="focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-200 via-pink-200 to-orange-200 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 px-3 py-1.5 border border-purple-300 dark:border-purple-700">
+            <Link to={createPageUrl("Upgrade")} className="touch-manipulation">
+                                                      <button className="active:scale-95 transition-transform focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-200 via-pink-200 to-orange-200 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 px-4 py-2.5 min-h-[44px] border border-purple-300 dark:border-purple-700">
                                                         <div className="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 shadow-md rounded-full">
                                                           <Sparkles className="w-3 h-3 text-white" />
                                                         </div>
-                                                        <span className="text-xs font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Go Pro</span>
+                                                        <span className="text-sm font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Go Pro</span>
                                                       </button>
                                                     </Link>)
 
