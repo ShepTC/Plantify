@@ -27,7 +27,7 @@ import LoginPrompt from "../components/auth/LoginPrompt";
 import FavoritePlantsSelector from "../components/profile/FavoritePlantsSelector";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
-import { useToast } from "@/components/ui/use-toast";
+import toast from 'react-hot-toast';
 
 export default function Profile() {
   const location = useLocation();
@@ -51,7 +51,6 @@ export default function Profile() {
   const fileInputRef = useRef(null); // Ref for hidden file input
   const [isSyncing, setIsSyncing] = useState(false);
   const [justSynced, setJustSynced] = useState(false);
-  const { toast } = useToast();
 
   const applyThemeToDocument = (newTheme, newPalette = formData.color_palette) => {
     document.documentElement.classList.remove("light", "dark");
@@ -210,11 +209,10 @@ export default function Profile() {
       if (response.data.success) {
         const { created, updated, errors } = response.data.results;
         
-        toast({
-          title: "Google Calendar Synced",
-          description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
-          duration: 3000
-        });
+        toast.success(
+          `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          { duration: 3000 }
+        );
         
         // Hide card after success
         setJustSynced(true);
@@ -223,12 +221,10 @@ export default function Profile() {
         throw new Error('Sync failed');
       }
     } catch (error) {
-      toast({
-        title: "Sync Failed",
-        description: error.message || "Failed to sync with Google Calendar",
-        variant: "destructive",
-        duration: 3000
-      });
+      toast.error(
+        error.message || "Failed to sync with Google Calendar",
+        { duration: 3000 }
+      );
     } finally {
       setIsSyncing(false);
     }
