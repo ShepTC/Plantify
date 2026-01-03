@@ -299,15 +299,22 @@ export default function Profile() {
         </Card>
 
         {/* Google Calendar Sync */}
-        <Card className="bg-card border-border">
-          <CardContent className="p-4 md:p-6">
+        <Card className="bg-card border-border overflow-hidden relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-red-500/5 via-yellow-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 rounded-lg shadow-[inset_0_0_20px_rgba(66,133,244,0.1)] dark:shadow-[inset_0_0_25px_rgba(66,133,244,0.15)] opacity-0 group-hover:opacity-100 transition-opacity" />
+          <CardContent className="p-4 md:p-6 relative z-10">
             <button
               onClick={handleSyncGoogleCalendar}
               disabled={isSyncing}
-              className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl border-2 border-border hover:border-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Cloud className={`w-5 h-5 text-primary ${isSyncing ? 'animate-pulse' : ''}`} />
+              className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl border-2 border-border hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group/btn">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-red-500/10 to-yellow-500/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-100 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/fe6c37c78_google-logo-g-suite-google-9820d64d83b313b7a901dcc7f6052ee6.png"
+                    alt="Google"
+                    className={`w-6 h-6 ${isSyncing ? 'animate-pulse' : ''}`}
+                  />
                 </div>
                 <div className="text-left">
                   <h3 className="font-medium text-foreground text-sm">Google Calendar</h3>
@@ -317,9 +324,9 @@ export default function Profile() {
                 </div>
               </div>
               {isSyncing ? (
-                <Loader2 className="w-4 h-4 text-primary animate-spin flex-shrink-0" />
+                <Loader2 className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin flex-shrink-0 relative z-10" />
               ) : (
-                <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0 relative z-10" />
               )}
             </button>
           </CardContent>
