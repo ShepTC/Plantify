@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sprout, Flower, Droplets, Sun, Plus, CheckCircle, Calendar, ImageIcon } from "lucide-react";
+import { Sprout, Flower, Droplets, Sun, Plus, CheckCircle, Calendar, Leaf, Apple } from "lucide-react";
 
 const categoryIcons = {
-  vegetables: <Sprout className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />,
-  herbs: <Sprout className="w-3 h-3 sm:w-4 sm:h-4 text-teal-600" />,
-  flowers: <Flower className="w-3 h-3 sm:w-4 sm:h-4 text-pink-600" />,
-  fruits: <Sprout className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />,
-  grains: <Sprout className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
+  vegetables: <Sprout className="w-8 h-8 sm:w-10 sm:h-10" />,
+  herbs: <Leaf className="w-8 h-8 sm:w-10 sm:h-10" />,
+  flowers: <Flower className="w-8 h-8 sm:w-10 sm:h-10" />,
+  fruits: <Apple className="w-8 h-8 sm:w-10 sm:h-10" />,
+  grains: <Sprout className="w-8 h-8 sm:w-10 sm:h-10" />
+};
+
+const categoryGradients = {
+  vegetables: "from-green-500 to-emerald-600",
+  fruits: "from-red-500 to-orange-600",
+  flowers: "from-pink-500 to-rose-600",
+  grains: "from-yellow-500 to-amber-600",
+  herbs: "from-teal-500 to-cyan-600"
 };
 
 const categoryBadgeColors = {
@@ -22,7 +30,6 @@ const categoryBadgeColors = {
 
 export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClick }) {
   const [visible, setVisible] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 10);
@@ -38,10 +45,6 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
   };
 
   const plantingInfo = getPlantingInfo();
-
-  const handleImageError = () => {
-    setImageError(true);
-  };
 
   const handleAddClick = (e) => {
     e.stopPropagation(); // Prevent the card's onClick from firing
@@ -60,30 +63,16 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
       >
 
       <Card className="rounded-lg border text-card-foreground shadow-sm h-full bg-card border-border flex flex-col hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg overflow-hidden w-90">
-        {/* Plant Image */}
-        <div className="relative h-32 sm:h-40 bg-muted overflow-hidden">
-          {plant.image_url && !imageError ?
-          <img
-            src={plant.image_url}
-            alt={plant.name}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-            onError={handleImageError}
-            loading="lazy" /> :
-
-
-          <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-              <div className="text-center">
-                <ImageIcon className="w-8 h-8 sm:w-12 sm:h-12 text-muted-foreground/50 mx-auto mb-1" />
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-muted-foreground/10 rounded-full flex items-center justify-center mx-auto">
-                  {categoryIcons[plant.category] || <Sprout className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground/50" />}
-                </div>
-              </div>
-            </div>
-          }
+        {/* Gradient Header with Icon */}
+        <div className={`relative h-24 sm:h-28 bg-gradient-to-br ${categoryGradients[plant.category] || 'from-primary to-secondary'} overflow-hidden`}>
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/20" />
+          <div className="absolute inset-0 flex items-center justify-center text-white">
+            {categoryIcons[plant.category] || <Sprout className="w-8 h-8 sm:w-10 sm:h-10" />}
+          </div>
           
           {/* Category badge overlay */}
           <div className="absolute top-2 right-2">
-            <Badge variant="outline" className={`text-[10px] sm:text-xs backdrop-blur-sm bg-white/90 border-white/50 ${categoryBadgeColors[plant.category]} shadow-sm`}>
+            <Badge variant="outline" className="text-[10px] sm:text-xs backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 border-white/50 dark:border-gray-700/50 shadow-sm">
               {plant.category}
             </Badge>
           </div>
