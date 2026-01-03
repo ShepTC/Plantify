@@ -470,7 +470,7 @@ export default function CalendarPage() {
         toast({
           title: "Google Calendar Synced",
           description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
-          variant: errors.length > 0 ? "default" : "default"
+          duration: 3000
         });
         
         // Refresh plant data
@@ -483,7 +483,8 @@ export default function CalendarPage() {
       toast({
         title: "Sync Failed",
         description: error.message || "Failed to sync with Google Calendar",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 3000
       });
     } finally {
       setIsSyncing(false);
