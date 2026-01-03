@@ -210,11 +210,15 @@ export default function Profile() {
       if (response.data.success) {
         const { created, updated, errors } = response.data.results;
         
-        toast({
+        const toastId = toast({
           title: "Google Calendar Synced",
           description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
-          duration: 3000
         });
+        
+        // Auto dismiss after 3 seconds
+        setTimeout(() => {
+          if (toastId?.dismiss) toastId.dismiss();
+        }, 3000);
         
         // Hide card after success
         setJustSynced(true);
@@ -223,12 +227,15 @@ export default function Profile() {
         throw new Error('Sync failed');
       }
     } catch (error) {
-      toast({
+      const toastId = toast({
         title: "Sync Failed",
         description: error.message || "Failed to sync with Google Calendar",
         variant: "destructive",
-        duration: 3000
       });
+      
+      setTimeout(() => {
+        if (toastId?.dismiss) toastId.dismiss();
+      }, 3000);
     } finally {
       setIsSyncing(false);
     }

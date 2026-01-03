@@ -460,7 +460,7 @@ export default function CalendarPage() {
     }
   };
 
-  const handleSyncGoogleCalendar = async () => {
+  const handleSyncGoogleCalendar = async (silent = false) => {
     setIsSyncing(true);
     try {
       const response = await syncGoogleCalendar({ action: 'sync' });
@@ -468,29 +468,42 @@ export default function CalendarPage() {
       if (response.data.success) {
         const { created, updated, errors } = response.data.results;
         
-        toast({
-          title: "Google Calendar Synced",
-          description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
-          duration: 3000
-        });
+        if (!silent) {
+          const toastId = toast({
+            title: "Google Calendar Synced",
+            description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          });
+          
+          // Auto dismiss after 3 seconds
+          setTimeout(() => {
+            if (toastId?.dismiss) toastId.dismiss();
+          }, 3000);
+        }
         
         // Refresh plant data
         const userPlants = await UserPlant.filter({ created_by: user.email });
         setRawUserPlants(userPlants);
         
         // Show success state
-        setJustSynced(true);
-        setTimeout(() => setJustSynced(false), 3000);
+        if (!silent) {
+          setJustSynced(true);
+          setTimeout(() => setJustSynced(false), 3000);
+        }
       } else {
         throw new Error('Sync failed');
       }
     } catch (error) {
-      toast({
-        title: "Sync Failed",
-        description: error.message || "Failed to sync with Google Calendar",
-        variant: "destructive",
-        duration: 3000
-      });
+      if (!silent) {
+        const toastId = toast({
+          title: "Sync Failed",
+          description: error.message || "Failed to sync with Google Calendar",
+          variant: "destructive",
+        });
+        
+        setTimeout(() => {
+          if (toastId?.dismiss) toastId.dismiss();
+        }, 3000);
+      }
     } finally {
       setIsSyncing(false);
     }
