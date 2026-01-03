@@ -1,29 +1,31 @@
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import PlantLibrary from './pages/PlantLibrary';
-import MyGarden from './pages/MyGarden';
-import Calendar from './pages/Calendar';
-import PlantingAlerts from './pages/PlantingAlerts';
 import Assistant from './pages/Assistant';
+import Calendar from './pages/Calendar';
+import Dashboard from './pages/Dashboard';
 import HealthScanner from './pages/HealthScanner';
-import Upgrade from './pages/Upgrade';
+import Home from './pages/Home';
 import ImageUploader from './pages/ImageUploader';
+import MyGarden from './pages/MyGarden';
+import PlantLibrary from './pages/PlantLibrary';
+import PlantingAlerts from './pages/PlantingAlerts';
+import Profile from './pages/Profile';
 import RequestPlant from './pages/RequestPlant';
+import Upgrade from './pages/Upgrade';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Dashboard": Dashboard,
-    "Profile": Profile,
-    "PlantLibrary": PlantLibrary,
-    "MyGarden": MyGarden,
-    "Calendar": Calendar,
-    "PlantingAlerts": PlantingAlerts,
     "Assistant": Assistant,
+    "Calendar": Calendar,
+    "Dashboard": Dashboard,
     "HealthScanner": HealthScanner,
-    "Upgrade": Upgrade,
+    "Home": Home,
     "ImageUploader": ImageUploader,
+    "MyGarden": MyGarden,
+    "PlantLibrary": PlantLibrary,
+    "PlantingAlerts": PlantingAlerts,
+    "Profile": Profile,
     "RequestPlant": RequestPlant,
+    "Upgrade": Upgrade,
 }
 
 export const pagesConfig = {

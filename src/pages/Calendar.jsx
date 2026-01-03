@@ -21,7 +21,8 @@ import {
   CalendarCheck,
   Ruler,
   Sparkles,
-  X // Added X icon for close button
+  X,
+  Cloud
 } from
 "lucide-react";
 import {
@@ -55,6 +56,8 @@ import {
 "@/components/ui/dialog";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
+import { useToast } from "@/components/ui/use-toast";
 
 const categoryColors = {
   vegetables: "bg-green-500/30 text-green-100 border border-green-500/40 backdrop-blur-sm",
@@ -243,6 +246,8 @@ export default function CalendarPage() {
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
   const [fullScreenPlant, setFullScreenPlant] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const { toast } = useToast();
 
   // This effect runs only ONCE on component mount to fetch all data.
   useEffect(() => {
@@ -454,6 +459,37 @@ export default function CalendarPage() {
     }
   };
 
+  const handleSyncGoogleCalendar = async () => {
+    setIsSyncing(true);
+    try {
+      const response = await syncGoogleCalendar({ action: 'sync' });
+      
+      if (response.data.success) {
+        const { created, updated, errors } = response.data.results;
+        
+        toast({
+          title: "Google Calendar Synced",
+          description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          variant: errors.length > 0 ? "default" : "default"
+        });
+        
+        // Refresh plant data
+        const userPlants = await UserPlant.filter({ created_by: user.email });
+        setRawUserPlants(userPlants);
+      } else {
+        throw new Error('Sync failed');
+      }
+    } catch (error) {
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Failed to sync with Google Calendar",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const monthStart = startOfMonth(currentDate);
   // Calculate the start date of the calendar grid (Sunday of the week of monthStart)
   const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
@@ -470,25 +506,35 @@ export default function CalendarPage() {
   );
 
   const Header = () =>
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3">
       <h1 className="text-xl md:text-3xl font-bold text-foreground whitespace-nowrap">
         {format(currentDate, "MMM yyyy")}
       </h1>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full md:w-auto">
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setCurrentDate(subMonths(currentDate, 1))}>
+          onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+          className="flex-shrink-0">
           <ChevronLeft className="w-4 h-4" />
         </Button>
-        <Button variant="outline" onClick={() => setCurrentDate(new Date())}>
+        <Button variant="outline" onClick={() => setCurrentDate(new Date())} className="flex-shrink-0">
           Today
         </Button>
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setCurrentDate(addMonths(currentDate, 1))}>
+          onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+          className="flex-shrink-0">
           <ChevronRight className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="outline"
+          onClick={handleSyncGoogleCalendar}
+          disabled={isSyncing}
+          className="ml-auto md:ml-2 flex-shrink-0">
+          <Cloud className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-pulse' : ''}`} />
+          {isSyncing ? 'Syncing...' : 'Sync'}
         </Button>
       </div>
     </div>;
