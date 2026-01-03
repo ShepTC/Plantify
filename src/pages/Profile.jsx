@@ -50,6 +50,7 @@ export default function Profile() {
   const isInitialMount = useRef(true); // Ref to prevent useEffect from running on initial mount
   const fileInputRef = useRef(null); // Ref for hidden file input
   const [isSyncing, setIsSyncing] = useState(false);
+  const [justSynced, setJustSynced] = useState(false);
   const { toast } = useToast();
 
   const applyThemeToDocument = (newTheme, newPalette = formData.color_palette) => {
@@ -214,6 +215,10 @@ export default function Profile() {
           description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
           duration: 3000
         });
+        
+        // Hide card after success
+        setJustSynced(true);
+        setTimeout(() => setJustSynced(false), 3000);
       } else {
         throw new Error('Sync failed');
       }
@@ -300,6 +305,7 @@ export default function Profile() {
         </Card>
 
         {/* Google Calendar Sync */}
+        {!justSynced && (
         <Card className="bg-card border-border overflow-hidden relative group">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-red-500/5 via-yellow-500/5 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="absolute inset-0 rounded-lg shadow-[inset_0_0_20px_rgba(66,133,244,0.1)] dark:shadow-[inset_0_0_25px_rgba(66,133,244,0.15)] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -332,6 +338,7 @@ export default function Profile() {
             </button>
           </CardContent>
         </Card>
+        )}
 
         {/* App Settings */}
         <Card className="bg-card border-border">

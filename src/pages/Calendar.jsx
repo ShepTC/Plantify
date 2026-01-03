@@ -247,6 +247,7 @@ export default function CalendarPage() {
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
   const [fullScreenPlant, setFullScreenPlant] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [justSynced, setJustSynced] = useState(false);
   const { toast } = useToast();
 
   // This effect runs only ONCE on component mount to fetch all data.
@@ -476,6 +477,10 @@ export default function CalendarPage() {
         // Refresh plant data
         const userPlants = await UserPlant.filter({ created_by: user.email });
         setRawUserPlants(userPlants);
+        
+        // Show success state
+        setJustSynced(true);
+        setTimeout(() => setJustSynced(false), 3000);
       } else {
         throw new Error('Sync failed');
       }
@@ -529,22 +534,24 @@ export default function CalendarPage() {
           className="flex-shrink-0">
           <ChevronRight className="w-4 h-4" />
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleSyncGoogleCalendar}
-          disabled={isSyncing}
-          className="ml-auto md:ml-2 flex-shrink-0 relative overflow-hidden group border-2 hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-red-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/fe6c37c78_google-logo-g-suite-google-9820d64d83b313b7a901dcc7f6052ee6.png"
-            alt="Google"
-            className={`w-4 h-4 mr-2 relative z-10 ${isSyncing ? 'animate-pulse' : ''}`}
-          />
-          <span className="relative z-10">{isSyncing ? 'Syncing...' : 'Sync'}</span>
-          {!isSyncing && (
-            <div className="absolute inset-0 rounded-lg shadow-[0_0_15px_rgba(66,133,244,0.3)] dark:shadow-[0_0_20px_rgba(66,133,244,0.4)] opacity-0 group-hover:opacity-100 transition-opacity" />
-          )}
-        </Button>
+        {!justSynced && (
+          <Button
+            variant="outline"
+            onClick={handleSyncGoogleCalendar}
+            disabled={isSyncing}
+            className="ml-auto md:ml-2 flex-shrink-0 relative overflow-hidden group border-2 hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-red-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/fe6c37c78_google-logo-g-suite-google-9820d64d83b313b7a901dcc7f6052ee6.png"
+              alt="Google"
+              className={`w-4 h-4 mr-2 relative z-10 ${isSyncing ? 'animate-pulse' : ''}`}
+            />
+            <span className="relative z-10">{isSyncing ? 'Syncing...' : 'Sync'}</span>
+            {!isSyncing && (
+              <div className="absolute inset-0 rounded-lg shadow-[0_0_15px_rgba(66,133,244,0.3)] dark:shadow-[0_0_20px_rgba(66,133,244,0.4)] opacity-0 group-hover:opacity-100 transition-opacity" />
+            )}
+          </Button>
+        )}
       </div>
     </div>;
 
