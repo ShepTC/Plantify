@@ -285,6 +285,22 @@ export default function CalendarPage() {
       }
     };
     loadInitialData();
+    
+    // Auto-sync in background after page loads (silent sync)
+    const autoSync = async () => {
+      try {
+        await handleSyncGoogleCalendar(true);
+      } catch (error) {
+        // Silent fail for background sync
+      }
+    };
+    
+    // Wait 2 seconds after initial load to auto-sync
+    const timer = setTimeout(() => {
+      autoSync();
+    }, 2000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const processReminders = useCallback((reminders) => {
