@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,7 @@ const DetailItem = ({ icon, label, value }) => (
   </div>
 );
 
-export default function PlantDetailView({ plant, userZone, open, onOpenChange, onAddPlant, isAdded }) {
+export default function PlantDetailView({ plant, userZone, open, onOpenChange, onAddPlant, isAdded, userPlantData }) {
   if (!plant) return null;
 
   const getPlantingInfo = () => {
@@ -101,7 +100,61 @@ export default function PlantDetailView({ plant, userZone, open, onOpenChange, o
             <div className="flex flex-wrap gap-2">
                 <Badge className={`${categoryColors[plant.category]} text-sm py-1`}>{plant.category}</Badge>
                 <Badge variant="outline" className="text-sm py-1 capitalize">{plant.plant_type}</Badge>
+                {userPlantData && (
+                  <Badge className="bg-primary text-primary-foreground text-sm py-1">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    In Your Garden
+                  </Badge>
+                )}
             </div>
+
+            {/* Garden Status - Only show if plant is in user's garden */}
+            {userPlantData && (
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2 text-foreground">
+                  <Sprout className="w-5 h-5 text-primary"/>Your Garden Info
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Status:</span>
+                    <Badge className={
+                      userPlantData.status === 'planted' ? 'bg-green-500' :
+                      userPlantData.status === 'harvested' ? 'bg-amber-500' :
+                      'bg-blue-500'
+                    }>
+                      {userPlantData.status === 'planted' ? 'Growing' :
+                       userPlantData.status === 'harvested' ? 'Harvested' : 'Planned'}
+                    </Badge>
+                  </div>
+                  {userPlantData.actual_planting_date && (
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-muted-foreground"/>
+                      <span className="text-muted-foreground">Planted:</span>
+                      <span className="font-medium text-foreground">
+                        {new Date(userPlantData.actual_planting_date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+                  {userPlantData.harvest_date && (
+                    <div className="flex items-center gap-2">
+                      <Sun className="w-4 h-4 text-muted-foreground"/>
+                      <span className="text-muted-foreground">
+                        {userPlantData.status === 'harvested' ? 'Harvested:' : 'Est. Harvest:'}
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {new Date(userPlantData.harvest_date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+                  {userPlantData.notes && (
+                    <div className="mt-3 pt-3 border-t border-primary/20">
+                      <p className="text-muted-foreground mb-1">Notes:</p>
+                      <p className="text-foreground">{userPlantData.notes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
             
             {/* Plant Details Grid */}
             <div className="mb-6">

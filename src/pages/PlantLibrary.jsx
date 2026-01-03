@@ -234,6 +234,11 @@ export default function PlantLibrary() {
     setSelectedPlant(plant);
   };
 
+  // Get user plant data for selected plant
+  const selectedUserPlantData = selectedPlant 
+    ? userPlants.find(up => up.plant_id === selectedPlant.id)
+    : null;
+
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -660,6 +665,7 @@ export default function PlantLibrary() {
         }}
         onAddPlant={handleAddPlant}
         isAdded={selectedPlant ? userPlantIds.has(selectedPlant.id) : false}
+        userPlantData={selectedUserPlantData}
       />
     </div>);
 
