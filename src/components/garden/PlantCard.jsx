@@ -76,6 +76,13 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
             {plant.plant_name}
           </h3>
 
+          {/* Planting Window Info */}
+          {plant.status === 'planned' && plant.planned_planting_week && (
+            <p className="text-[10px] md:text-xs text-muted-foreground mb-3">
+              Plant week: <span className="font-medium text-foreground">{plant.planned_planting_week}</span>
+            </p>
+          )}
+
           {/* Plant Info */}
           <div className="flex flex-wrap gap-1.5 mb-3">
             {plantDetails?.water_needs && (
