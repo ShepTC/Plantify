@@ -17,7 +17,8 @@ import {
   CheckCircle,
   Camera,
   Thermometer,
-  ChevronRight } from
+  ChevronRight,
+  Cloud } from
 "lucide-react";
 // motion is still used for the loading screen, keep it
 
@@ -25,6 +26,8 @@ import LocationSelector from "../components/profile/LocationSelector";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import FavoritePlantsSelector from "../components/profile/FavoritePlantsSelector";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Profile() {
   const location = useLocation();
@@ -46,6 +49,8 @@ export default function Profile() {
   const [isUploadingImage, setIsUploadingImage] = useState(false); // New state for image upload status
   const isInitialMount = useRef(true); // Ref to prevent useEffect from running on initial mount
   const fileInputRef = useRef(null); // Ref for hidden file input
+  const [isSyncing, setIsSyncing] = useState(false);
+  const { toast } = useToast();
 
   const applyThemeToDocument = (newTheme, newPalette = formData.color_palette) => {
     document.documentElement.classList.remove("light", "dark");
@@ -196,6 +201,33 @@ export default function Profile() {
     setFormData((prev) => ({ ...prev, color_palette: newPalette }));
   };
 
+  const handleSyncGoogleCalendar = async () => {
+    setIsSyncing(true);
+    try {
+      const response = await syncGoogleCalendar({ action: 'sync' });
+      
+      if (response.data.success) {
+        const { created, updated, errors } = response.data.results;
+        
+        toast({
+          title: "Google Calendar Synced",
+          description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          variant: errors.length > 0 ? "default" : "default"
+        });
+      } else {
+        throw new Error('Sync failed');
+      }
+    } catch (error) {
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Failed to sync with Google Calendar",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground p-4 md:p-6 flex items-center justify-center">
@@ -263,6 +295,33 @@ export default function Profile() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Google Calendar Sync */}
+        <Card className="bg-card border-border">
+          <CardContent className="p-4 md:p-6">
+            <button
+              onClick={handleSyncGoogleCalendar}
+              disabled={isSyncing}
+              className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl border-2 border-border hover:border-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Cloud className={`w-5 h-5 text-primary ${isSyncing ? 'animate-pulse' : ''}`} />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-medium text-foreground text-sm">Google Calendar</h3>
+                  <p className="text-xs text-muted-foreground">
+                    {isSyncing ? 'Syncing events...' : 'Sync your plants to calendar'}
+                  </p>
+                </div>
+              </div>
+              {isSyncing ? (
+                <Loader2 className="w-4 h-4 text-primary animate-spin flex-shrink-0" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              )}
+            </button>
           </CardContent>
         </Card>
 
