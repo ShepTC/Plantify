@@ -20,7 +20,6 @@ import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
-import PlantDetailView from "../components/library/PlantDetailView";
 
 export default function MyGarden() {
   const [myPlants, setMyPlants] = useState([]);
@@ -32,10 +31,6 @@ export default function MyGarden() {
   const [isPlantedDialogOpen, setIsPlantedDialogOpen] = useState(false);
   const [plantToUpdate, setPlantToUpdate] = useState(null);
   const [selectedPlantingDate, setSelectedPlantingDate] = useState(null);
-  
-  // State for plant detail view
-  const [selectedPlant, setSelectedPlant] = useState(null);
-  const [selectedUserPlant, setSelectedUserPlant] = useState(null);
 
   useEffect(() => {
     loadMyGarden();
@@ -127,14 +122,6 @@ export default function MyGarden() {
     setPlantToUpdate(null);
   };
 
-  const handlePlantClick = (userPlant) => {
-    const plantDetails = plantDataMap[userPlant.plant_id];
-    if (plantDetails) {
-      setSelectedPlant(plantDetails);
-      setSelectedUserPlant(userPlant);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center p-4 md:p-6">
@@ -187,8 +174,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onDelete={deletePlant} />
 
 
             {/* Planned Plants */}
@@ -200,8 +186,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onDelete={deletePlant} />
 
 
             {/* Harvested Plants */}
@@ -213,8 +198,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onDelete={deletePlant} />
 
           </div>
         }
@@ -242,21 +226,6 @@ export default function MyGarden() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <PlantDetailView
-        plant={selectedPlant}
-        userZone={user?.growing_zone}
-        open={!!selectedPlant}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setSelectedPlant(null);
-            setSelectedUserPlant(null);
-          }
-        }}
-        onAddPlant={() => {}} // Already in garden
-        isAdded={true}
-        userPlantData={selectedUserPlant}
-      />
     </div>);
 
 }
