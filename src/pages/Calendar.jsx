@@ -57,7 +57,7 @@ import {
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
-import toast from 'react-hot-toast';
+import { useToast } from "@/components/ui/use-toast";
 
 const categoryColors = {
   vegetables: "bg-green-500/30 text-green-100 border border-green-500/40 backdrop-blur-sm",
@@ -248,6 +248,7 @@ export default function CalendarPage() {
   const [fullScreenPlant, setFullScreenPlant] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [justSynced, setJustSynced] = useState(false);
+  const { toast } = useToast();
 
   // This effect runs only ONCE on component mount to fetch all data.
   useEffect(() => {
@@ -467,10 +468,11 @@ export default function CalendarPage() {
       if (response.data.success) {
         const { created, updated, errors } = response.data.results;
         
-        toast.success(
-          `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
-          { duration: 3000 }
-        );
+        toast({
+          title: "Google Calendar Synced",
+          description: `Created ${created} events, updated ${updated} events${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          duration: 3000
+        });
         
         // Refresh plant data
         const userPlants = await UserPlant.filter({ created_by: user.email });
@@ -483,10 +485,12 @@ export default function CalendarPage() {
         throw new Error('Sync failed');
       }
     } catch (error) {
-      toast.error(
-        error.message || "Failed to sync with Google Calendar",
-        { duration: 3000 }
-      );
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Failed to sync with Google Calendar",
+        variant: "destructive",
+        duration: 3000
+      });
     } finally {
       setIsSyncing(false);
     }
