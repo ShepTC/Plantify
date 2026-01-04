@@ -192,7 +192,8 @@ export default function MyGarden() {
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onPlantClick={handlePlantClick}
+            userZone={user?.growing_zone} />
 
 
             {/* Planned Plants */}
@@ -205,7 +206,8 @@ export default function MyGarden() {
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onPlantClick={handlePlantClick}
+            userZone={user?.growing_zone} />
 
 
             {/* Harvested Plants */}
@@ -218,7 +220,8 @@ export default function MyGarden() {
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={deletePlant}
-            onPlantClick={handlePlantClick} />
+            onPlantClick={handlePlantClick}
+            userZone={user?.growing_zone} />
 
           </div>
         }

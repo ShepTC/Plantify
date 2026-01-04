@@ -11,7 +11,8 @@ export default function GardenSection({
   onStatusChange, 
   onOpenPlantedDialog, 
   onDelete,
-  onPlantClick
+  onPlantClick,
+  userZone
 }) {
   if (plants.length === 0) return null;
 
@@ -33,6 +34,7 @@ export default function GardenSection({
               onOpenPlantedDialog={onOpenPlantedDialog}
               onDelete={onDelete}
               onClick={() => onPlantClick?.(plant)}
+              userZone={userZone}
             />
           ))}
         </AnimatePresence>

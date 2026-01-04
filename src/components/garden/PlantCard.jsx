@@ -18,7 +18,7 @@ const statusConfig = {
   harvested: { icon: Sun, color: "bg-amber-500", textColor: "text-amber-600 dark:text-amber-400", label: "Harvested" }
 };
 
-export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenPlantedDialog, onDelete, onClick }) {
+export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenPlantedDialog, onDelete, onClick, userZone }) {
   const config = statusConfig[plant.status] || statusConfig.planned;
   const Icon = config.icon;
 
@@ -32,6 +32,16 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
   };
 
   const daysUntilHarvest = getDaysUntilHarvest();
+
+  // Get planting windows for user's zone
+  const getPlantingWindows = () => {
+    if (!userZone || !plantDetails?.planting_zones) return null;
+    return plantDetails.planting_zones.find(
+      (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
+    );
+  };
+
+  const plantingWindows = getPlantingWindows();
 
   return (
     <motion.div
@@ -79,11 +89,18 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
             {plant.plant_name}
           </h3>
 
-          {/* Planting Window Info */}
-          {plant.status === 'planned' && plant.planned_planting_week && (
-            <p className="text-[10px] md:text-xs text-muted-foreground mb-3">
-              Plant week: <span className="font-medium text-foreground">{plant.planned_planting_week}</span>
-            </p>
+          {/* Planting Window Info - Show for planned plants */}
+          {plant.status === 'planned' && plantingWindows && (
+            <div className="mb-3 text-[10px] md:text-xs">
+              <p className="text-muted-foreground">
+                <span className="font-medium text-foreground">Spring:</span> Weeks {plantingWindows.spring_start_week}-{plantingWindows.spring_end_week}
+              </p>
+              {plantingWindows.fall_start_week && (
+                <p className="text-muted-foreground">
+                  <span className="font-medium text-foreground">Fall:</span> Weeks {plantingWindows.fall_start_week}-{plantingWindows.fall_end_week}
+                </p>
+              )}
+            </div>
           )}
 
           {/* Plant Info */}
