@@ -18,7 +18,7 @@ const statusConfig = {
   harvested: { icon: Sun, color: "bg-amber-500", textColor: "text-amber-600 dark:text-amber-400", label: "Harvested" }
 };
 
-export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenPlantedDialog, onDelete }) {
+export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenPlantedDialog, onDelete, onClick }) {
   const config = statusConfig[plant.status] || statusConfig.planned;
   const Icon = config.icon;
 
@@ -41,7 +41,10 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
     >
-      <Card className="bg-card border-border hover:border-primary/40 transition-all duration-300 overflow-hidden group">
+      <Card 
+        className="bg-card border-border hover:border-primary/40 transition-all duration-300 overflow-hidden group cursor-pointer"
+        onClick={onClick}
+      >
         {/* Plant Image or Gradient */}
         <div className="relative h-24 md:h-32 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
           {plantDetails?.image_url ? (
