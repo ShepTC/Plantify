@@ -60,11 +60,11 @@ import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
 import { useToast } from "@/components/ui/use-toast";
 
 const categoryColors = {
-  vegetables: "bg-green-500/30 text-green-100 border border-green-500/40 backdrop-blur-sm",
-  herbs: "bg-teal-500/30 text-teal-100 border border-teal-500/40 backdrop-blur-sm",
-  flowers: "bg-pink-500/30 text-pink-100 border border-pink-500/40 backdrop-blur-sm",
-  fruits: "bg-red-500/30 text-red-100 border border-red-500/40 backdrop-blur-sm",
-  grains: "bg-yellow-500/30 text-yellow-100 border border-yellow-500/40 backdrop-blur-sm"
+  vegetables: "bg-gradient-to-r from-green-500/40 to-green-500/30 text-green-100 border border-green-500/50 backdrop-blur-sm",
+  herbs: "bg-gradient-to-r from-teal-500/40 to-teal-500/30 text-teal-100 border border-teal-500/50 backdrop-blur-sm",
+  flowers: "bg-gradient-to-r from-pink-500/40 to-pink-500/30 text-pink-100 border border-pink-500/50 backdrop-blur-sm",
+  fruits: "bg-gradient-to-r from-red-500/40 to-red-500/30 text-red-100 border border-red-500/50 backdrop-blur-sm",
+  grains: "bg-gradient-to-r from-yellow-500/40 to-yellow-500/30 text-yellow-100 border border-yellow-500/50 backdrop-blur-sm"
 };
 
 const categoryIcons = {
@@ -674,7 +674,7 @@ export default function CalendarPage() {
                       
                       const eventCategory = isPlantingGroup ? event.category : event.plantData?.category || event.category || 'vegetables';
                       const colorClass = isHarvest 
-                        ? "bg-yellow-500/30 text-yellow-100 border border-yellow-500/40 backdrop-blur-sm"
+                        ? "bg-gradient-to-r from-yellow-500/40 to-orange-500/30 text-yellow-100 border border-yellow-500/50 backdrop-blur-sm"
                         : categoryColors[eventCategory];
                       
                       const icon = isHarvest 
@@ -686,21 +686,33 @@ export default function CalendarPage() {
                         handleOpenFullScreen(event, eventTypeToPass)
                       };
 
+                      // Calculate week range for planting events
+                      const isMultiWeek = len >= 7;
+                      const startWeek = isPlantingGroup ? getWeek(days[start], { weekStartsOn: 0 }) : null;
+                      const endWeek = isPlantingGroup && isMultiWeek ? getWeek(days[start + len - 1], { weekStartsOn: 0 }) : null;
+
                       return (
                         <ContextMenu key={`span-${dayIndex}-${spanIndex}`}>
                           <ContextMenuTrigger asChild>
                             <div
-                              className={`absolute flex items-center px-1 md:px-1.5 py-0.5 rounded-sm cursor-pointer hover:opacity-90 z-10 ${colorClass}`}
+                              className={`absolute flex items-center px-1 md:px-1.5 py-0.5 rounded-sm cursor-pointer hover:opacity-95 hover:shadow-md transition-all duration-200 z-10 ${colorClass} ${isMultiWeek ? 'border-l-4 border-l-white/40 shadow-sm' : ''}`}
                               style={{
-                                top: `calc(1.4rem + ${track * 1.5}rem)`, // Adjusted for new event height
+                                top: `calc(1.4rem + ${track * 1.5}rem)`,
                                 left: `2px`,
                                 width: `calc(${len * 100}% - 4px)`,
-                                height: '1.25rem' // New height for events
+                                height: isMultiWeek ? '1.4rem' : '1.25rem'
                               }}
                               onClick={openHandler}>
 
                               {icon}
-                              <span className="ml-1 text-[9px] md:text-[11px] font-medium truncate">{event.name}</span>
+                              <span className="ml-1 text-[9px] md:text-[11px] font-medium truncate">
+                                {event.name}
+                                {isMultiWeek && startWeek && endWeek && (
+                                  <span className="ml-1 text-[8px] md:text-[10px] opacity-80">
+                                    (W{startWeek}-{endWeek})
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           </ContextMenuTrigger>
                           <ContextMenuContent>
