@@ -798,18 +798,11 @@ export default function CalendarPage() {
                 </h1>
               </div>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsFullScreenOpen(false)}
-                className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/50 text-white hover:bg-black/70 hover:text-white"
-              >
-                <X className="w-6 h-6" />
-              </Button>
+
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-6">
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-20">
               {fullScreenPlant &&
                 <div className="space-y-4 md:space-y-6">
                   {fullScreenPlant.eventType === 'planting_group' ?
@@ -947,11 +940,34 @@ export default function CalendarPage() {
                     </div>
                   }
                 </div>
-              }
-            </div>
+                }
+                </div>
 
-          </DialogContent>
-        </Dialog>
+                {/* Remove Plant Button */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-card via-card to-transparent border-t border-border">
+                <Button
+                onClick={() => {
+                  if (fullScreenPlant?.eventType === 'planting_group' && fullScreenPlant?.plants?.length > 0) {
+                    // Delete all plants in the group
+                    fullScreenPlant.plants.forEach(plant => {
+                      handleDeleteEvent(plant, 'planting');
+                    });
+                  } else {
+                    handleDeleteEvent(fullScreenPlant, fullScreenPlant?.eventType);
+                  }
+                  setIsFullScreenOpen(false);
+                }}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold shadow-lg hover:shadow-red-500/50 transition-all duration-300 relative overflow-hidden group"
+                size="lg"
+                >
+                <div className="absolute inset-0 bg-red-400/20 rounded-lg blur-xl group-hover:blur-2xl transition-all duration-300" />
+                <Trash2 className="w-5 h-5 mr-2 relative z-10" />
+                <span className="relative z-10">Remove Plant</span>
+                </Button>
+                </div>
+
+                </DialogContent>
+                </Dialog>
 
         {/* Regular Event Dialog */}
         <Dialog open={isEventDialogOpen} onOpenChange={setIsEventDialogOpen}>
