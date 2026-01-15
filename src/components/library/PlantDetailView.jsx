@@ -75,12 +75,11 @@ export default function PlantDetailView({ plant, userZone, open, onOpenChange, o
           </motion.p>
 
           <Button
-            variant="ghost"
-            size="icon"
             onClick={() => onOpenChange(false)}
-            className="absolute top-3 right-3 h-8 w-8 rounded-full bg-muted hover:bg-muted/80"
+            className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white px-3 py-1 h-auto rounded-md shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-xs font-semibold"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3 h-3 mr-1" />
+            Close
           </Button>
         </div>
 
