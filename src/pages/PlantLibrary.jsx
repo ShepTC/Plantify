@@ -465,20 +465,9 @@ export default function PlantLibrary() {
 
             {viewMode !== "shelf" && (
               <div className="flex flex-row gap-2 items-center">
-                {user?.growing_zone && (
-                  <Button
-                    variant={filterByZone ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setFilterByZone(!filterByZone)}
-                    className="h-8 text-xs whitespace-nowrap"
-                  >
-                    <Filter className="w-3 h-3 mr-1" />
-                    Zone {user.growing_zone}
-                  </Button>
-                )}
                 <Select onValueChange={handleFilterChange}>
-                  <SelectTrigger className="h-8 w-32 text-xs">
-                    <Filter className="w-3 h-3 mr-1" />
+                  <SelectTrigger className="h-10 flex-1 text-sm">
+                    <Filter className="w-4 h-4 mr-2" />
                     <SelectValue placeholder={selectedCategory === "all" ? "Category" : categoryData[selectedCategory]?.name} />
                   </SelectTrigger>
                   <SelectContent>
@@ -490,6 +479,16 @@ export default function PlantLibrary() {
                     <SelectItem value="grains">Grains</SelectItem>
                   </SelectContent>
                 </Select>
+                {user?.growing_zone && (
+                  <Button
+                    variant={filterByZone ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setFilterByZone(!filterByZone)}
+                    className="h-10 text-xs whitespace-nowrap px-3"
+                  >
+                    Zone {user.growing_zone}
+                  </Button>
+                )}
               </div>
             )}
 
