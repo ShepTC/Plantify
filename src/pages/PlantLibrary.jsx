@@ -454,47 +454,44 @@ export default function PlantLibrary() {
               </Button>
             }
             
-            <div className="flex flex-row gap-2 items-center">
-              <div className="relative flex-grow">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search plants..."
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  className="pl-8 h-8 md:h-10 text-sm" />
-
-              </div>
-
-              {viewMode !== "shelf" && (
-                <>
-                  {user?.growing_zone && (
-                    <Button
-                      variant={filterByZone ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setFilterByZone(!filterByZone)}
-                      className="h-8 md:h-10 text-xs whitespace-nowrap"
-                    >
-                      <Filter className="w-3 h-3 mr-1" />
-                      Zone {user.growing_zone}
-                    </Button>
-                  )}
-                  <Select onValueChange={handleFilterChange}>
-                    <SelectTrigger className="h-8 md:h-10 w-28 md:w-36 text-xs">
-                      <Filter className="w-3 h-3 mr-1" />
-                      <SelectValue placeholder={selectedCategory === "all" ? "Category" : categoryData[selectedCategory]?.name} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="vegetables">Vegetables</SelectItem>
-                      <SelectItem value="herbs">Herbs</SelectItem>
-                      <SelectItem value="flowers">Flowers</SelectItem>
-                      <SelectItem value="fruits">Fruits</SelectItem>
-                      <SelectItem value="grains">Grains</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </>
-              )}
+            <div className="relative w-full">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search plants..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="pl-8 h-8 md:h-10 text-sm w-full" />
             </div>
+
+            {viewMode !== "shelf" && (
+              <div className="flex flex-row gap-2 items-center">
+                {user?.growing_zone && (
+                  <Button
+                    variant={filterByZone ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setFilterByZone(!filterByZone)}
+                    className="h-8 text-xs whitespace-nowrap"
+                  >
+                    <Filter className="w-3 h-3 mr-1" />
+                    Zone {user.growing_zone}
+                  </Button>
+                )}
+                <Select onValueChange={handleFilterChange}>
+                  <SelectTrigger className="h-8 w-32 text-xs">
+                    <Filter className="w-3 h-3 mr-1" />
+                    <SelectValue placeholder={selectedCategory === "all" ? "Category" : categoryData[selectedCategory]?.name} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="vegetables">Vegetables</SelectItem>
+                    <SelectItem value="herbs">Herbs</SelectItem>
+                    <SelectItem value="flowers">Flowers</SelectItem>
+                    <SelectItem value="fruits">Fruits</SelectItem>
+                    <SelectItem value="grains">Grains</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             {(searchTerm || selectedCategory !== "all" || filterByZone) && viewMode !== "shelf" &&
             <div className="flex items-center justify-between mt-2 text-xs md:text-sm text-muted-foreground">
