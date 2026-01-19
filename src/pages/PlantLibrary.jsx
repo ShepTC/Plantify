@@ -276,13 +276,9 @@ export default function PlantLibrary() {
   };
 
   const handleFilterChange = (value) => {
-    if (value === "my_zone") {
-      setFilterByZone(!filterByZone);
-    } else {
-      setSelectedCategory(value);
-      if (currentPage !== 1) {
-        setCurrentPage(1);
-      }
+    setSelectedCategory(value);
+    if (currentPage !== 1) {
+      setCurrentPage(1);
     }
   };
 
