@@ -469,30 +469,35 @@ export default function PlantLibrary() {
 
               </div>
 
-              {viewMode !== "shelf" &&
-              <Select onValueChange={handleFilterChange}>
-                    <SelectTrigger className="h-8 md:h-10 w-28 md:w-40 text-xs">
+              {viewMode !== "shelf" && (
+                <>
+                  {user?.growing_zone && (
+                    <Button
+                      variant={filterByZone ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setFilterByZone(!filterByZone)}
+                      className="h-8 md:h-10 text-xs whitespace-nowrap"
+                    >
                       <Filter className="w-3 h-3 mr-1" />
-                      <SelectValue placeholder={getFilterDisplayText()} />
+                      Zone {user.growing_zone}
+                    </Button>
+                  )}
+                  <Select onValueChange={handleFilterChange}>
+                    <SelectTrigger className="h-8 md:h-10 w-28 md:w-36 text-xs">
+                      <Filter className="w-3 h-3 mr-1" />
+                      <SelectValue placeholder={selectedCategory === "all" ? "Category" : categoryData[selectedCategory]?.name} />
                     </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="vegetables">Vegetables</SelectItem>
-                    <SelectItem value="herbs">Herbs</SelectItem>
-                    <SelectItem value="flowers">Flowers</SelectItem>
-                    <SelectItem value="fruits">Fruits</SelectItem>
-                    <SelectItem value="grains">Grains</SelectItem>
-                    {user?.growing_zone &&
-                  <>
-                        <div className="border-t border-border my-1"></div>
-                        <SelectItem value="my_zone">
-                          {filterByZone ? "✓" : ""} My Zone ({user.growing_zone})
-                        </SelectItem>
-                      </>
-                  }
-                  </SelectContent>
-                </Select>
-              }
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="vegetables">Vegetables</SelectItem>
+                      <SelectItem value="herbs">Herbs</SelectItem>
+                      <SelectItem value="flowers">Flowers</SelectItem>
+                      <SelectItem value="fruits">Fruits</SelectItem>
+                      <SelectItem value="grains">Grains</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
+              )}
             </div>
 
             {(searchTerm || selectedCategory !== "all" || filterByZone) && viewMode !== "shelf" &&
