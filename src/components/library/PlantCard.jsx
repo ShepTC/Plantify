@@ -80,14 +80,16 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
 
         <CardHeader className="p-2 sm:p-4 pb-2 sm:pb-3">
           <div className="flex items-start justify-between gap-1 sm:gap-2">
-            <CardTitle className="text-foreground text-sm font-bold tracking-tight sm:text-base leading-tight line-clamp-2">
-              {plant.name}
-            </CardTitle>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-foreground text-sm font-bold tracking-tight sm:text-base leading-tight line-clamp-2">
+                {plant.name}
+              </CardTitle>
+              {/* Always show botanical/common name to differentiate varieties */}
+              <p className="text-[10px] sm:text-xs text-muted-foreground italic truncate mt-0.5">
+                {plant.botanical_name || plant.common_name}
+              </p>
+            </div>
           </div>
-          {/* Hide botanical name on mobile, show on larger screens */}
-          <p className="hidden sm:block text-xs text-muted-foreground italic truncate">
-            {plant.botanical_name}
-          </p>
         </CardHeader>
         
         <CardContent className="flex-grow space-y-1 sm:space-y-3 p-2 sm:p-4 pt-0">
