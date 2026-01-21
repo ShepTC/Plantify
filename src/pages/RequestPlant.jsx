@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Sprout, Send, CheckCircle, ArrowLeft, AlertCircle, BookOpen } from "lucide-react";
+import { Send, CheckCircle, ArrowLeft, AlertCircle, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { motion } from "framer-motion";
+import ThemePlantLogo from "../components/common/ThemePlantLogo";
 
 export default function RequestPlant() {
   const [plantName, setPlantName] = useState("");
@@ -79,7 +80,7 @@ export default function RequestPlant() {
         {/* Header */}
         <div className="text-center space-y-2 py-4">
           <div className="w-14 h-14 bg-primary/15 rounded-2xl flex items-center justify-center mx-auto">
-            <Sprout className="w-7 h-7 text-primary" />
+            <ThemePlantLogo className="w-7 h-7" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Request a Plant</h1>
           <p className="text-sm text-muted-foreground">
