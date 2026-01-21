@@ -253,6 +253,10 @@ export default function CalendarPage() {
   const [justSynced, setJustSynced] = useState(false);
   const { toast } = useToast();
 
+  // Swipe gesture state
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
   // This effect runs only ONCE on component mount to fetch all data.
   useEffect(() => {
     const loadInitialData = async () => {
@@ -603,6 +607,33 @@ export default function CalendarPage() {
   const monthHarvests = getMonthHarvests();
   const monthReminders = getMonthReminders();
 
+  // Swipe handling
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) {
+      setCurrentDate(addMonths(currentDate, 1));
+    }
+    if (isRightSwipe) {
+      setCurrentDate(subMonths(currentDate, 1));
+    }
+  };
+
   const Header = () =>
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3">
       <h1 className="text-xl md:text-3xl font-bold text-foreground whitespace-nowrap">
@@ -686,7 +717,7 @@ export default function CalendarPage() {
       <div className="max-w-5xl mx-auto w-full">
         <Header />
         
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs defaultValue="all" className="w-full" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all" className="text-xs md:text-sm">
               <CalendarIcon className="w-4 h-4 mr-1 md:mr-2" />
