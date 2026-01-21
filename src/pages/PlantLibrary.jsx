@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Loader, ChevronLeft, ChevronRight, Filter, ArrowLeft, Leaf, Flower, Plus } from "lucide-react";
+import { Search, Sprout, Loader, ChevronLeft, ChevronRight, Filter, ArrowLeft, Leaf, Flower, Plus } from "lucide-react";
 import ThemePlantLogo from "../components/common/ThemePlantLogo";
 import PlantCard from "../components/library/PlantCard";
 import PlantCardSkeleton from "../components/library/PlantCardSkeleton";
