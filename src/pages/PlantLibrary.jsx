@@ -14,6 +14,9 @@ import LoginPrompt from "../components/auth/LoginPrompt";
 import PlantDetailView from "../components/library/PlantDetailView";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import PlantLogo from "../components/common/PlantLogo";
+import { createPageUrl } from "@/components/utils";
+import { Link } from "react-router-dom";
 
 const PLANTS_PER_PAGE = 24;
 
@@ -405,7 +408,7 @@ export default function PlantLibrary() {
               <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-6 py-4 md:px-10 md:py-6">
                 <div className="flex flex-col items-center gap-2 md:gap-3">
                   <div className="w-12 h-12 md:w-14 md:h-14 bg-primary/15 rounded-2xl flex items-center justify-center border border-primary/20">
-                    <Sprout className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+                    <PlantLogo className="w-6 h-6 md:w-7 md:h-7" />
                   </div>
                   <div>
                     <h1 className="text-xl md:text-3xl font-bold text-foreground">Seed Library</h1>
@@ -573,14 +576,22 @@ export default function PlantLibrary() {
                 animate={{ opacity: 1 }}
                 className="col-span-full text-center py-12 md:py-20">
 
-                      <p className="text-sm md:text-lg text-muted-foreground">No plants found matching your criteria.</p>
-                      <Button
-                  variant="outline"
-                  onClick={handleBackToShelf}
-                  className="mt-3 md:mt-4 text-xs md:text-sm">
+                      <PlantLogo className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 opacity-50" />
+                      <p className="text-sm md:text-lg text-muted-foreground mb-4">No plants found matching your criteria.</p>
+                      <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+                        <Button
+                      variant="outline"
+                      onClick={handleBackToShelf}
+                      className="text-xs md:text-sm">
 
-                        Browse All Categories
-                      </Button>
+                          Browse All Categories
+                        </Button>
+                        <Link to={createPageUrl("RequestPlant")}>
+                          <Button className="text-xs md:text-sm">
+                            Request a Plant
+                          </Button>
+                        </Link>
+                      </div>
                     </motion.div>
               }
                 </AnimatePresence>

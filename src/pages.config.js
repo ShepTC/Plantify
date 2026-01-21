@@ -5,11 +5,11 @@ import HealthScanner from './pages/HealthScanner';
 import Home from './pages/Home';
 import ImageUploader from './pages/ImageUploader';
 import MyGarden from './pages/MyGarden';
-import PlantLibrary from './pages/PlantLibrary';
 import PlantingAlerts from './pages/PlantingAlerts';
 import Profile from './pages/Profile';
-import RequestPlant from './pages/RequestPlant';
 import Upgrade from './pages/Upgrade';
+import RequestPlant from './pages/RequestPlant';
+import PlantLibrary from './pages/PlantLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -21,11 +21,11 @@ export const PAGES = {
     "Home": Home,
     "ImageUploader": ImageUploader,
     "MyGarden": MyGarden,
-    "PlantLibrary": PlantLibrary,
     "PlantingAlerts": PlantingAlerts,
     "Profile": Profile,
-    "RequestPlant": RequestPlant,
     "Upgrade": Upgrade,
+    "RequestPlant": RequestPlant,
+    "PlantLibrary": PlantLibrary,
 }
 
 export const pagesConfig = {
