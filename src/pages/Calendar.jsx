@@ -22,7 +22,9 @@ import {
   Ruler,
   Sparkles,
   X,
-  Cloud
+  Cloud,
+  ListChecks,
+  TrendingUp
 } from
 "lucide-react";
 import {
@@ -46,6 +48,7 @@ import {
   ContextMenuTrigger
 } from
 "@/components/ui/context-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -525,25 +528,85 @@ export default function CalendarPage() {
     }
   };
 
-  const monthStart = startOfMonth(currentDate);
-  // Calculate the start date of the calendar grid (Sunday of the week of monthStart)
-  const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
+  // Get all planting events for the current month
+  const getMonthPlantings = useCallback(() => {
+    const plantingEvents = [];
+    const currentYear = getYear(currentDate);
+    const currentMonth = currentDate.getMonth();
+    
+    Object.entries(plantingsByWeek).forEach(([weekKey, plants]) => {
+      plants.forEach(plant => {
+        const [year, week] = weekKey.split('-').map(Number);
+        if (year === currentYear) {
+          // Approximate week to month
+          const weekDate = new Date(year, 0, 1 + (week - 1) * 7);
+          if (weekDate.getMonth() === currentMonth) {
+            plantingEvents.push({
+              ...plant,
+              weekKey,
+              weekNumber: week,
+              date: weekDate
+            });
+          }
+        }
+      });
+    });
+    
+    return plantingEvents.sort((a, b) => a.weekNumber - b.weekNumber);
+  }, [plantingsByWeek, currentDate]);
 
-  // Calculate the end date of the calendar grid to ensure 6 weeks are always displayed (6 * 7 = 42 days)
-  // addDays(startDate, 41) because startDate is the first day (day 0), so 41 more days make 42 total.
-  const endDateConsistent = addDays(startDate, 41);
+  // Get all harvest events for the current month
+  const getMonthHarvests = useCallback(() => {
+    const harvestEvents = [];
+    const currentMonth = currentDate.getMonth();
+    const currentYear = getYear(currentDate);
+    
+    Object.entries(harvestsByDate).forEach(([dateKey, harvests]) => {
+      const date = new Date(dateKey);
+      if (date.getMonth() === currentMonth && getYear(date) === currentYear) {
+        harvests.forEach(harvest => {
+          harvestEvents.push({
+            ...harvest,
+            dateKey,
+            date
+          });
+        });
+      }
+    });
+    
+    return harvestEvents.sort((a, b) => a.date - b.date);
+  }, [harvestsByDate, currentDate]);
 
-  const days = eachDayOfInterval({ start: startDate, end: endDateConsistent });
+  // Get all reminders for the current month
+  const getMonthReminders = useCallback(() => {
+    const reminderEvents = [];
+    const currentMonth = currentDate.getMonth();
+    const currentYear = getYear(currentDate);
+    
+    Object.entries(remindersByDate).forEach(([dateKey, reminders]) => {
+      const date = new Date(dateKey);
+      if (date.getMonth() === currentMonth && getYear(date) === currentYear) {
+        reminders.forEach(reminder => {
+          reminderEvents.push({
+            ...reminder,
+            dateKey,
+            date: new Date(dateKey)
+          });
+        });
+      }
+    });
+    
+    return reminderEvents.sort((a, b) => a.date - b.date);
+  }, [remindersByDate, currentDate]);
 
-  const { eventsByDay, dayGrid } = useMemo(
-    () => calculateSpanningEvents(days, plantingsByWeek, harvestsByDate),
-    [days, plantingsByWeek, harvestsByDate]
-  );
+  const monthPlantings = getMonthPlantings();
+  const monthHarvests = getMonthHarvests();
+  const monthReminders = getMonthReminders();
 
   const Header = () =>
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3">
       <h1 className="text-xl md:text-3xl font-bold text-foreground whitespace-nowrap">
-        {format(currentDate, "MMM yyyy")}
+        {format(currentDate, "MMMM yyyy")}
       </h1>
       <div className="flex items-center gap-2 w-full md:w-auto">
         <Button
@@ -586,15 +649,6 @@ export default function CalendarPage() {
 
 
 
-  const DaysOfWeek = () =>
-    <div className="grid grid-cols-7 text-center text-sm font-medium text-muted-foreground pb-2 border-b border-border">
-      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) =>
-        <div key={day}>{day}</div>
-      )}
-    </div>;
-
-
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
@@ -629,127 +683,272 @@ export default function CalendarPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-3 md:p-6 pb-20 md:pb-6">
-      <div className="max-w-4xl mx-auto w-full">
+      <div className="max-w-5xl mx-auto w-full">
         <Header />
-        <Card className="border-border overflow-hidden">
-          <CardContent className="p-2 md:p-4">
-            <DaysOfWeek />
-            {/* Calendar grid with fixed row heights for standard shape */}
-            <div className="grid grid-cols-7">
-              {days.map((day, dayIndex) => {
-                const dateKey = format(day, "yyyy-MM-dd");
-                const dailyReminders = remindersByDate[dateKey] || [];
-                const maxDisplayEvents = 3;
+        
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="all" className="text-xs md:text-sm">
+              <CalendarIcon className="w-4 h-4 mr-1 md:mr-2" />
+              All Events
+            </TabsTrigger>
+            <TabsTrigger value="planting" className="text-xs md:text-sm">
+              <Sprout className="w-4 h-4 mr-1 md:mr-2" />
+              Planting
+            </TabsTrigger>
+            <TabsTrigger value="harvest" className="text-xs md:text-sm">
+              <SunIcon className="w-4 h-4 mr-1 md:mr-2" />
+              Harvest
+            </TabsTrigger>
+            <TabsTrigger value="reminders" className="text-xs md:text-sm">
+              <ListChecks className="w-4 h-4 mr-1 md:mr-2" />
+              Tasks
+            </TabsTrigger>
+          </TabsList>
 
-                const daySpans = eventsByDay[dayIndex] || []; // Get events that start on this specific dayIndex
-                const trackCount = getTrackCountForDay(dayIndex, dayGrid); // Get max tracks used up to this day
-                const paddingTop = trackCount > 0 ? `calc(${trackCount * 1.5}rem + 2px)` : '0rem'; // Use 1.5rem for height of events
-
-
-                return (
-                  <div
-                    key={day.toString()}
-                    className={
-                      "border-r border-b border-border p-1 md:p-2 flex flex-col relative min-h-[70px] md:min-h-[90px] " + (
-                        !isSameMonth(day, monthStart) ?
-                          "bg-muted/30 text-muted-foreground" :
-                          "bg-card")
-                    }>
-
-                    <time
-                      dateTime={format(day, "yyyy-MM-dd")}
-                      className={
-                        "font-semibold text-xs mb-1 " + (
-                          isToday(day) ?
-                            "bg-primary text-primary-foreground rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center text-[10px] md:text-xs" :
-                            "")
-                      }>
-
-                      {format(day, "d")}
-                    </time>
-
-                    {daySpans.map(({ start, len, track, event }, spanIndex) => {
-                      const isPlantingGroup = event.eventType === 'planting_group';
-                      const isHarvest = event.eventType === 'harvest';
-                      
-                      const eventCategory = isPlantingGroup ? event.category : event.plantData?.category || event.category || 'vegetables';
-                      const colorClass = isHarvest 
-                        ? "bg-gradient-to-r from-yellow-500/40 to-orange-500/30 text-yellow-100 border border-yellow-500/50 backdrop-blur-sm"
-                        : categoryColors[eventCategory];
-                      
-                      const icon = isHarvest 
-                        ? <SunIcon className="w-3 h-3" /> 
-                        : categoryIcons[eventCategory];
-
-                      const openHandler = () => {
-                        const eventTypeToPass = isPlantingGroup ? 'planting_group' : (isHarvest ? 'harvest' : event.eventType);
-                        handleOpenFullScreen(event, eventTypeToPass)
-                      };
-
-                      // Calculate week range for planting events
-                      const isMultiWeek = len >= 7;
-                      const startWeek = isPlantingGroup ? getWeek(days[start], { weekStartsOn: 0 }) : null;
-                      const endWeek = isPlantingGroup && isMultiWeek ? getWeek(days[start + len - 1], { weekStartsOn: 0 }) : null;
-
-                      return (
-                        <ContextMenu key={`span-${dayIndex}-${spanIndex}`}>
-                          <ContextMenuTrigger asChild>
-                            <div
-                              className={`absolute flex items-center px-1 md:px-1.5 py-0.5 rounded-sm cursor-pointer hover:opacity-95 hover:shadow-md transition-all duration-200 z-10 ${colorClass} ${isMultiWeek ? 'border-l-4 border-l-white/40 shadow-sm' : ''}`}
-                              style={{
-                                top: `calc(1.4rem + ${track * 1.5}rem)`,
-                                left: `2px`,
-                                width: `calc(${len * 100}% - 4px)`,
-                                height: isMultiWeek ? '1.4rem' : '1.25rem'
-                              }}
-                              onClick={openHandler}>
-
-                              {icon}
-                              <span className="ml-1 text-[9px] md:text-[11px] font-medium truncate">
-                                {event.name}
-                                {isMultiWeek && startWeek && endWeek && (
-                                  <span className="ml-1 text-[8px] md:text-[10px] opacity-80">
-                                    (W{startWeek}-{endWeek})
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          </ContextMenuTrigger>
-                          <ContextMenuContent>
-                           {isPlantingGroup ? (
-                              event.plants.map((plant, pIndex) =>
-                                <div key={`${plant.userPlantId}-${pIndex}`}>
-                                  <ContextMenuItem onClick={() => handleOpenFullScreen(plant, 'planting')}><Sprout className="w-4 h-4 mr-2" /> Details for {plant.name}</ContextMenuItem>
-                                  <ContextMenuItem onClick={() => handleDeleteEvent(plant, 'planting')} className="text-destructive focus:bg-destructive focus:text-destructive-foreground"><Trash2 className="w-4 h-4 mr-2" /> Remove {plant.name}</ContextMenuItem>
+          {/* All Events Tab */}
+          <TabsContent value="all" className="space-y-3">
+            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
+              {monthPlantings.length === 0 && monthHarvests.length === 0 && monthReminders.length === 0 ? (
+                <Card className="border-border">
+                  <CardContent className="p-8 text-center">
+                    <CalendarIcon className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground">No events scheduled for this month</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  {[...monthPlantings.map(p => ({...p, type: 'planting'})), 
+                    ...monthHarvests.map(h => ({...h, type: 'harvest'})),
+                    ...monthReminders.map(r => ({...r, type: 'reminder'}))]
+                    .sort((a, b) => a.date - b.date)
+                    .map((event, idx) => {
+                      if (event.type === 'planting') {
+                        return (
+                          <Card key={`planting-${idx}`} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(event, 'planting')}>
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[event.category]}`}>
+                                  {categoryIcons[event.category]}
                                 </div>
-                              )
-                            ) : (
-                                <div>
-                                  <ContextMenuItem onClick={openHandler}><Eye className="w-4 h-4 mr-2" /> View Details</ContextMenuItem>
-                                  {/* For harvest events, the userPlantId is directly on the event */}
-                                  <ContextMenuItem onClick={() => handleDeleteEvent(event, 'harvest')} className="text-destructive focus:bg-destructive focus:text-destructive-foreground"><Trash2 className="w-4 h-4 mr-2" /> Remove from Garden</ContextMenuItem>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-foreground mb-1">{event.name}</h3>
+                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                    <Badge variant="outline" className="text-xs">
+                                      <Clock className="w-3 h-3 mr-1" />
+                                      Week {event.weekNumber}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-xs capitalize">
+                                      {event.season}
+                                    </Badge>
+                                  </div>
                                 </div>
-                            )}
-                          </ContextMenuContent>
-                        </ContextMenu>);
-
+                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'planting'); }}>
+                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      } else if (event.type === 'harvest') {
+                        return (
+                          <Card key={`harvest-${idx}`} className="border-border hover:border-yellow-500/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(event, 'harvest')}>
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-500/40 to-orange-500/30 border border-yellow-500/50">
+                                  <SunIcon className="w-5 h-5 text-yellow-100" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-foreground mb-1">{event.name}</h3>
+                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                    <Badge variant="outline" className="text-xs">
+                                      <CalendarIcon className="w-3 h-3 mr-1" />
+                                      {format(event.date, 'MMM d, yyyy')}
+                                    </Badge>
+                                    <Badge variant="secondary" className="text-xs capitalize">
+                                      {event.status}
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'harvest'); }}>
+                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      } else {
+                        return (
+                          <Card key={`reminder-${idx}`} className={`border-border hover:border-purple-500/50 transition-colors cursor-pointer ${event.is_completed ? 'opacity-60' : ''}`} onClick={() => handleViewEvent(event, 'reminder')}>
+                            <CardContent className="p-4">
+                              <div className="flex items-start gap-3">
+                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${event.is_completed ? 'bg-gray-200 dark:bg-gray-800' : 'bg-purple-100 dark:bg-purple-900/40'}`}>
+                                  {event.is_completed ? <CheckCircle2 className="w-5 h-5 text-gray-500" /> : <ListChecks className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className={`font-semibold mb-1 ${event.is_completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{event.title}</h3>
+                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                    <Badge variant="outline" className="text-xs">
+                                      <CalendarIcon className="w-3 h-3 mr-1" />
+                                      {format(event.date, 'MMM d, yyyy')}
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'reminder'); }}>
+                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      }
                     })}
-
-                    <div className="flex-1 space-y-0.5 md:space-y-1 overflow-hidden" style={{ paddingTop }}>
-                      {dailyReminders.slice(0, maxDisplayEvents).map((reminder, index) =>
-                        <Badge key={`reminder-${reminder.id}-${index}`} variant="outline" onClick={() => handleViewEvent(reminder, 'reminder')} className={`w-full justify-start text-xs truncate cursor-pointer hover:opacity-80 px-1 py-0.5 h-3 md:h-4 ${reminder.is_completed ? "bg-gray-100 text-gray-500 border-gray-300 line-through dark:bg-gray-800/50 dark:border-gray-700 dark:text-gray-500" : "bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-700/60"}`}>
-                          <CalendarIcon className="w-2 h-2 md:w-2.5 md:h-2.5 mr-1 flex-shrink-0" />
-                          <span className="truncate text-[9px] md:text-[11px]">{reminder.title}</span>
-                        </Badge>
-                      )}
-                      {/* Daily Harvest Badges are now replaced by the spanning event logic */}
-                    </div>
-                  </div>);
-
-              })}
+                </>
+              )}
             </div>
-          </CardContent>
-        </Card>
+          </TabsContent>
+
+          {/* Planting Tab */}
+          <TabsContent value="planting" className="space-y-3">
+            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
+              {monthPlantings.length === 0 ? (
+                <Card className="border-border">
+                  <CardContent className="p-8 text-center">
+                    <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground">No planting windows this month</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                monthPlantings.map((planting, idx) => (
+                  <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[planting.category]}`}>
+                          {categoryIcons[planting.category]}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              <Clock className="w-3 h-3 mr-1" />
+                              Week {planting.weekNumber}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs capitalize">
+                              {planting.season}
+                            </Badge>
+                            <Badge className={categoryColors[planting.category]}>
+                              {planting.category}
+                            </Badge>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
+                          <Trash2 className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Harvest Tab */}
+          <TabsContent value="harvest" className="space-y-3">
+            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
+              {monthHarvests.length === 0 ? (
+                <Card className="border-border">
+                  <CardContent className="p-8 text-center">
+                    <SunIcon className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground">No harvests scheduled this month</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                monthHarvests.map((harvest, idx) => (
+                  <Card key={idx} className="border-border hover:border-yellow-500/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(harvest, 'harvest')}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-500/40 to-orange-500/30 border border-yellow-500/50">
+                          <SunIcon className="w-5 h-5 text-yellow-100" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground mb-1">{harvest.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            {harvest.actualPlantingDate && `Planted ${format(new Date(harvest.actualPlantingDate), 'MMM d')}`}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              <CalendarIcon className="w-3 h-3 mr-1" />
+                              {format(harvest.date, 'MMM d, yyyy')}
+                            </Badge>
+                            <Badge variant="secondary" className="text-xs capitalize">
+                              {harvest.status}
+                            </Badge>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(harvest, 'harvest'); }}>
+                          <Trash2 className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Reminders Tab */}
+          <TabsContent value="reminders" className="space-y-3">
+            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
+              {monthReminders.length === 0 ? (
+                <Card className="border-border">
+                  <CardContent className="p-8 text-center">
+                    <ListChecks className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground">No tasks or reminders this month</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                monthReminders.map((reminder, idx) => (
+                  <Card key={idx} className={`border-border hover:border-purple-500/50 transition-colors cursor-pointer ${reminder.is_completed ? 'opacity-60' : ''}`} onClick={() => handleViewEvent(reminder, 'reminder')}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${reminder.is_completed ? 'bg-gray-200 dark:bg-gray-800' : 'bg-purple-100 dark:bg-purple-900/40'}`}>
+                          {reminder.is_completed ? <CheckCircle2 className="w-5 h-5 text-gray-500" /> : <ListChecks className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`font-semibold mb-1 ${reminder.is_completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{reminder.title}</h3>
+                          {reminder.description && (
+                            <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{reminder.description}</p>
+                          )}
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              <CalendarIcon className="w-3 h-3 mr-1" />
+                              {format(reminder.date, 'MMM d, yyyy')}
+                            </Badge>
+                            {!reminder.is_completed && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-6 px-2 text-xs"
+                                onClick={(e) => { e.stopPropagation(); handleCompleteReminder(reminder.id); }}
+                              >
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                Complete
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(reminder, 'reminder'); }}>
+                          <Trash2 className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* Full Screen Plant Details Dialog */}
         <Dialog open={isFullScreenOpen} onOpenChange={setIsFullScreenOpen}>
