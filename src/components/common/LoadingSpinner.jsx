@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function LoadingSpinner({ message = "Loading...", size = "large" }) {
-  const [logoUrl, setLogoUrl] = useState("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/298c219c1_GardenSubLogo.png");
+  const [logoUrl, setLogoUrl] = useState("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/3d4f42c2e_PlantifyLogoFinal.png");
 
   useEffect(() => {
     // Read from data attribute to get the most current palette
@@ -9,16 +9,18 @@ export default function LoadingSpinner({ message = "Loading...", size = "large" 
 
     switch (currentPalette) {
       case 'pastel':
-        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/65a6ff1fd_PastelSubLogo.png");
+        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/06abebac7_LogoPastel.png");
         break;
       case 'ocean':
-        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/0f36e5ac0_OceanSubLogo.png");
+        // Swapped with sunset logo
+        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/2d4b219c9_LogoSunset.png"); 
         break;
       case 'sunset':
-        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/2998abfd9_SunsetSubLogo.png");
+        // Swapped with ocean logo
+        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/adf8bab24_LogoOcean.png"); 
         break;
       default:
-        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/298c219c1_GardenSubLogo.png");
+        setLogoUrl("https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/3d4f42c2e_PlantifyLogoFinal.png");
     }
   }, []);
 

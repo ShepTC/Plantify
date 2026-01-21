@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/components/utils";
 import { User } from "@/entities/User";
 import { Plant } from "@/entities/Plant";
 import { UserPlant } from "@/entities/UserPlant";
@@ -8,8 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Sprout, Loader, ChevronLeft, ChevronRight, Filter, ArrowLeft, Leaf, Flower, Plus } from "lucide-react";
-import ThemePlantLogo from "../components/common/ThemePlantLogo";
+import { Search, Sprout, Loader, ChevronLeft, ChevronRight, Filter, ArrowLeft, Leaf, Flower } from "lucide-react";
 import PlantCard from "../components/library/PlantCard";
 import PlantCardSkeleton from "../components/library/PlantCardSkeleton";
 import CategoryCard from "../components/library/CategoryCard";
@@ -408,7 +405,7 @@ export default function PlantLibrary() {
               <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-6 py-4 md:px-10 md:py-6">
                 <div className="flex flex-col items-center gap-2 md:gap-3">
                   <div className="w-12 h-12 md:w-14 md:h-14 bg-primary/15 rounded-2xl flex items-center justify-center border border-primary/20">
-                    <ThemePlantLogo className="w-6 h-6 md:w-7 md:h-7" />
+                    <Sprout className="w-6 h-6 md:w-7 md:h-7 text-primary" />
                   </div>
                   <div>
                     <h1 className="text-xl md:text-3xl font-bold text-foreground">Seed Library</h1>
@@ -576,23 +573,14 @@ export default function PlantLibrary() {
                 animate={{ opacity: 1 }}
                 className="col-span-full text-center py-12 md:py-20">
 
-                      <p className="text-sm md:text-lg text-muted-foreground mb-4">No plants found matching your criteria.</p>
-                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <Button
-                          variant="outline"
-                          onClick={handleBackToShelf}
-                          className="text-xs md:text-sm">
-                          Browse All Categories
-                        </Button>
-                        <Link to={createPageUrl("RequestPlant")}>
-                          <Button
-                            variant="default"
-                            className="text-xs md:text-sm w-full sm:w-auto">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Request a Plant
-                          </Button>
-                        </Link>
-                      </div>
+                      <p className="text-sm md:text-lg text-muted-foreground">No plants found matching your criteria.</p>
+                      <Button
+                  variant="outline"
+                  onClick={handleBackToShelf}
+                  className="mt-3 md:mt-4 text-xs md:text-sm">
+
+                        Browse All Categories
+                      </Button>
                     </motion.div>
               }
                 </AnimatePresence>
@@ -601,7 +589,7 @@ export default function PlantLibrary() {
 
             {/* Pagination */}
             {totalPages > 1 &&
-            <Card className="bg-card border-border">
+          <Card className="bg-card border-border">
                 <div className="p-3 md:p-6">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
                     {/* Results info */}
@@ -658,24 +646,7 @@ export default function PlantLibrary() {
                   </div>
                 </div>
               </Card>
-            }
-
-            {/* Request Plant CTA */}
-            {currentPagePlants.length > 0 && currentPage === totalPages && (
-              <Card className="bg-card border-border mt-4">
-                <CardContent className="p-4 md:p-6 text-center">
-                  <p className="text-sm md:text-base text-muted-foreground mb-3">
-                    Can't find what you're looking for?
-                  </p>
-                  <Link to={createPageUrl("RequestPlant")}>
-                    <Button variant="default" className="text-xs md:text-sm">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Request a Plant
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
+          }
           </>)
         }
       </div>
