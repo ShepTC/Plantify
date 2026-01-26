@@ -875,20 +875,22 @@ export default function Assistant() {
                   </div>
                   {message.type === 'assistant' &&
                   message.suggestedPlants?.length > 0 &&
-                  <div className="flex justify-start">
-                      <div className="pl-14 mt-3">
-                        <p className="text-sm font-medium text-primary mb-2 flex items-center gap-1.5">
+                  <div className="flex justify-center">
+                      <div className="mt-3">
+                        <p className="text-sm font-medium text-primary mb-2 flex items-center gap-1.5 justify-center">
                           <Sparkles className="w-4 h-4" />
                           Plants I recommend:
                         </p>
-                        <div className="grid grid-cols-2 gap-3 max-w-2xl">
+                        <div className="grid grid-cols-2 gap-3 justify-center">
                           {message.suggestedPlants.map((plant) =>
-                      <MiniPlantCard
-                        key={plant.id}
-                        plant={plant}
-                        onAddPlant={handleAddPlant}
-                        isAdded={userPlantIds.has(plant.id)}
-                        onClick={() => setSelectedPlantDetail(plant)} />
+                      <div className="drop-shadow-[0_0_12px_rgba(168,85,247,0.4)] dark:drop-shadow-[0_0_16px_rgba(168,85,247,0.6)]">
+                        <MiniPlantCard
+                          key={plant.id}
+                          plant={plant}
+                          onAddPlant={handleAddPlant}
+                          isAdded={userPlantIds.has(plant.id)}
+                          onClick={() => setSelectedPlantDetail(plant)} />
+                      </div>
 
                       )}
                         </div>
