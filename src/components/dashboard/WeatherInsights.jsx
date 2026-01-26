@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertCircle
+  AlertCircle,
+  Droplets,
+  Wind,
+  Thermometer
 } from "lucide-react";
 
 export default function WeatherInsights({ user }) {
@@ -108,16 +111,52 @@ export default function WeatherInsights({ user }) {
 
   return (
     <Card className="bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800 backdrop-blur-sm">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm mb-1">
-              Weather Alert
-            </h3>
-            <p className="text-xs text-orange-700 dark:text-orange-300">
-              {weatherData.forecast}
-            </p>
+      <CardContent className="p-4 md:p-6">
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm md:text-base mb-1">
+                Weather Alert
+              </h3>
+              <p className="text-xs md:text-sm text-orange-700 dark:text-orange-300">
+                {weatherData.forecast}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 pt-2">
+            <div className="flex items-center gap-2 bg-orange-100/50 dark:bg-orange-900/30 rounded-lg p-2 md:p-3">
+              <Thermometer className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-orange-700 dark:text-orange-300">Temp</p>
+                <p className="text-sm font-semibold text-orange-800 dark:text-orange-200">{weatherData.temperature}°F</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-orange-100/50 dark:bg-orange-900/30 rounded-lg p-2 md:p-3">
+              <Wind className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-orange-700 dark:text-orange-300">Wind</p>
+                <p className="text-sm font-semibold text-orange-800 dark:text-orange-200">{weatherData.windSpeed} mph</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-orange-100/50 dark:bg-orange-900/30 rounded-lg p-2 md:p-3">
+              <Droplets className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-orange-700 dark:text-orange-300">Rain</p>
+                <p className="text-sm font-semibold text-orange-800 dark:text-orange-200">{weatherData.rainfall}"</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-orange-100/50 dark:bg-orange-900/30 rounded-lg p-2 md:p-3">
+              <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-orange-700 dark:text-orange-300">Min Temp</p>
+                <p className="text-sm font-semibold text-orange-800 dark:text-orange-200">{weatherData.minTemp}°F</p>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
