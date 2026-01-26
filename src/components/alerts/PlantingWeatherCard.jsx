@@ -37,9 +37,9 @@ export default function PlantingWeatherCard({ user }) {
       try {
         let lat, lon;
 
-        if (user?.location?.lat && user?.location?.lon) {
+        if (user?.location?.lat && user?.location?.lng) {
           lat = user.location.lat;
-          lon = user.location.lon;
+          lon = user.location.lng;
         } else {
           const geoRes = await fetch("https://ipapi.co/json/");
           const geoData = await geoRes.json();
