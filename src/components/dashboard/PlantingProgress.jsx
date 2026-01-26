@@ -1,13 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/components/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  TrendingUp,
-  Sprout,
-  Leaf,
-  Sun } from
-"lucide-react";
+import { Sprout, Leaf, Sun, ArrowRight } from "lucide-react";
 
 export default function PlantingProgress({ userPlants }) {
   const totalPlants = userPlants.length;
