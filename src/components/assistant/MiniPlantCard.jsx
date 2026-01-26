@@ -48,11 +48,11 @@ export default function MiniPlantCard({ plant, onAddPlant, isAdded, onClick }) {
           </div>
         </div>
 
-        <div className="flex gap-1.5 pt-1">
+        <div className="flex gap-2 pt-2">
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 h-7 text-[10px]"
+            className="flex-1 h-9 text-xs"
             onClick={(e) => {
               e.stopPropagation();
               onClick?.();
@@ -67,9 +67,9 @@ export default function MiniPlantCard({ plant, onAddPlant, isAdded, onClick }) {
               onAddPlant?.(plant);
             }}
             disabled={isAdded}
-            className="flex-1 h-7 text-[10px]"
+            className="flex-1 h-9 text-xs"
           >
-            {isAdded ? '✓' : <Plus className="w-3 h-3" />}
+            {isAdded ? '✓' : <Plus className="w-4 h-4" />}
           </Button>
         </div>
       </div>
