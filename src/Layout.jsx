@@ -521,7 +521,7 @@ export default function Layout({ children, currentPageName }) {
                                     </PopoverTrigger>
                     <PopoverContent className="p-3 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-card text-popover-foreground mr-4 px-4 py-4 z-50 outline-none w-[80vw] max-w-xs rounded-xl shadow-xl border border-border relative overflow-hidden">
                       {/* Diagonal lines background */}
-                      <div className="absolute inset-0 pointer-events-none opacity-10">
+                      <div className="absolute bottom-0 left-0 right-0 h-[70%] pointer-events-none opacity-25">
                         <img 
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/40f73253e_lines.png"
                           alt=""
