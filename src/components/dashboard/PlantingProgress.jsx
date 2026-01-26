@@ -13,24 +13,22 @@ export default function PlantingProgress({ userPlants }) {
   const plantedPercentage = totalPlants > 0 ? plantedCount / totalPlants * 100 : 0;
   const harvestedPercentage = totalPlants > 0 ? harvestedCount / totalPlants * 100 : 0;
 
+  const plannedCount = userPlants.filter((p) => p.status === 'planned').length;
+
   if (totalPlants === 0) {
     return (
-      <Card className="bg-card/80 backdrop-blur-sm border-border">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <TrendingUp className="w-5 h-5 text-secondary" />
-            Garden Progress
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <Sprout className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="font-semibold text-foreground mb-2">Start Your Garden Journey</h3>
-            <p className="text-secondary">Add your first plants to track your progress!</p>
-          </div>
-        </CardContent>
-      </Card>);
-
+      <Link to={createPageUrl("PlantLibrary")} className="block">
+        <Card className="bg-card/80 backdrop-blur-sm border-border hover:border-primary/50 transition-colors cursor-pointer">
+          <CardContent className="p-4">
+            <div className="text-center py-4">
+              <Sprout className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
+              <p className="text-sm font-semibold text-foreground">Add plants to get started</p>
+              <p className="text-xs text-muted-foreground mt-1">Browse the plant library</p>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+    );
   }
 
   return (
