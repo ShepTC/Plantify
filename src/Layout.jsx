@@ -525,7 +525,7 @@ export default function Layout({ children, currentPageName }) {
                         <img 
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/40f73253e_lines.png"
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover saturate-150"
                         />
                       </div>
                       <div className="relative z-10">
