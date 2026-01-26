@@ -598,10 +598,13 @@ export default function PlantingAlerts() {
         {/* This Week Section - Only show if there are additional weekly plants and in shelf view */}
         {viewMode === 'shelf' && plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length > 0 && (
           <Card className="bg-card/80 backdrop-blur-sm border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
+            <CardHeader className="pb-4 md:pb-6">
+              <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-foreground">
                 <Calendar className="w-5 h-5 text-secondary" />
-                Also Good This Week ({plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length} more options)
+                <span>Good This Week</span>
+                <Badge variant="outline" className="ml-auto text-xs">
+                  {plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length} options
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
