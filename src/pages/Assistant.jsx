@@ -580,14 +580,15 @@ export default function Assistant() {
                         <Sparkles className="w-3.5 h-3.5" />
                         Plants I recommend:
                       </p>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-2 justify-center">
                         {message.suggestedPlants.map((plant) =>
-                    <MiniPlantCard
-                      key={plant.id}
-                      plant={plant}
-                      onAddPlant={handleAddPlant}
-                      isAdded={userPlantIds.has(plant.id)}
-                      onClick={() => setSelectedPlantDetail(plant)} />
+                    <div key={plant.id} className="drop-shadow-[0_0_8px_rgba(168,85,247,0.3)] dark:drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]">
+                      <MiniPlantCard
+                        plant={plant}
+                        onAddPlant={handleAddPlant}
+                        isAdded={userPlantIds.has(plant.id)}
+                        onClick={() => setSelectedPlantDetail(plant)} />
+                    </div>
 
                     )}
                       </div>
