@@ -185,6 +185,7 @@ export default function Dashboard() {
             currentWeek={currentWeek}
             userPlants={userPlants}
             userZone={user?.growing_zone}
+            userLocation={user?.location}
             onPlantUpdate={loadDashboardData} />
 
           <PlantingProgress userPlants={userPlants} />
