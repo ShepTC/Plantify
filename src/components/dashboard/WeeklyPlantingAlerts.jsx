@@ -16,10 +16,76 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 
-export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone, onPlantUpdate }) {
+// Calculate confidence score based on timing and weather
+const calculateConfidence = (currentWeek, zoneData, season, weatherConditions = {}) => {
+  const isSpring = season === 'Spring';
+  const startWeek = isSpring ? zoneData.spring_start_week : zoneData.fall_start_week;
+  const endWeek = isSpring ? zoneData.spring_end_week : zoneData.fall_end_week;
+  
+  // Base score: proximity to midpoint of planting window
+  const windowSize = endWeek - startWeek + 1;
+  const midpoint = startWeek + (windowSize / 2);
+  const distanceFromMidpoint = Math.abs(currentWeek - midpoint);
+  const maxDistance = windowSize / 2;
+  const timingScore = Math.max(70, 100 - (distanceFromMidpoint / maxDistance) * 30);
+  
+  // Apply weather modifiers
+  let confidenceScore = timingScore;
+  const { goodTemp = false, lowWind = false, notTooWet = false, noFrostRisk = false } = weatherConditions;
+  
+  if (goodTemp) confidenceScore += 5;
+  if (lowWind) confidenceScore += 3;
+  if (notTooWet) confidenceScore += 4;
+  if (noFrostRisk) confidenceScore += 3;
+  
+  // Cap at 100
+  return Math.min(100, Math.round(confidenceScore));
+};
+
+// Fetch weather conditions
+const fetchWeatherConditions = async (userLocation) => {
+  try {
+    let latitude, longitude;
+    
+    if (userLocation?.lat && userLocation?.lng) {
+      latitude = userLocation.lat;
+      longitude = userLocation.lng;
+    } else {
+      const locRes = await fetch("https://ipapi.co/json/", { 
+        signal: AbortSignal.timeout(5000) 
+      });
+      const locData = await locRes.json();
+      latitude = locData.latitude;
+      longitude = locData.longitude;
+    }
+    
+    const weatherRes = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=temperature_2m_min,precipitation_sum,windspeed_10m_max&past_days=7&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=auto`,
+      { signal: AbortSignal.timeout(10000) }
+    );
+    const weatherJson = await weatherRes.json();
+    
+    const current = weatherJson.current_weather;
+    const daily = weatherJson.daily;
+    const rainWeek = daily.precipitation_sum.slice(0, 7).reduce((a, b) => a + b, 0);
+    
+    return {
+      goodTemp: current.temperature >= 60 && current.temperature <= 80,
+      lowWind: current.windspeed <= 15,
+      notTooWet: rainWeek <= 2,
+      noFrostRisk: daily.temperature_2m_min[0] > 40
+    };
+  } catch (error) {
+    console.warn("Could not fetch weather conditions:", error);
+    return {};
+  }
+};
+
+export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone, userLocation, onPlantUpdate }) {
   const [plantsToPlant, setPlantsToPlant] = useState([]);
   const [upcomingPlants, setUpcomingPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [weatherConditions, setWeatherConditions] = useState({});
 
   const loadPlantingAlerts = useCallback(async () => {
     try {
