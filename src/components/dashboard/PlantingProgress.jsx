@@ -36,7 +36,7 @@ export default function PlantingProgress({ userPlants }) {
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border">
-      <CardContent className="px-5 py-3 space-y-3">
+      <CardContent className="px-5 py-2 space-y-3">
         <h3 className="font-semibold text-foreground">Garden Status</h3>
         
         {/* Quick Stats */}
