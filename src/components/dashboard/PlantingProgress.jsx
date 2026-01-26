@@ -30,60 +30,60 @@ export default function PlantingProgress({ userPlants }) {
             </Link>
           </div>
         </CardContent>
-      </Card>
-    );
+      </Card>);
+
   }
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border">
-      <CardContent className="p-5 space-y-3">
-        <h3 className="font-semibold text-foreground text-sm">Garden Status</h3>
+      <CardContent className="px-5 py-4 space-y-3">
+        <h3 className="font-semibold text-foreground">Garden Status</h3>
         
         {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-muted/50 rounded-lg p-3">
-            <div className="flex items-center gap-1.5 mb-1.5">
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-muted/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
               <Sprout className="w-4 h-4 text-secondary" />
               <p className="text-xs text-muted-foreground">Planned</p>
             </div>
             <p className="text-2xl font-bold text-foreground">{plannedCount}</p>
           </div>
           
-          <div className="bg-muted/50 rounded-lg p-3">
-            <div className="flex items-center gap-1.5 mb-1.5">
+          <div className="bg-muted/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
               <Leaf className="w-4 h-4 text-primary" />
               <p className="text-xs text-muted-foreground">Planted</p>
             </div>
-            <p className="text-xl font-bold text-foreground">{plantedCount}</p>
+            <p className="text-2xl font-bold text-foreground">{plantedCount}</p>
           </div>
 
-          <div className="bg-muted/50 rounded-lg p-3">
-            <div className="flex items-center gap-1.5 mb-1.5">
+          <div className="bg-muted/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
               <Sun className="w-4 h-4 text-accent" />
               <p className="text-xs text-muted-foreground">Harvested</p>
             </div>
-            <p className="text-xl font-bold text-foreground">{harvestedCount}</p>
+            <p className="text-2xl font-bold text-foreground">{harvestedCount}</p>
           </div>
         </div>
 
         {/* Plant Library Link Card */}
         <Link to={createPageUrl("PlantLibrary")} className="block">
-          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-3 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <div className="bg-primary/20 group-hover:bg-primary/30 transition-colors rounded-lg p-1.5">
-                  <BookOpen className="w-3.5 h-3.5 text-primary" />
+          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/20 group-hover:bg-primary/30 transition-colors rounded-lg p-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
                 </div>
-                <div className="min-w-0">
-                  <p className="font-medium text-foreground text-xs">Explore Plants</p>
+                <div>
+                  <p className="font-medium text-foreground text-sm">Explore Plants</p>
                   <p className="text-xs text-muted-foreground">Browse 100+ varieties</p>
                 </div>
               </div>
-              <span className="text-primary group-hover:translate-x-1 transition-transform flex-shrink-0">→</span>
+              <span className="text-primary group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
         </Link>
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }
