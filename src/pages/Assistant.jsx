@@ -873,8 +873,8 @@ export default function Assistant() {
                   }
                   </div>
                   {message.type === 'assistant' &&
-                message.suggestedPlants?.length > 0 &&
-                <div className="flex justify-start">
+                  message.suggestedPlants?.length > 0 &&
+                  <div className="flex justify-start">
                       <div className="pl-14 mt-3">
                         <p className="text-sm font-medium text-primary mb-2 flex items-center gap-1.5">
                           <Sparkles className="w-4 h-4" />
@@ -882,19 +882,18 @@ export default function Assistant() {
                         </p>
                         <div className="grid grid-cols-2 gap-3 max-w-2xl">
                           {message.suggestedPlants.map((plant) =>
-                      <PlantCard
+                      <MiniPlantCard
                         key={plant.id}
                         plant={plant}
                         onAddPlant={handleAddPlant}
                         isAdded={userPlantIds.has(plant.id)}
-                        userZone={user?.growing_zone}
-                        size="sm" />
+                        onClick={() => setSelectedPlantDetail(plant)} />
 
                       )}
                         </div>
                       </div>
                     </div>
-                }
+                  }
                 </motion.div>
               )}
               {isLoading &&
