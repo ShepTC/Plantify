@@ -211,11 +211,17 @@ export default function Dashboard() {
                 </div>
                 
                 {getPlantOfTheDay() && (
-                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2">
-                    <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
-                    <p className="font-semibold text-foreground">{getPlantOfTheDay().name}</p>
-                    <p className="text-xs text-muted-foreground">{getPlantOfTheDay().category}</p>
-                  </div>
+                  <Link 
+                    to={`${createPageUrl("PlantLibrary")}?plant=${encodeURIComponent(getPlantOfTheDay().name)}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="block hover:bg-primary/10 transition-colors rounded-lg"
+                  >
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2 hover:border-primary/40">
+                      <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
+                      <p className="font-semibold text-foreground">{getPlantOfTheDay().name}</p>
+                      <p className="text-xs text-muted-foreground">{getPlantOfTheDay().category}</p>
+                    </div>
+                  </Link>
                 )}
                 
                 {user?.growing_zone && (
