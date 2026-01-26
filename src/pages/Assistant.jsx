@@ -92,8 +92,11 @@ export default function Assistant() {
 
       // Load saved chat history from database
       const savedChats = await ChatHistory.filter({ created_by: currentUser.email }, '-created_date');
-      
+
       if (savedChats.length > 0) {
+        // Get all plants for matching IDs
+        const allPlants = await Plant.list();
+
         // Convert saved chats to local format
         const formattedChats = savedChats.map(chat => ({
           id: chat.id,
@@ -101,7 +104,11 @@ export default function Assistant() {
           messages: chat.messages.map(msg => ({
             ...msg,
             timestamp: new Date(msg.timestamp),
-            suggestedPlants: [] // Will be loaded on demand
+            suggestedPlants: msg.suggestedPlantIds 
+              ? msg.suggestedPlantIds
+                  .map(id => allPlants.find(p => p.id === id))
+                  .filter(Boolean)
+              : []
           })),
           createdAt: new Date(chat.created_date)
         }));
