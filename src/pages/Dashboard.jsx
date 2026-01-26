@@ -231,8 +231,8 @@ export default function Dashboard() {
                       <p className="font-semibold text-sm text-foreground">{user.growing_zone}</p>
                     </div>
                     <div className="bg-secondary/10 rounded-lg p-2 text-center">
-                      <p className="text-xs text-muted-foreground">In Library</p>
-                      <p className="font-semibold text-sm text-foreground">{recommendedPlants.length}+</p>
+                      <p className="text-xs text-muted-foreground">In Garden</p>
+                      <p className="font-semibold text-sm text-foreground">{userPlants.length}</p>
                     </div>
                     <div className="bg-accent/10 rounded-lg p-2 text-center">
                       <p className="text-xs text-muted-foreground">Week</p>
