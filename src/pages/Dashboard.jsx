@@ -88,7 +88,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
+    <div className="min-h-screen bg-background pt-1 px-3 py-3 pb-20 md:pt-2 md:px-6 md:py-6 md:pb-6">
       <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
         {/* Welcome Header */}
         <div className="space-y-2 pt-0 md:pt-2 text-center">
