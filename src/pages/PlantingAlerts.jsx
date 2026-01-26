@@ -25,7 +25,6 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import CategoryCard from "../components/library/CategoryCard";
 import PlantingWeatherCard from "../components/alerts/PlantingWeatherCard";
 import { motion, AnimatePresence } from "framer-motion";
-import PlantLogo from "../components/common/PlantLogo";
 
 const categoryData = {
   vegetables: {
@@ -419,7 +418,7 @@ export default function PlantingAlerts() {
             <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-8 py-6 md:px-12 md:py-8">
               <div className="flex flex-col items-center gap-3 md:gap-4">
                 <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/15 rounded-2xl flex items-center justify-center border border-primary/20">
-                  <PlantLogo className="w-7 h-7 md:w-8 md:h-8" />
+                  <Sprout className="w-7 h-7 md:w-8 md:h-8 text-primary" />
                 </div>
                 <div>
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">Today's Plants</h1>

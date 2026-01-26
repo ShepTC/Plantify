@@ -21,7 +21,6 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
 import PlantDetailView from "../components/library/PlantDetailView";
-import PlantLogo from "../components/common/PlantLogo";
 
 export default function MyGarden() {
   const [myPlants, setMyPlants] = useState([]);
@@ -186,7 +185,7 @@ export default function MyGarden() {
             {/* Growing Plants */}
             <GardenSection
             title="Currently Growing"
-            icon={PlantLogo}
+            icon={Sprout}
             color="text-green-500"
             plants={myPlants.filter((p) => p.status === 'planted')}
             plantDataMap={plantDataMap}
