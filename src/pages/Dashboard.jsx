@@ -9,14 +9,12 @@ import {
   Clock,
   AlertCircle,
   Sprout,
-  Sun,
-  Calendar } from
+  Sun } from
 "lucide-react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 
-import TodayFocusCard from "../components/dashboard/TodayFocusCard";
 import WeeklyPlantingAlerts from "../components/dashboard/WeeklyPlantingAlerts";
 import PlantingProgress from "../components/dashboard/PlantingProgress";
 import WeatherInsights from "../components/dashboard/WeatherInsights";
@@ -32,7 +30,6 @@ export default function Dashboard() {
   const [userPlants, setUserPlants] = useState([]);
   const [recommendedPlants, setRecommendedPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showOverview, setShowOverview] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -92,32 +89,60 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
-      <div className="mx-auto max-w-7xl space-y-4 md:space-y-6">
-        {/* Simple Header */}
-        <div className="pt-2 md:pt-6">
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">
-            {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}
-          </h1>
-          <p className="text-sm text-muted-foreground md:text-base mt-1">
-            {format(new Date(), "EEEE, MMMM d")}
-          </p>
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
+        {/* Welcome Header */}
+        <div className="space-y-4 pt-2 md:pt-6 text-center">
+          <div>
+            <h1 className="text-xl font-bold text-foreground md:text-2xl lg:text-4xl">
+              {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}!
+            </h1>
+            <p className="text-sm text-muted-foreground md:text-base lg:text-lg md:mt-2">
+              Week {currentWeek} • {format(new Date(), "EEEE, MMMM d")}
+            </p>
+            <p className="hidden md:block text-sm lg:text-base text-secondary mt-1">
+              {getSeasonalMessage()}
+            </p>
+          </div>
+
+          {/* Plant Today Button */}
+          <div className="flex justify-center md:pt-4">
+            <Link
+              to={createPageUrl("PlantingAlerts")}
+              className="group relative inline-block">
+
+              {/* Glow effect */}
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
+              <Button
+                size="lg" className="bg-gradient-to-r text-white mx-6 md:mx-0 px-6 md:px-10 lg:px-12 py-6 md:py-7 lg:py-8 text-base md:text-lg lg:text-xl font-bold rounded-xl justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-primary/90 h-11 md:h-auto relative flex items-center gap-2 md:gap-3 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
+
+
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
+                  alt="Plant" 
+                  className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 object-contain" 
+                />
+                What can I plant today?
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Seasonal Goal Banner */}
         {user && <SeasonalGoalBanner user={user} onUserUpdate={loadDashboardData} />}
 
         {/* Zone Setup Warning */}
-        {!user?.location && (
-          <Card className="border-orange-200 bg-orange-50/50 backdrop-blur-sm dark:bg-orange-950/20 dark:border-orange-800">
-            <CardContent className="p-4 md:p-6">
+        {!user?.location &&
+        <Card className="border-orange-200 bg-orange-50/50 backdrop-blur-sm">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-start gap-3 md:gap-4">
                 <AlertCircle className="mt-1 h-5 w-5 flex-shrink-0 text-orange-500 md:h-6 md:w-6" />
                 <div className="min-w-0 flex-1">
-                  <h3 className="mb-1 text-sm font-semibold text-orange-800 dark:text-orange-200 md:mb-2 md:text-base">
+                  <h3 className="mb-1 text-sm font-semibold text-orange-800 md:mb-2 md:text-base">
                     Set Your Location
                   </h3>
-                  <p className="mb-3 text-xs text-orange-700 dark:text-orange-300 md:mb-4 md:text-sm">
-                    Set your location to get personalized planting recommendations.
+                  <p className="mb-3 text-xs text-orange-700 md:mb-4 md:text-base">
+                    To get accurate planting recommendations, please set your location in
+                    your profile to automatically detect your USDA Hardiness Zone.
                   </p>
                   <Link to={createPageUrl("Profile")}>
                     <Button size="sm" className="bg-orange-500 text-xs hover:bg-orange-600 md:text-sm">
@@ -128,84 +153,68 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
-        )}
+        }
 
-        {/* PRIMARY: Today Focus Card */}
-        <TodayFocusCard 
-          userPlants={userPlants}
-          currentWeek={currentWeek}
-          userZone={user?.growing_zone}
-        />
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
+          <StatCard
+            title="Plants Planned"
+            value={userPlants.length}
+            icon={<Sprout className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
 
-        {/* Quick Stats - Simplified */}
-        <div className="grid grid-cols-3 gap-2 md:gap-4">
-          <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-card/60 backdrop-blur-sm border border-border rounded-lg">
-            <Sprout className="h-6 w-6 md:h-8 md:w-8 text-primary mb-1 md:mb-2" />
-            <p className="text-xl md:text-3xl font-bold text-foreground">{userPlants.filter(p => p.status === "planned").length}</p>
-            <p className="text-xs md:text-sm text-muted-foreground">Planned</p>
-          </div>
-          <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-card/60 backdrop-blur-sm border border-border rounded-lg">
-            <Leaf className="h-6 w-6 md:h-8 md:w-8 text-primary mb-1 md:mb-2" />
-            <p className="text-xl md:text-3xl font-bold text-foreground">{userPlants.filter(p => p.status === "planted").length}</p>
-            <p className="text-xs md:text-sm text-muted-foreground">Growing</p>
-          </div>
-          <div className="flex flex-col items-center justify-center p-3 md:p-4 bg-card/60 backdrop-blur-sm border border-border rounded-lg">
-            <Sun className="h-6 w-6 md:h-8 md:w-8 text-accent mb-1 md:mb-2" />
-            <p className="text-xl md:text-3xl font-bold text-foreground">{userPlants.filter(p => p.status === "harvested").length}</p>
-            <p className="text-xs md:text-sm text-muted-foreground">Harvested</p>
-          </div>
+          <StatCard
+            title="This Week"
+            value={userPlants.filter((p) => p.planned_planting_week === currentWeek).length}
+            icon={<Clock className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Planted"
+            value={userPlants.filter((p) => p.status === "planted").length}
+            icon={<Leaf className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Harvested"
+            value={userPlants.filter((p) => p.status === "harvested").length}
+            icon={<Sun className="h-4 w-4 text-accent md:h-6 md:w-6" />} />
+
         </div>
 
-        {/* SECONDARY: Collapsible Overview Section */}
-        <div className="space-y-4">
-          <button
-            onClick={() => setShowOverview(!showOverview)}
-            className="w-full flex items-center justify-between p-4 bg-muted/30 hover:bg-muted/50 border border-border rounded-lg transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium text-foreground">Season Overview</span>
-            </div>
-            <span className="text-sm text-muted-foreground">
-              {showOverview ? "Hide" : "Show"}
-            </span>
-          </button>
+        {/* Alerts & Progress */}
+        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
+          <WeeklyPlantingAlerts
+            currentWeek={currentWeek}
+            userPlants={userPlants}
+            userZone={user?.growing_zone}
+            userLocation={user?.location}
+            onPlantUpdate={loadDashboardData} />
 
-          {showOverview && (
-            <div className="space-y-4 md:space-y-6 animate-in fade-in duration-300">
-              {/* Alerts & Progress */}
-              <div className="grid gap-4 lg:grid-cols-1">
-                <WeeklyPlantingAlerts
-                  currentWeek={currentWeek}
-                  userPlants={userPlants}
-                  userZone={user?.growing_zone}
-                  onPlantUpdate={loadDashboardData}
-                />
-                <PlantingProgress userPlants={userPlants} />
+          <PlantingProgress userPlants={userPlants} />
+        </div>
+
+        {/* Weather / Map & Quick Actions */}
+        <div className="space-y-4 pt-4 md:space-y-8">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
+            <WeatherInsights user={user} />
+            <LocationMap user={user} />
+          </div>
+
+          <Card className="bg-card/80 backdrop-blur-sm border-border">
+            <CardHeader className="p-4 md:p-6">
+              <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0 md:p-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "add-plants")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "view-calendar")} />
+                </div>
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "my-garden")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "settings")} />
+                </div>
               </div>
-
-              {/* Weather / Map */}
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <WeatherInsights user={user} />
-                <LocationMap user={user} />
-              </div>
-
-              {/* Quick Actions */}
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader className="p-4 md:p-6">
-                  <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 pt-0 md:p-6">
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                    <QuickActionButton action={quickActionsData.find((a) => a.id === "add-plants")} />
-                    <QuickActionButton action={quickActionsData.find((a) => a.id === "view-calendar")} />
-                    <QuickActionButton action={quickActionsData.find((a) => a.id === "my-garden")} />
-                    <QuickActionButton action={quickActionsData.find((a) => a.id === "settings")} />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>);
