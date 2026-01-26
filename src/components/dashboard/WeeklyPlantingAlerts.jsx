@@ -89,6 +89,10 @@ export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone
 
   const loadPlantingAlerts = useCallback(async () => {
     try {
+      // Fetch weather conditions
+      const weather = await fetchWeatherConditions(userLocation);
+      setWeatherConditions(weather);
+
       // Get all plant details for user's plants
       const allPlants = await Plant.list();
       const plantLookup = {};
@@ -126,10 +130,13 @@ export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone
                                  currentWeek + 2 >= zoneData.fall_start_week && currentWeek + 2 <= zoneData.fall_end_week);
 
           if (isSpringPlanting || isFallPlanting) {
+            const season = isSpringPlanting ? 'Spring' : 'Fall';
+            const confidence = calculateConfidence(currentWeek, zoneData, season, weather);
             thisWeekPlants.push({
               ...userPlant,
               plantData,
-              season: isSpringPlanting ? 'Spring' : 'Fall',
+              season,
+              confidence,
               optimalWeeks: isSpringPlanting ? 
                 `Weeks ${zoneData.spring_start_week}-${zoneData.spring_end_week}` :
                 `Weeks ${zoneData.fall_start_week}-${zoneData.fall_end_week}`
@@ -152,7 +159,7 @@ export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone
     } finally {
       setIsLoading(false);
     }
-  }, [currentWeek, userPlants, userZone]);
+  }, [currentWeek, userPlants, userZone, userLocation]);
 
   useEffect(() => {
     if (userZone) {
