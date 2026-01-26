@@ -160,7 +160,7 @@ export default function Dashboard() {
           <StatCard
             title="Plants Planned"
             value={userPlants.length}
-            icon={<Sprout className="h-4 w-4 text-secondary md:h-6 md:w-6" />} />
+            icon={<Sprout className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
 
           <StatCard
             title="This Week"
