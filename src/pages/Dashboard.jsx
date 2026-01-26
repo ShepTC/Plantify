@@ -16,7 +16,10 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 
 import WeeklyPlantingAlerts from "../components/dashboard/WeeklyPlantingAlerts";
+import PlantingProgress from "../components/dashboard/PlantingProgress";
 import WeatherInsights from "../components/dashboard/WeatherInsights";
+import LocationMap from "../components/dashboard/LocationMap";
+import { quickActionsData, QuickActionButton } from "../components/dashboard/QuickActions";
 import SeasonalGoalBanner from "../components/dashboard/SeasonalGoalBanner";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
@@ -84,75 +87,65 @@ export default function Dashboard() {
     return <LoginPrompt />;
   }
 
-  const getSeason = () => {
-    const month = new Date().getMonth() + 1;
-    if (month >= 3 && month <= 5) return "Mid Spring";
-    if (month >= 6 && month <= 8) return "Mid Summer";
-    if (month >= 9 && month <= 11) return "Mid Fall";
-    return "Mid Winter";
-  };
-
-  const plannedCount = userPlants.filter(p => p.status === 'planned').length;
-  const plantedCount = userPlants.filter(p => p.status === 'planted').length;
-  const totalPlants = userPlants.length;
-
   return (
-    <div className="min-h-screen bg-background p-4 pb-24 md:p-8 md:pb-8">
-      <div className="mx-auto max-w-4xl space-y-6 md:space-y-8">
-        
-        {/* Tier 1: Primary Action */}
-        <div className="text-center space-y-6 pt-4">
-          <h1 className="text-2xl font-bold text-foreground md:text-3xl">
-            {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}!
-          </h1>
+    <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
+        {/* Welcome Header */}
+        <div className="space-y-4 pt-2 md:pt-6 text-center">
+          <div>
+            <h1 className="text-xl font-bold text-foreground md:text-2xl lg:text-4xl">
+              {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}!
+            </h1>
+            <p className="text-sm text-muted-foreground md:text-base lg:text-lg md:mt-2">
+              Week {currentWeek} • {format(new Date(), "EEEE, MMMM d")}
+            </p>
+            <p className="hidden md:block text-sm lg:text-base text-secondary mt-1">
+              {getSeasonalMessage()}
+            </p>
+          </div>
 
           {/* Plant Today Button */}
-          <Link
-            to={createPageUrl("PlantingAlerts")}
-            className="group relative inline-block">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
-            <Button
-              size="lg"
-              className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white px-8 py-7 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 md:px-12 md:py-8 md:text-xl">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
-                alt="Plant" 
-                className="h-6 w-6 md:h-8 md:w-8 object-contain" 
-              />
-              What can I plant today?
-            </Button>
-          </Link>
+          <div className="flex justify-center md:pt-4">
+            <Link
+              to={createPageUrl("PlantingAlerts")}
+              className="group relative inline-block">
 
-          {/* Time + Zone Context (Passive) */}
-          {user?.location && user?.growing_zone && (
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <span className="font-medium">Zone {user.growing_zone}</span>
-              <span>•</span>
-              <span>{getSeason()}</span>
-              <span>•</span>
-              <span>Week {currentWeek}</span>
-            </div>
-          )}
+              {/* Glow effect */}
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
+              <Button
+                size="lg" className="bg-gradient-to-r text-white mx-6 md:mx-0 px-6 md:px-10 lg:px-12 py-6 md:py-7 lg:py-8 text-base md:text-lg lg:text-xl font-bold rounded-xl justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-primary/90 h-11 md:h-auto relative flex items-center gap-2 md:gap-3 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
+
+
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
+                  alt="Plant" 
+                  className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 object-contain" 
+                />
+                What can I plant today?
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Seasonal Goal Banner */}
         {user && <SeasonalGoalBanner user={user} onUserUpdate={loadDashboardData} />}
 
         {/* Zone Setup Warning */}
-        {!user?.location && (
-          <Card className="border-orange-200 bg-orange-50/50 dark:bg-orange-950/20 backdrop-blur-sm">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="mt-1 h-5 w-5 flex-shrink-0 text-orange-500" />
+        {!user?.location &&
+        <Card className="border-orange-200 bg-orange-50/50 backdrop-blur-sm">
+            <CardContent className="p-3 md:p-6">
+              <div className="flex items-start gap-3 md:gap-4">
+                <AlertCircle className="mt-1 h-5 w-5 flex-shrink-0 text-orange-500 md:h-6 md:w-6" />
                 <div className="min-w-0 flex-1">
-                  <h3 className="mb-1 text-sm font-semibold text-orange-800 dark:text-orange-200">
+                  <h3 className="mb-1 text-sm font-semibold text-orange-800 md:mb-2 md:text-base">
                     Set Your Location
                   </h3>
-                  <p className="mb-3 text-xs text-orange-700 dark:text-orange-300">
-                    Get accurate planting recommendations by setting your location.
+                  <p className="mb-3 text-xs text-orange-700 md:mb-4 md:text-base">
+                    To get accurate planting recommendations, please set your location in
+                    your profile to automatically detect your USDA Hardiness Zone.
                   </p>
                   <Link to={createPageUrl("Profile")}>
-                    <Button size="sm" className="bg-orange-500 text-xs hover:bg-orange-600">
+                    <Button size="sm" className="bg-orange-500 text-xs hover:bg-orange-600 md:text-sm">
                       Set Location
                     </Button>
                   </Link>
@@ -160,51 +153,88 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
-        )}
+        }
 
-        {/* Tier 2: Support Info */}
-        <div className="space-y-4">
-          {/* Planting Progress - Single Metric */}
-          {totalPlants > 0 && (
-            <div className="text-center py-3 border-y border-border">
-              <p className="text-muted-foreground text-sm">
-                <span className="text-2xl font-bold text-primary">{plantedCount}</span>
-                <span className="text-muted-foreground"> / {totalPlants}</span>
-                <span className="ml-2">plants planted this season</span>
-              </p>
-            </div>
-          )}
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
+          <StatCard
+            title="Plants Planned"
+            value={userPlants.length}
+            icon={<Sprout className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
 
-          {/* Upcoming Window - Single Line */}
+          <StatCard
+            title="This Week"
+            value={userPlants.filter((p) => p.planned_planting_week === currentWeek).length}
+            icon={<Clock className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Planted"
+            value={userPlants.filter((p) => p.status === "planted").length}
+            icon={<Leaf className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Harvested"
+            value={userPlants.filter((p) => p.status === "harvested").length}
+            icon={<Sun className="h-4 w-4 text-accent md:h-6 md:w-6" />} />
+
+        </div>
+
+        {/* Alerts & Progress */}
+        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
           <WeeklyPlantingAlerts
             currentWeek={currentWeek}
             userPlants={userPlants}
             userZone={user?.growing_zone}
-            onPlantUpdate={loadDashboardData}
-          />
+            onPlantUpdate={loadDashboardData} />
+
+          <PlantingProgress userPlants={userPlants} />
         </div>
 
-        {/* Tier 3: Weather (Only if risk) & Quick Actions */}
-        <div className="space-y-4">
-          <WeatherInsights user={user} />
-          
-          <div className="grid grid-cols-2 gap-3">
-            <Link to={createPageUrl("PlantLibrary")}>
-              <Button variant="outline" className="w-full">
-                <Leaf className="mr-2 h-4 w-4" />
-                Browse Plants
-              </Button>
-            </Link>
-            <Link to={createPageUrl("Calendar")}>
-              <Button variant="outline" className="w-full">
-                <Clock className="mr-2 h-4 w-4" />
-                View Calendar
-              </Button>
-            </Link>
+        {/* Weather / Map & Quick Actions */}
+        <div className="space-y-4 pt-4 md:space-y-8">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
+            <WeatherInsights user={user} />
+            <LocationMap user={user} />
           </div>
+
+          <Card className="bg-card/80 backdrop-blur-sm border-border">
+            <CardHeader className="p-4 md:p-6">
+              <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0 md:p-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "add-plants")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "view-calendar")} />
+                </div>
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "my-garden")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "settings")} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
+}
+
+// Helper component for quick stats
+function StatCard({ title, value, icon }) {
+  return (
+    <Card className="border-border bg-card/80 backdrop-blur-sm">
+      <CardContent className="p-3 md:p-6">
+        <div className="flex items-center justify-between">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-secondary md:text-sm">{title}</p>
+            <p className="text-xl font-bold text-foreground md:text-3xl">{value}</p>
+          </div>
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-muted md:h-12 md:w-12 md:rounded-xl">
+            {icon}
+          </div>
+        </div>
+      </CardContent>
+    </Card>);
 
 }
