@@ -407,28 +407,32 @@ export default function PlantingAlerts() {
   const hasPlantsToday = Object.values(plantsByCategoryToday).some(p => p.length > 0);
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+    <div className="min-h-screen bg-background p-3 md:p-6 pb-20 md:pb-6">
+      <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
 
         {/* Header */}
-        <div className="text-center space-y-4 md:space-y-6">
-          <div className="relative inline-block">
+        <div className="space-y-4 md:space-y-5">
+          <div className="relative mx-auto inline-block w-full">
             {/* Glow effect */}
-            <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-xl scale-150" />
-            <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-8 py-6 md:px-12 md:py-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-2xl scale-110 opacity-50" />
+            <div className="relative bg-gradient-to-br from-primary/8 via-secondary/5 to-accent/8 border border-primary/15 backdrop-blur-md rounded-2xl px-6 py-7 md:px-10 md:py-9">
               <div className="flex flex-col items-center gap-3 md:gap-4">
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/15 rounded-2xl flex items-center justify-center border border-primary/20">
-                  <Sprout className="w-7 h-7 md:w-8 md:h-8 text-primary" />
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary/25 to-primary/15 rounded-2xl flex items-center justify-center border border-primary/25 shadow-lg">
+                  <Sprout className="w-6 h-6 md:w-7 md:h-7 text-primary" />
                 </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">Today's Plants</h1>
-                  <p className="text-sm md:text-base text-muted-foreground mt-1">
-                    Perfect for planting in <span className="text-primary font-semibold">Zone {user.growing_zone}</span>
+                <div className="text-center">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">What's Ready Today?</h1>
+                  <p className="text-xs md:text-sm text-muted-foreground mt-2">
+                    Personalized recommendations for <span className="text-primary font-semibold">Zone {user.growing_zone}</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-2 bg-muted/50 rounded-full px-4 py-1.5 border border-border">
-                  <Calendar className="w-4 h-4 text-primary" />
-                  <span className="text-sm text-foreground font-medium">Day {currentDay} • Week {currentWeek}</span>
+                <div className="flex items-center justify-center gap-4 bg-muted/40 rounded-full px-5 py-2 border border-border/50 text-xs md:text-sm">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-foreground font-medium">Week {currentWeek}</span>
+                  </div>
+                  <div className="w-1 h-1 rounded-full bg-border" />
+                  <span className="text-muted-foreground">Day {currentDay}</span>
                 </div>
               </div>
             </div>
