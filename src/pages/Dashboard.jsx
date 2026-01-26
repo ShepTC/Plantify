@@ -198,6 +198,21 @@ export default function Dashboard() {
             <LocationMap user={user} />
           </div>
 
+          <Link to={createPageUrl("PlantLibrary")}>
+            <Card className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border border-primary/20 hover:border-primary/40 transition-all duration-300 cursor-pointer hover:shadow-lg">
+              <CardHeader className="p-4 md:p-6">
+                <CardTitle className="text-base text-foreground md:text-lg flex items-center gap-2">
+                  <Leaf className="w-5 h-5 text-primary" />
+                  Explore Plant Library
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0 md:p-6">
+                <p className="text-sm text-muted-foreground mb-4">Discover {recommendedPlants.length}+ plants perfect for your zone and add them to your garden.</p>
+                <Button className="w-full bg-primary hover:bg-primary/90">Browse Plants</Button>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Card className="bg-card/80 backdrop-blur-sm border-border">
             <CardHeader className="p-4 md:p-6">
               <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
