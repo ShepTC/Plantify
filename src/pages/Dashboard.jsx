@@ -30,9 +30,13 @@ export default function Dashboard() {
   const [userPlants, setUserPlants] = useState([]);
   const [recommendedPlants, setRecommendedPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [colorPalette, setColorPalette] = useState('default');
 
   useEffect(() => {
     loadDashboardData();
+    // Get color palette from data attribute
+    const palette = document.documentElement.getAttribute('data-palette');
+    setColorPalette(palette || 'default');
   }, []);
 
   const loadDashboardData = async () => {
@@ -116,7 +120,15 @@ export default function Dashboard() {
                 size="lg" className="bg-gradient-to-r text-white mx-6 md:mx-0 px-6 md:px-10 lg:px-12 py-6 md:py-7 lg:py-8 text-base md:text-lg lg:text-xl font-bold rounded-xl justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-primary/90 h-11 md:h-auto relative flex items-center gap-2 md:gap-3 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
 
 
-                <Sprout className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8" />
+                {colorPalette === 'sunset' ? (
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/646dda02e_SunsetSub_Logo.png"
+                    alt="Plant"
+                    className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8"
+                  />
+                ) : (
+                  <Sprout className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8" />
+                )}
                 What can I plant today?
               </Button>
             </Link>
