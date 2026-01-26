@@ -36,13 +36,13 @@ export default function PlantingProgress({ userPlants }) {
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border">
-      <CardContent className="p-6 space-y-4">
-        <h3 className="font-semibold text-foreground">Garden Status</h3>
+      <CardContent className="p-5 space-y-3">
+        <h3 className="font-semibold text-foreground text-sm">Garden Status</h3>
         
         {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
+        <div className="grid grid-cols-3 gap-2">
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center gap-1.5 mb-1.5">
               <Sprout className="w-4 h-4 text-secondary" />
               <p className="text-xs text-muted-foreground">Planned</p>
             </div>
