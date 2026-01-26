@@ -68,18 +68,18 @@ export default function PlantingProgress({ userPlants }) {
 
         {/* Plant Library Link Card */}
         <Link to={createPageUrl("PlantLibrary")} className="block">
-          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/20 group-hover:bg-primary/30 transition-colors rounded-lg p-2">
-                  <BookOpen className="w-4 h-4 text-primary" />
+          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-3 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="bg-primary/20 group-hover:bg-primary/30 transition-colors rounded-lg p-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-primary" />
                 </div>
-                <div>
-                  <p className="font-medium text-foreground text-sm">Explore Plants</p>
+                <div className="min-w-0">
+                  <p className="font-medium text-foreground text-xs">Explore Plants</p>
                   <p className="text-xs text-muted-foreground">Browse 100+ varieties</p>
                 </div>
               </div>
-              <span className="text-primary group-hover:translate-x-1 transition-transform">→</span>
+              <span className="text-primary group-hover:translate-x-1 transition-transform flex-shrink-0">→</span>
             </div>
           </div>
         </Link>
