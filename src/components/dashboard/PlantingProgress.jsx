@@ -40,7 +40,7 @@ export default function PlantingProgress({ userPlants }) {
         <h3 className="font-semibold text-foreground">Garden Status</h3>
         
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="bg-muted/50 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
               <Sprout className="w-4 h-4 text-secondary" />
@@ -55,6 +55,14 @@ export default function PlantingProgress({ userPlants }) {
               <p className="text-xs text-muted-foreground">Planted</p>
             </div>
             <p className="text-2xl font-bold text-foreground">{plantedCount}</p>
+          </div>
+
+          <div className="bg-muted/50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Sun className="w-4 h-4 text-accent" />
+              <p className="text-xs text-muted-foreground">Harvested</p>
+            </div>
+            <p className="text-2xl font-bold text-foreground">{harvestedCount}</p>
           </div>
         </div>
 
