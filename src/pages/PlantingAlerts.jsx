@@ -447,7 +447,8 @@ export default function PlantingAlerts() {
           user={user}
           recommendations={recommendations}
           isLoading={isLoading}
-          onAddPlant={addPlantToGarden} />
+          onAddPlant={addPlantToGarden}
+        />
 
         {/* Category Shelf View */}
         {viewMode === 'shelf' && (
