@@ -6,23 +6,23 @@ import { Card } from '@/components/ui/card';
 
 export default function PremiumMenu() {
   const premiumTools = [
-  {
-    name: "AI Garden Helper",
-    description: "Get personalized advice from our AI assistant",
-    icon: Bot,
-    url: createPageUrl("Assistant"),
-    gradient: "from-purple-500 via-purple-600 to-pink-500",
-    shadowColor: "shadow-purple-500/50"
-  },
-  {
-    name: "Plant Health Scanner",
-    description: "Diagnose plant diseases with AI photo analysis",
-    icon: Camera,
-    url: createPageUrl("HealthScanner"),
-    gradient: "from-green-500 via-emerald-500 to-teal-500",
-    shadowColor: "shadow-green-500/50"
-  }];
-
+    {
+      name: "AI Garden Helper",
+      description: "Get personalized advice from our AI assistant",
+      icon: Bot,
+      url: createPageUrl("Assistant"),
+      gradient: "from-purple-500 via-purple-600 to-pink-500",
+      shadowColor: "shadow-purple-500/50"
+    },
+    {
+      name: "Plant Health Scanner",
+      description: "Diagnose plant diseases with AI photo analysis",
+      icon: Camera,
+      url: createPageUrl("HealthScanner"),
+      gradient: "from-green-500 via-emerald-500 to-teal-500",
+      shadowColor: "shadow-green-500/50"
+    }
+  ];
 
   return (
     <div className="w-full max-w-xs space-y-3">
@@ -40,8 +40,8 @@ export default function PremiumMenu() {
 
       {/* Premium Tools */}
       <div className="space-y-2">
-        {premiumTools.map((tool) =>
-        <Link key={tool.name} to={tool.url} className="block">
+        {premiumTools.map((tool) => (
+          <Link key={tool.name} to={tool.url} className="block">
             <Card className={`relative hover:scale-[1.02] transition-all duration-300 cursor-pointer group border-0 bg-gradient-to-r p-[1.5px] rounded-lg ${tool.shadowColor} hover:shadow-lg`}>
               {/* Animated border gradient */}
               <div className={`absolute inset-0 bg-gradient-to-r ${tool.gradient} rounded-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300`} />
@@ -62,16 +62,16 @@ export default function PremiumMenu() {
               </div>
             </Card>
           </Link>
-        )}
+        ))}
       </div>
 
       {/* Premium Badge Footer */}
       <div className="text-center pt-2 border-t border-border/50">
-        <div className="relative bg-gradient-to-r px-3 py-1.5 rounded-full flex items-center justify-center gap-1.5\nfrom-yellow-500 to-amber-500\nshadow-lg\nbefore:absolute before:inset-0 before:rounded-full\nbefore:bg-gradient-to-r before:from-yellow-400 before:to-amber-400\nbefore:blur-xl before:opacity-70 before:-z-10\nhover:before:opacity-100 transition\n">
-          <Zap className="w-3 h-3 text-yellow-500" />
-          <span className="text-xs font-semibold text-foreground">Pro Active</span>
+        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 px-3 py-1.5 rounded-full shadow-lg shadow-yellow-500/50">
+          <Zap className="w-3 h-3 text-white" />
+          <span className="text-xs font-semibold text-white">Pro Active</span>
         </div>
       </div>
-    </div>);
-
+    </div>
+  );
 }
