@@ -327,42 +327,42 @@ export default function Layout({ children, currentPageName }) {
 
         /* --- SUNSET PALETTE --- */
         :root[data-palette="sunset"] {
-          --background: 38 48% 97%;
-          --foreground: 20 30% 18%;
-          --card: 36 45% 94%;
-          --card-foreground: 20 30% 18%;
-          --popover: 36 45% 94%;
-          --popover-foreground: 20 30% 18%;
-          --primary: 15 68% 58%;
-          --primary-foreground: 38 48% 97%;
-          --secondary: 48 72% 62%;
-          --secondary-foreground: 20 30% 18%;
-          --muted: 38 35% 88%;
-          --muted-foreground: 20 20% 42%;
-          --accent: 82 48% 55%;
-          --accent-foreground: 20 30% 18%;
-          --border: 36 30% 82%;
-          --input: 36 30% 82%;
-          --ring: 15 68% 58%;
+          --background: 38 48% 100%;
+          --foreground: 20 30% 8%;
+          --card: 36 45% 96%;
+          --card-foreground: 20 30% 8%;
+          --popover: 36 45% 96%;
+          --popover-foreground: 20 30% 8%;
+          --primary: 15 75% 50%;
+          --primary-foreground: 38 48% 100%;
+          --secondary: 48 78% 55%;
+          --secondary-foreground: 20 30% 8%;
+          --muted: 38 35% 82%;
+          --muted-foreground: 20 20% 32%;
+          --accent: 82 55% 48%;
+          --accent-foreground: 20 30% 8%;
+          --border: 36 30% 72%;
+          --input: 36 30% 72%;
+          --ring: 15 75% 50%;
         }
         .dark[data-palette="sunset"] {
-          --background: 22 24% 10%;
-          --foreground: 38 25% 90%;
-          --card: 25 22% 14%;
-          --card-foreground: 38 25% 90%;
-          --popover: 22 24% 10%;
-          --popover-foreground: 38 25% 90%;
-          --primary: 18 72% 65%;
-          --primary-foreground: 22 24% 10%;
-          --secondary: 50 75% 68%;
-          --secondary-foreground: 22 24% 10%;
-          --muted: 22 18% 20%;
-          --muted-foreground: 35 10% 65%;
-          --accent: 85 52% 62%;
-          --accent-foreground: 38 25% 90%;
-          --border: 25 18% 24%;
-          --input: 25 18% 24%;
-          --ring: 18 72% 65%;
+          --background: 22 24% 6%;
+          --foreground: 38 25% 96%;
+          --card: 25 22% 11%;
+          --card-foreground: 38 25% 96%;
+          --popover: 22 24% 6%;
+          --popover-foreground: 38 25% 96%;
+          --primary: 18 76% 68%;
+          --primary-foreground: 22 24% 6%;
+          --secondary: 50 78% 70%;
+          --secondary-foreground: 22 24% 6%;
+          --muted: 22 18% 26%;
+          --muted-foreground: 35 10% 78%;
+          --accent: 85 56% 66%;
+          --accent-foreground: 38 25% 96%;
+          --border: 25 18% 32%;
+          --input: 25 18% 32%;
+          --ring: 18 76% 68%;
         }
         
         body.camera-active .bottom-nav-bar {
