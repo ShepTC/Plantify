@@ -206,14 +206,28 @@ export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone
   }
 
   // Show ready to plant
+  const topPlants = plantsToPlant.slice(0, 3);
+  
   return (
     <Link to={createPageUrl("PlantingAlerts")} className="block">
       <div className="text-center py-3 border-y border-border hover:bg-muted/50 transition-colors cursor-pointer">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground mb-2">
           <span className="text-primary font-semibold">Ready to plant now:</span>{" "}
-          <span className="text-foreground">{plantsToPlant.slice(0, 3).map(p => p.plant_name).join(", ")}</span>
+          <span className="text-foreground">{topPlants.map(p => p.plant_name).join(", ")}</span>
           {plantsToPlant.length > 3 && <span className="text-muted-foreground"> +{plantsToPlant.length - 3} more</span>}
         </p>
+        <div className="flex justify-center gap-2 flex-wrap">
+          {topPlants.map(plant => (
+            <Badge 
+              key={plant.id} 
+              variant="outline"
+              className="text-xs"
+            >
+              <span className="text-green-600 dark:text-green-400 font-semibold">{plant.confidence}%</span>
+              <span className="text-muted-foreground ml-1">confidence</span>
+            </Badge>
+          ))}
+        </div>
       </div>
     </Link>
   );
