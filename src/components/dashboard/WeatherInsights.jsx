@@ -107,15 +107,15 @@ export default function WeatherInsights({ user }) {
   if (!hasRisk) return null;
 
   return (
-    <Card className="bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-950/30 dark:to-orange-900/20 border-orange-300 dark:border-orange-700 backdrop-blur-sm">
-      <CardContent className="p-6 md:p-8">
-        <div className="flex items-start gap-4">
-          <AlertCircle className="h-8 w-8 flex-shrink-0 text-orange-600 dark:text-orange-400 mt-0.5" />
+    <Card className="bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800 backdrop-blur-sm">
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-orange-900 dark:text-orange-100 text-lg md:text-xl mb-2">
+            <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm mb-1">
               Weather Alert
             </h3>
-            <p className="text-sm md:text-base text-orange-800 dark:text-orange-200 leading-relaxed">
+            <p className="text-xs text-orange-700 dark:text-orange-300">
               {weatherData.forecast}
             </p>
           </div>
