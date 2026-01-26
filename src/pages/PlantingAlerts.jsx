@@ -509,19 +509,19 @@ export default function PlantingAlerts() {
               transition={{ duration: 0.3 }}
             >
               <Card className="bg-card/80 backdrop-blur-sm border-border">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 text-foreground">
-                      {categoryIcons[selectedCategory]}
-                      <span className="capitalize">{selectedCategory}</span>
-                    </CardTitle>
-                    <Button variant="ghost" size="sm" onClick={handleBackToShelf}>
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Back to Categories
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
+               <CardHeader className="pb-4 md:pb-6">
+                 <div className="flex items-center justify-between gap-4">
+                   <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-foreground">
+                     {categoryIcons[selectedCategory]}
+                     <span className="capitalize font-semibold">{selectedCategory}</span>
+                   </CardTitle>
+                   <Button variant="ghost" size="sm" onClick={handleBackToShelf} className="text-xs md:text-sm">
+                     <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
+                     Back
+                   </Button>
+                 </div>
+               </CardHeader>
+               <CardContent>
                   <motion.div
                     variants={containerVariants}
                     initial="hidden"
