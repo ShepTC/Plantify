@@ -103,26 +103,75 @@ export default function WeatherInsights({ user }) {
 
   if (loading || !weatherData) return null;
 
-  // Only show if there's a weather risk
-  const hasRisk = !weatherData.forecast.includes("Perfect") && 
+  const isPerfect = weatherData.forecast.includes("Perfect");
+  const hasRisk = !isPerfect && 
                   (weatherData.forecast.includes("frost") || 
                    weatherData.forecast.includes("windy") || 
                    weatherData.forecast.includes("not ideal"));
 
-  if (!hasRisk) return null;
+  const bgColor = isPerfect 
+    ? "bg-green-50/50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
+    : hasRisk
+    ? "bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800"
+    : "bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800";
+
+  const headerColor = isPerfect 
+    ? "text-green-800 dark:text-green-200"
+    : hasRisk
+    ? "text-orange-800 dark:text-orange-200"
+    : "text-blue-800 dark:text-blue-200";
+
+  const alertIcon = isPerfect 
+    ? <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-500 mt-0.5" />
+    : <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />;
 
   return (
-    <Card className="bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800 backdrop-blur-sm">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />
+    <Card className={`${bgColor} backdrop-blur-sm`}>
+      <CardContent className="p-4 md:p-6">
+        <div className="flex items-start gap-3 mb-4">
+          {alertIcon}
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm mb-1">
-              Weather Alert
+            <h3 className={`font-semibold text-sm md:text-base mb-1 ${headerColor}`}>
+              {isPerfect ? "Perfect Conditions!" : "Weather Alert"}
             </h3>
-            <p className="text-xs text-orange-700 dark:text-orange-300">
+            <p className={`text-xs md:text-sm ${isPerfect ? "text-green-700 dark:text-green-300" : "text-orange-700 dark:text-orange-300"}`}>
               {weatherData.forecast}
             </p>
+          </div>
+        </div>
+
+        {/* Weather Details Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2.5 md:p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Thermometer className="h-3.5 w-3.5 md:h-4 md:w-4 text-secondary" />
+              <span className="text-[10px] md:text-xs text-muted-foreground">Temp</span>
+            </div>
+            <p className="text-sm md:text-base font-semibold text-foreground">{weatherData.temperature}°F</p>
+          </div>
+
+          <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2.5 md:p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Droplets className="h-3.5 w-3.5 md:h-4 md:w-4 text-secondary" />
+              <span className="text-[10px] md:text-xs text-muted-foreground">Rain</span>
+            </div>
+            <p className="text-sm md:text-base font-semibold text-foreground">{weatherData.rainfall}</p>
+          </div>
+
+          <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2.5 md:p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Wind className="h-3.5 w-3.5 md:h-4 md:w-4 text-secondary" />
+              <span className="text-[10px] md:text-xs text-muted-foreground">Wind</span>
+            </div>
+            <p className="text-sm md:text-base font-semibold text-foreground">{weatherData.windSpeed} mph</p>
+          </div>
+
+          <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2.5 md:p-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Cloud className="h-3.5 w-3.5 md:h-4 md:w-4 text-secondary" />
+              <span className="text-[10px] md:text-xs text-muted-foreground">Condition</span>
+            </div>
+            <p className="text-sm md:text-base font-semibold text-foreground">{weatherData.condition}</p>
           </div>
         </div>
       </CardContent>
