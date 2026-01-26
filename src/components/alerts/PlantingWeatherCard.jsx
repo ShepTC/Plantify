@@ -146,18 +146,6 @@ export default function PlantingWeatherCard({ user }) {
         });
       } catch (error) {
         console.error("Failed to fetch weather:", error);
-        setWeather({
-          tempC: 20,
-          humidity: 60,
-          windSpeed: 10,
-          condition: "Unable to load",
-          icon: Cloud,
-          status: "caution",
-          message: "Unable to fetch weather data",
-          uvIndex: 5,
-          sunshineHours: null,
-          precipitation: 0,
-        });
       } finally {
         setIsLoading(false);
       }
@@ -175,14 +163,7 @@ export default function PlantingWeatherCard({ user }) {
     );
   }
 
-  if (!weather) {
-    return (
-      <div className="flex items-center justify-center gap-2 py-3 px-4 bg-muted/30 rounded-xl border border-border">
-        <Cloud className="w-5 h-5 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Weather unavailable</span>
-      </div>
-    );
-  }
+  if (!weather) return null;
 
   const WeatherIcon = weather.icon;
   const unit = user?.temperature_unit || 'celsius';
