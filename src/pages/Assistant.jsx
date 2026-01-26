@@ -24,6 +24,8 @@ import {
 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PlantCard from '../components/library/PlantCard';
+import MiniPlantCard from '../components/assistant/MiniPlantCard';
+import PlantDetailView from '../components/library/PlantDetailView';
 import LoginPrompt from '../components/auth/LoginPrompt';
 import {
   Sheet,
