@@ -137,7 +137,7 @@ export default function WeatherInsights({ user }) {
   }
 
   return (
-    <Card className="bg-muted/80 backdrop-blur-sm border-border">
+    <Card className="bg-card/80 backdrop-blur-sm border-border">
       <CardHeader className="p-4 md:p-6">
         <CardTitle className="flex items-center justify-between text-foreground">
           <div className="flex items-center gap-2">

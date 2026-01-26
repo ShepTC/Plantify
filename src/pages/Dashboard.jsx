@@ -197,9 +197,9 @@ export default function Dashboard() {
             <LocationMap user={user} />
           </div>
 
-          <Card className="rounded-lg border border-border bg-card text-card-foreground shadow-sm">
+          <Card className="bg-card/80 backdrop-blur-sm border-border">
             <CardHeader className="p-4 md:p-6">
-              <CardTitle className="text-base text-forest-dark md:text-lg">Quick Actions</CardTitle>
+              <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 md:p-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">

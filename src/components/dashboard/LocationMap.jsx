@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -172,7 +171,7 @@ export default function LocationMap({ user }) {
   const mapAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
   return (
-    <Card className="rounded-lg border text-card-foreground shadow-sm bg-muted/80 backdrop-blur-sm border-border">
+    <Card className="bg-card/80 backdrop-blur-sm border-border">
       <CardHeader className="p-4 md:p-6">
         <CardTitle className="flex items-center gap-2 text-foreground text-base md:text-lg">
           <MapPin className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
