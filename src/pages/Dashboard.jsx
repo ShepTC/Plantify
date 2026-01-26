@@ -117,7 +117,7 @@ export default function Dashboard() {
 
 
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/ba23a5447_WhiteLogo.png" 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
                   alt="Plant" 
                   className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 object-contain" 
                 />
