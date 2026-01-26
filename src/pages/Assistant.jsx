@@ -582,13 +582,12 @@ export default function Assistant() {
                       </p>
                       <div className="grid grid-cols-2 gap-2">
                         {message.suggestedPlants.map((plant) =>
-                    <PlantCard
+                    <MiniPlantCard
                       key={plant.id}
                       plant={plant}
                       onAddPlant={handleAddPlant}
                       isAdded={userPlantIds.has(plant.id)}
-                      userZone={user?.growing_zone}
-                      size="sm" />
+                      onClick={() => setSelectedPlantDetail(plant)} />
 
                     )}
                       </div>
