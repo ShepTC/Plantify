@@ -155,18 +155,6 @@ export default function Dashboard() {
           </Card>
         }
 
-        {/* Alerts & Progress */}
-        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
-          <WeeklyPlantingAlerts
-            currentWeek={currentWeek}
-            userPlants={userPlants}
-            userZone={user?.growing_zone}
-            userLocation={user?.location}
-            onPlantUpdate={loadDashboardData} />
-
-          <PlantingProgress userPlants={userPlants} />
-        </div>
-
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
           <StatCard
@@ -191,27 +179,24 @@ export default function Dashboard() {
 
         </div>
 
+        {/* Alerts & Progress */}
+        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
+          <WeeklyPlantingAlerts
+            currentWeek={currentWeek}
+            userPlants={userPlants}
+            userZone={user?.growing_zone}
+            userLocation={user?.location}
+            onPlantUpdate={loadDashboardData} />
+
+          <PlantingProgress userPlants={userPlants} />
+        </div>
+
         {/* Weather / Map & Quick Actions */}
         <div className="space-y-4 pt-4 md:space-y-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
             <WeatherInsights user={user} />
             <LocationMap user={user} />
           </div>
-
-          <Link to={createPageUrl("PlantLibrary")}>
-            <Card className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border border-primary/20 hover:border-primary/40 transition-all duration-300 cursor-pointer hover:shadow-lg">
-              <CardHeader className="p-4 md:p-6">
-                <CardTitle className="text-base text-foreground md:text-lg flex items-center gap-2">
-                  <Leaf className="w-5 h-5 text-primary" />
-                  Explore Plant Library
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0 md:p-6">
-                <p className="text-sm text-muted-foreground mb-4">Discover {recommendedPlants.length}+ plants perfect for your zone and add them to your garden.</p>
-                <Button className="w-full bg-primary hover:bg-primary/90">Browse Plants</Button>
-              </CardContent>
-            </Card>
-          </Link>
 
           <Card className="bg-card/80 backdrop-blur-sm border-border">
             <CardHeader className="p-4 md:p-6">
