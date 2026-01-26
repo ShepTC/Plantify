@@ -287,42 +287,42 @@ export default function Layout({ children, currentPageName }) {
 
         /* --- OCEAN PALETTE --- */
         :root[data-palette="ocean"] {
-          --background: 195 35% 97%;
-          --foreground: 195 25% 18%;
-          --card: 195 30% 94%;
-          --card-foreground: 195 25% 18%;
-          --popover: 195 30% 94%;
-          --popover-foreground: 195 25% 18%;
-          --primary: 168 45% 48%;
-          --primary-foreground: 195 35% 97%;
-          --secondary: 42 58% 58%;
-          --secondary-foreground: 195 25% 18%;
-          --muted: 195 25% 88%;
-          --muted-foreground: 195 15% 42%;
-          --accent: 85 40% 52%;
-          --accent-foreground: 195 25% 18%;
-          --border: 195 22% 82%;
-          --input: 195 22% 82%;
-          --ring: 168 45% 48%;
+          --background: 195 35% 100%;
+          --foreground: 195 25% 10%;
+          --card: 195 30% 96%;
+          --card-foreground: 195 25% 10%;
+          --popover: 195 30% 96%;
+          --popover-foreground: 195 25% 10%;
+          --primary: 168 50% 42%;
+          --primary-foreground: 195 35% 100%;
+          --secondary: 42 65% 50%;
+          --secondary-foreground: 195 25% 10%;
+          --muted: 195 25% 82%;
+          --muted-foreground: 195 15% 32%;
+          --accent: 85 50% 45%;
+          --accent-foreground: 195 25% 10%;
+          --border: 195 22% 72%;
+          --input: 195 22% 72%;
+          --ring: 168 50% 42%;
         }
         .dark[data-palette="ocean"] {
-          --background: 195 22% 10%;
-          --foreground: 195 20% 90%;
-          --card: 195 20% 14%;
-          --card-foreground: 195 20% 90%;
-          --popover: 195 22% 10%;
-          --popover-foreground: 195 20% 90%;
-          --primary: 170 48% 58%;
-          --primary-foreground: 195 22% 10%;
-          --secondary: 45 68% 65%;
-          --secondary-foreground: 195 22% 10%;
-          --muted: 195 18% 20%;
-          --muted-foreground: 195 10% 65%;
-          --accent: 88 45% 58%;
-          --accent-foreground: 195 20% 90%;
-          --border: 195 18% 24%;
-          --input: 195 18% 24%;
-          --ring: 170 48% 58%;
+          --background: 195 22% 6%;
+          --foreground: 195 20% 96%;
+          --card: 195 20% 12%;
+          --card-foreground: 195 20% 96%;
+          --popover: 195 22% 6%;
+          --popover-foreground: 195 20% 96%;
+          --primary: 170 52% 62%;
+          --primary-foreground: 195 22% 6%;
+          --secondary: 45 72% 68%;
+          --secondary-foreground: 195 22% 6%;
+          --muted: 195 18% 26%;
+          --muted-foreground: 195 10% 78%;
+          --accent: 88 52% 62%;
+          --accent-foreground: 195 20% 96%;
+          --border: 195 18% 32%;
+          --input: 195 18% 32%;
+          --ring: 170 52% 62%;
         }
 
         /* --- SUNSET PALETTE --- */
