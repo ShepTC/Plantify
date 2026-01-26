@@ -496,9 +496,19 @@ export default function Layout({ children, currentPageName }) {
 
         <main className="flex-1 flex flex-col min-h-0">
           {/* Mobile Header - Hidden on Assistant page */}
-          {currentPageName !== "Assistant" &&
-                          <header className="bg-card/80 px-4 py-2 backdrop-blur-sm border-b border-border md:hidden flex items-center justify-between flex-shrink-0 z-50">
-              <div className="flex items-center gap-2">
+            {currentPageName !== "Assistant" &&
+                            <header className="bg-card/80 px-4 py-2 backdrop-blur-sm border-b border-border md:hidden flex items-center justify-between flex-shrink-0 z-50 relative overflow-hidden">
+                {/* Diagonal Lines Background */}
+                <div className="absolute inset-0 pointer-events-none opacity-10">
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="20" y1="0" x2="40" y2="100" stroke="#f97316" strokeWidth="8" />
+                    <line x1="40" y1="0" x2="60" y2="100" stroke="#f97316" strokeWidth="8" />
+                    <line x1="60" y1="0" x2="80" y2="100" stroke="#f97316" strokeWidth="8" />
+                    <line x1="80" y1="0" x2="100" y2="100" stroke="#f97316" strokeWidth="8" />
+                  </svg>
+                </div>
+
+                <div className="flex items-center gap-2 relative z-10">
                 <div className="w-9 h-9 flex items-center justify-center">
                   <img
                   src={getIconLogoUrl()}
@@ -510,8 +520,9 @@ export default function Layout({ children, currentPageName }) {
               </div>
 
               {/* Premium Badge / Upgrade Button - Mobile */}
+              <div className="relative z-10">
               {user && (
-            user.is_premium ?
+              user.is_premium ?
             <Popover>
                                     <PopoverTrigger asChild>
                                       <button className="focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-100 via-pink-100 to-orange-100 dark:from-purple-950/50 dark:via-pink-950/50 dark:to-purple-950/50 px-3 py-1.5 border border-purple-200 dark:border-purple-800">
@@ -535,8 +546,9 @@ export default function Layout({ children, currentPageName }) {
                                                     </Link>)
 
             }
+              </div>
             </header>
-          }
+            }
 
           <div className="flex-1 overflow-y-auto bg-background pb-24 md:pb-0">{children}</div>
         </main>
