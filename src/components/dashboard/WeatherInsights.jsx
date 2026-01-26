@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Cloud,
-  Sun,
-  Droplets,
-  Thermometer,
-  Wind
+  AlertCircle
 } from "lucide-react";
 
 export default function WeatherInsights({ user }) {
@@ -136,69 +132,27 @@ export default function WeatherInsights({ user }) {
     );
   }
 
+  // Only show if there's a weather risk
+  const hasRisk = !weatherData.forecast.includes("Perfect") && 
+                  (weatherData.forecast.includes("frost") || 
+                   weatherData.forecast.includes("windy") || 
+                   weatherData.forecast.includes("not ideal"));
+
+  if (!hasRisk) return null;
+
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border">
-      <CardHeader className="p-4 md:p-6">
-        <CardTitle className="flex items-center justify-between text-foreground">
-          <div className="flex items-center gap-2">
-            <Sun className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
-            <span className="text-base md:text-lg">Weather Insights</span>
+    <Card className="bg-orange-50/50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800 backdrop-blur-sm">
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-orange-800 dark:text-orange-200 text-sm mb-1">
+              Weather Alert
+            </h3>
+            <p className="text-xs text-orange-700 dark:text-orange-300">
+              {weatherData.forecast}
+            </p>
           </div>
-          {user?.growing_zone && (
-            <Badge variant="outline" className="bg-card/50 text-xs md:text-sm">
-              Zone {user.growing_zone}
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 md:space-y-4 p-4 md:p-6 pt-0">
-        <div className="text-center">
-          <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">
-            {weatherData.temperature}°F
-          </div>
-          <p className="text-secondary font-medium text-sm md:text-base">
-            {weatherData.condition}
-          </p>
-          <p className="text-xs text-muted">{weatherData.location}</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
-          <div className="flex items-center gap-2">
-            <Droplets className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
-            <div>
-              <p className="text-xs text-secondary">Humidity</p>
-              <p className="font-semibold text-foreground text-sm md:text-base">
-                {weatherData.humidity}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Wind className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
-            <div>
-              <p className="text-xs text-secondary">Wind</p>
-              <p className="font-semibold text-foreground text-sm md:text-base">
-                {weatherData.windSpeed} mph
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-card/50 rounded-lg p-2 md:p-3 border border-border">
-          <p className="text-xs text-secondary mb-1">This Week</p>
-          <p className="font-medium text-foreground text-sm md:text-base">
-            {weatherData.rainfall}
-          </p>
-        </div>
-
-        <div className="bg-muted/50 rounded-lg p-2 md:p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <Thermometer className="w-3 h-3 md:w-4 md:h-4 text-secondary" />
-            <span className="font-medium text-foreground text-xs md:text-sm">
-              Planting Advice
-            </span>
-          </div>
-          <p className="text-xs text-secondary">{weatherData.forecast}</p>
         </div>
       </CardContent>
     </Card>
