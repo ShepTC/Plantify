@@ -87,118 +87,154 @@ export default function Dashboard() {
     return <LoginPrompt />;
   }
 
-  const getSeason = () => {
-    const month = new Date().getMonth() + 1;
-    if (month >= 3 && month <= 5) return "Spring";
-    if (month >= 6 && month <= 8) return "Summer";
-    if (month >= 9 && month <= 11) return "Fall";
-    return "Winter";
-  };
-
   return (
     <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
-      <div className="mx-auto max-w-4xl space-y-6">
-        {/* Hero Action */}
-        <div className="flex justify-center pt-4 md:pt-8">
-          <Link
-            to={createPageUrl("PlantingAlerts")}
-            className="group relative inline-block w-full max-w-2xl">
+      <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
+        {/* Welcome Header */}
+        <div className="space-y-4 pt-2 md:pt-6 text-center">
+          <div>
+            <h1 className="text-xl font-bold text-foreground md:text-2xl lg:text-4xl">
+              {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}!
+            </h1>
+            <p className="text-sm text-muted-foreground md:text-base lg:text-lg md:mt-2">
+              Week {currentWeek} • {format(new Date(), "EEEE, MMMM d")}
+            </p>
+            <p className="hidden md:block text-sm lg:text-base text-secondary mt-1">
+              {getSeasonalMessage()}
+            </p>
+          </div>
 
-            {/* Glow effect */}
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
-            <Button
-              size="lg" 
-              className="w-full bg-gradient-to-r text-white px-8 py-8 md:py-10 text-lg md:text-2xl font-bold rounded-xl relative flex items-center justify-center gap-3 md:gap-4 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
-                alt="Plant" 
-                className="h-6 w-6 md:h-10 md:w-10 object-contain" 
-              />
-              What can I plant today?
-            </Button>
-          </Link>
+          {/* Plant Today Button */}
+          <div className="flex justify-center md:pt-4">
+            <Link
+              to={createPageUrl("PlantingAlerts")}
+              className="group relative inline-block">
+
+              {/* Glow effect */}
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
+              <Button
+                size="lg" className="bg-gradient-to-r text-white mx-6 md:mx-0 px-6 md:px-10 lg:px-12 py-6 md:py-7 lg:py-8 text-base md:text-lg lg:text-xl font-bold rounded-xl justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-primary/90 h-11 md:h-auto relative flex items-center gap-2 md:gap-3 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
+
+
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5f6c1662c_LightmodeSubLogo.png" 
+                  alt="Plant" 
+                  className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8 object-contain" 
+                />
+                What can I plant today?
+              </Button>
+            </Link>
+          </div>
         </div>
 
-        {/* Context Strip */}
-        <div className="flex items-center justify-center gap-4 text-sm md:text-base text-muted-foreground py-2">
-          {user?.growing_zone && (
-            <span className="flex items-center gap-1.5">
-              <span className="text-foreground font-medium">Zone {user.growing_zone}</span>
-            </span>
-          )}
-          <span className="text-muted-foreground/50">·</span>
-          <span>{getSeason()}</span>
-          <span className="text-muted-foreground/50">·</span>
-          <span>Week {currentWeek}</span>
-        </div>
+        {/* Seasonal Goal Banner */}
+        {user && <SeasonalGoalBanner user={user} onUserUpdate={loadDashboardData} />}
 
         {/* Zone Setup Warning */}
-        {!user?.location && (
-          <Card className="bg-card/80 backdrop-blur-sm border-border">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-500" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-foreground">
-                    Set your location to get planting recommendations
+        {!user?.location &&
+        <Card className="border-orange-200 bg-orange-50/50 backdrop-blur-sm">
+            <CardContent className="p-3 md:p-6">
+              <div className="flex items-start gap-3 md:gap-4">
+                <AlertCircle className="mt-1 h-5 w-5 flex-shrink-0 text-orange-500 md:h-6 md:w-6" />
+                <div className="min-w-0 flex-1">
+                  <h3 className="mb-1 text-sm font-semibold text-orange-800 md:mb-2 md:text-base">
+                    Set Your Location
+                  </h3>
+                  <p className="mb-3 text-xs text-orange-700 md:mb-4 md:text-base">
+                    To get accurate planting recommendations, please set your location in
+                    your profile to automatically detect your USDA Hardiness Zone.
                   </p>
+                  <Link to={createPageUrl("Profile")}>
+                    <Button size="sm" className="bg-orange-500 text-xs hover:bg-orange-600 md:text-sm">
+                      Set Location
+                    </Button>
+                  </Link>
                 </div>
-                <Link to={createPageUrl("Profile")}>
-                  <Button size="sm" variant="outline">
-                    Set Location
-                  </Button>
-                </Link>
               </div>
             </CardContent>
           </Card>
-        )}
+        }
 
-        {/* Supporting Cards - Max 3 visible */}
-        <div className="space-y-4">
-          {userPlants.length > 0 && (
-            <Card className="bg-card/80 backdrop-blur-sm border-border">
-              <CardContent className="p-4 md:p-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                      {userPlants.filter((p) => p.status === "planted").length}
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Planted</div>
-                  </div>
-                  <div className="text-center border-x border-border">
-                    <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                      {userPlants.filter((p) => p.planned_planting_week === currentWeek).length}
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">This Week</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
-                      {userPlants.filter((p) => p.status === "harvested").length}
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">Harvested</div>
-                  </div>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
+          <StatCard
+            title="Plants Planned"
+            value={userPlants.length}
+            icon={<Sprout className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="This Week"
+            value={userPlants.filter((p) => p.planned_planting_week === currentWeek).length}
+            icon={<Clock className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Planted"
+            value={userPlants.filter((p) => p.status === "planted").length}
+            icon={<Leaf className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
+
+          <StatCard
+            title="Harvested"
+            value={userPlants.filter((p) => p.status === "harvested").length}
+            icon={<Sun className="h-4 w-4 text-accent md:h-6 md:w-6" />} />
+
+        </div>
+
+        {/* Alerts & Progress */}
+        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
+          <WeeklyPlantingAlerts
+            currentWeek={currentWeek}
+            userPlants={userPlants}
+            userZone={user?.growing_zone}
+            onPlantUpdate={loadDashboardData} />
+
+          <PlantingProgress userPlants={userPlants} />
+        </div>
+
+        {/* Weather / Map & Quick Actions */}
+        <div className="space-y-4 pt-4 md:space-y-8">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
+            <WeatherInsights user={user} />
+            <LocationMap user={user} />
+          </div>
+
+          <Card className="bg-card/80 backdrop-blur-sm border-border">
+            <CardHeader className="p-4 md:p-6">
+              <CardTitle className="text-base text-foreground md:text-lg">Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0 md:p-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "add-plants")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "view-calendar")} />
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <WeatherInsights user={user} />
-
-          {user?.garden_goals && (
-            <Card className="bg-card/80 backdrop-blur-sm border-border">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start gap-3">
-                  <Leaf className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground mb-1">Garden Goal</p>
-                    <p className="text-sm md:text-base text-foreground">{user.garden_goals}</p>
-                  </div>
+                <div className="space-y-2 md:space-y-3">
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "my-garden")} />
+                  <QuickActionButton action={quickActionsData.find((a) => a.id === "settings")} />
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>);
+
+}
+
+// Helper component for quick stats
+function StatCard({ title, value, icon }) {
+  return (
+    <Card className="border-border bg-card/80 backdrop-blur-sm">
+      <CardContent className="p-3 md:p-6">
+        <div className="flex items-center justify-between">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-secondary md:text-sm">{title}</p>
+            <p className="text-xl font-bold text-foreground md:text-3xl">{value}</p>
+          </div>
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-muted md:h-12 md:w-12 md:rounded-xl">
+            {icon}
+          </div>
+        </div>
+      </CardContent>
+    </Card>);
 
 }
