@@ -84,7 +84,8 @@ export default function WeatherInsights({ user }) {
           temperature: current.temperature,
           condition: current.weathercode === 0 ? "Clear" : "Cloudy",
           humidity: "--", // Open-Meteo free tier doesn’t provide humidity in current_weather
-          rainfall: `${rainWeek.toFixed(2)} inches this week`,
+          rainfall: rainWeek.toFixed(2),
+          minTemp: daily.temperature_2m_min[0],
           windSpeed: current.windspeed,
           forecast,
           location: `${city}, ${region}`
