@@ -76,6 +76,18 @@ export default function Dashboard() {
     return "Winter planning season - prepare for next year!";
   };
 
+  const getPlantOfTheDay = () => {
+    if (!user?.growing_zone || recommendedPlants.length === 0) return null;
+    
+    // Create a deterministic seed from today's date + zone
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const seed = (today + user.growing_zone).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    
+    // Get a deterministic index from the seed
+    const index = seed % recommendedPlants.length;
+    return recommendedPlants[index];
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-background/20 p-4 md:p-6">
@@ -197,6 +209,14 @@ export default function Dashboard() {
                   </div>
                   <ArrowRight className="h-5 w-5 text-primary/60 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                 </div>
+                
+                {getPlantOfTheDay() && (
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2">
+                    <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
+                    <p className="font-semibold text-foreground">{getPlantOfTheDay().name}</p>
+                    <p className="text-xs text-muted-foreground">{getPlantOfTheDay().category}</p>
+                  </div>
+                )}
                 
                 {user?.growing_zone && (
                   <div className="grid grid-cols-3 gap-2 pt-2">
