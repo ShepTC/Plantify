@@ -607,22 +607,22 @@ export default function PlantingAlerts() {
                 </Badge>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CardContent className="px-4 md:px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                 {plantThisWeek.filter((plant) => !plantToday.some((p) => p.id === plant.id)).map((plant) => (
                   <Card key={plant.id} className="bg-muted/20 border-border hover:border-secondary/50 transition-all duration-300">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
+                    <CardHeader className="pb-3 p-4">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground truncate">{plant.name}</h3>
-                          <p className="text-sm text-muted-foreground italic truncate">{plant.botanical_name}</p>
+                          <h3 className="font-semibold text-sm md:text-base text-foreground truncate">{plant.name}</h3>
+                          <p className="text-xs md:text-sm text-muted-foreground italic truncate mt-0.5">{plant.botanical_name}</p>
                         </div>
-                        <div className="flex-shrink-0 ml-2">
+                        <div className="flex-shrink-0 text-secondary">
                           {categoryIcons[plant.category]}
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
+                    <CardContent className="p-4 pt-0 space-y-2.5 text-xs md:text-sm">
                       <div className="flex gap-2 flex-wrap">
                         <Badge className={`text-xs capitalize ${categoryColors[plant.category]}`}>
                           {plant.category}
