@@ -13,6 +13,7 @@ import {
 export default function PlantingProgress({ userPlants }) {
   const plannedCount = userPlants.filter((p) => p.status === 'planned').length;
   const plantedCount = userPlants.filter((p) => p.status === 'planted').length;
+  const harvestedCount = userPlants.filter((p) => p.status === 'harvested').length;
 
   if (userPlants.length === 0) {
     return (
