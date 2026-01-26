@@ -96,41 +96,7 @@ export default function WeatherInsights({ user }) {
     fetchWeather();
   }, [user?.location]);
 
-  if (loading) {
-    return (
-      <Card className="bg-card/80 backdrop-blur-sm border-border">
-        <CardHeader className="p-4 md:p-6">
-          <CardTitle className="flex items-center gap-2 text-foreground text-base md:text-lg">
-            <Cloud className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
-            Weather Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 md:p-6 pt-0">
-          <div className="text-center py-3 md:py-4">
-            <p className="text-secondary text-xs md:text-sm">Loading weather...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!weatherData) {
-    return (
-      <Card className="bg-card/80 backdrop-blur-sm border-border">
-        <CardHeader className="p-4 md:p-6">
-          <CardTitle className="flex items-center gap-2 text-foreground text-base md:text-lg">
-            <Cloud className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
-            Weather Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 md:p-6 pt-0">
-          <div className="text-center py-3 md:py-4">
-            <p className="text-secondary text-xs md:text-sm">Unable to fetch weather data.</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (loading || !weatherData) return null;
 
   // Only show if there's a weather risk
   const hasRisk = !weatherData.forecast.includes("Perfect") && 
