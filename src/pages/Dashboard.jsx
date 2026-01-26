@@ -192,36 +192,52 @@ export default function Dashboard() {
 
         </div>
 
-        {/* Plant of the Day */}
-        {getPlantOfTheDay() && (
-          <Link to={createPageUrl("PlantLibrary")} className="group block">
-            <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg overflow-hidden">
-              <div className="relative h-48 bg-muted overflow-hidden">
-                {getPlantOfTheDay().image_url && (
-                  <img
-                    src={getPlantOfTheDay().image_url}
-                    alt={getPlantOfTheDay().name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              </div>
-              <CardContent className="p-6 relative z-10">
-                <div className="flex flex-col gap-3">
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
-                  <div>
-                    <h3 className="font-semibold text-xl text-foreground mb-1">{getPlantOfTheDay().name}</h3>
-                    <p className="text-sm text-muted-foreground capitalize">{getPlantOfTheDay().category}</p>
+        {/* Plant Library Discover */}
+        <Link to={createPageUrl("PlantLibrary")} className="group block">
+          <Card className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                      <BookOpen className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground">Discover Plants</h3>
+                      <p className="text-sm text-muted-foreground">Expand your garden with new varieties</p>
+                    </div>
                   </div>
-                  <Button className="w-full mt-2 gap-2">
-                    Explore Library
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
+                  <ArrowRight className="h-5 w-5 text-primary/60 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
-        )}
+                
+                {getPlantOfTheDay() && (
+                  <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2">
+                    <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
+                    <p className="font-semibold text-foreground">{getPlantOfTheDay().name}</p>
+                    <p className="text-xs text-muted-foreground">{getPlantOfTheDay().category}</p>
+                  </div>
+                )}
+                
+                {user?.growing_zone && (
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    <div className="bg-primary/10 rounded-lg p-2 text-center">
+                      <p className="text-xs text-muted-foreground">Your Zone</p>
+                      <p className="font-semibold text-sm text-foreground">{user.growing_zone}</p>
+                    </div>
+                    <div className="bg-secondary/10 rounded-lg p-2 text-center">
+                      <p className="text-xs text-muted-foreground">In Library</p>
+                      <p className="font-semibold text-sm text-foreground">{recommendedPlants.length}+</p>
+                    </div>
+                    <div className="bg-accent/10 rounded-lg p-2 text-center">
+                      <p className="text-xs text-muted-foreground">Week</p>
+                      <p className="font-semibold text-sm text-foreground">{currentWeek}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
 
         {/* Alerts & Progress */}
         <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
