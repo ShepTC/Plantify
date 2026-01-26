@@ -67,9 +67,9 @@ export default function PremiumMenu() {
 
       {/* Premium Badge Footer */}
       <div className="text-center pt-2 border-t border-border/50">
-        <div className="flex items-center justify-center gap-1.5">
-          <Zap className="w-3 h-3 text-yellow-500" />
-          <span className="text-xs font-semibold text-foreground">Pro Active</span>
+        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-yellow-500/20 dark:from-yellow-500/30 dark:via-amber-500/30 dark:to-yellow-500/30 px-3 py-1.5 rounded-full shadow-lg shadow-yellow-500/20 dark:shadow-yellow-500/30 border border-yellow-500/30">
+          <Zap className="w-3 h-3 text-yellow-500 drop-shadow-[0_0_4px_rgba(234,179,8,0.8)]" />
+          <span className="text-xs font-semibold text-foreground drop-shadow-[0_0_4px_rgba(234,179,8,0.5)]">Pro Active</span>
         </div>
       </div>
     </div>
