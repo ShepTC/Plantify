@@ -212,6 +212,19 @@ export default function PlantLibrary() {
     loadLibraryData();
   }, [loadLibraryData]);
 
+  // Handle plant parameter from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const plantName = params.get('plant');
+    
+    if (plantName && allPlants.length > 0) {
+      const plant = allPlants.find(p => p.name.toLowerCase() === plantName.toLowerCase());
+      if (plant) {
+        handlePlantSelect(plant);
+      }
+    }
+  }, [allPlants]);
+
   const handleRetry = () => {
     setRetryCount(0);
     loadLibraryData(true);
