@@ -400,9 +400,8 @@ export default function PlantLibrary() {
         {/* Header */}
         {viewMode === "shelf" ? (
           <div className="text-center space-y-3 md:space-y-4 pt-2 md:pt-4">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-xl scale-150" />
-              <div className="relative bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 backdrop-blur-sm rounded-2xl px-6 py-4 md:px-10 md:py-6">
+             <div className="relative inline-block">
+               <div className="relative bg-card border border-border rounded-2xl px-6 py-4 md:px-10 md:py-6">
                 <div className="flex flex-col items-center gap-2 md:gap-3">
                   <div className="w-12 h-12 md:w-14 md:h-14 bg-primary/15 rounded-2xl flex items-center justify-center border border-primary/20">
                     <Sprout className="w-6 h-6 md:w-7 md:h-7 text-primary" />
