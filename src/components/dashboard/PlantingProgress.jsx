@@ -49,20 +49,20 @@ export default function PlantingProgress({ userPlants }) {
             <p className="text-2xl font-bold text-foreground">{plannedCount}</p>
           </div>
           
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center gap-1.5 mb-1.5">
               <Leaf className="w-4 h-4 text-primary" />
               <p className="text-xs text-muted-foreground">Planted</p>
             </div>
-            <p className="text-2xl font-bold text-foreground">{plantedCount}</p>
+            <p className="text-xl font-bold text-foreground">{plantedCount}</p>
           </div>
 
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="bg-muted/50 rounded-lg p-3">
+            <div className="flex items-center gap-1.5 mb-1.5">
               <Sun className="w-4 h-4 text-accent" />
               <p className="text-xs text-muted-foreground">Harvested</p>
             </div>
-            <p className="text-2xl font-bold text-foreground">{harvestedCount}</p>
+            <p className="text-xl font-bold text-foreground">{harvestedCount}</p>
           </div>
         </div>
 
