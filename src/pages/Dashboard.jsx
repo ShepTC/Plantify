@@ -170,7 +170,7 @@ export default function Dashboard() {
           <StatCard
             title="Planted"
             value={userPlants.filter((p) => p.status === "planted").length}
-            icon={<Leaf className="h-4 w-4 text-muted-foreground md:h-6 md:w-6" />} />
+            icon={<Leaf className="h-4 w-4 text-primary md:h-6 md:w-6" />} />
 
           <StatCard
             title="Harvested"
