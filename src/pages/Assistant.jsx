@@ -56,6 +56,7 @@ export default function Assistant() {
   const fileInputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [selectedPlantDetail, setSelectedPlantDetail] = useState(null);
 
   // New state variables for chat management
   const [chatHistory, setChatHistory] = useState([]);
