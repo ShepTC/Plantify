@@ -212,7 +212,7 @@ export default function Dashboard() {
                 
                 {getPlantOfTheDay() && (
                   <Link 
-                    to={`${createPageUrl("PlantLibrary")}?selectedPlant=${encodeURIComponent(getPlantOfTheDay().id)}`}
+                    to={`${createPageUrl("PlantLibrary")}?plant=${encodeURIComponent(getPlantOfTheDay().name)}`}
                     onClick={(e) => e.stopPropagation()}
                     className="block hover:bg-primary/10 transition-colors rounded-lg"
                   >
