@@ -91,7 +91,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
       <div className="mx-auto max-w-7xl space-y-4 md:space-y-8">
         {/* Welcome Header */}
-        <div className="space-y-4 pt-2 md:pt-6 text-center">
+        <div className="space-y-2 pt-0 md:pt-2 text-center">
           <div>
             <h1 className="text-xl font-bold text-foreground md:text-2xl lg:text-4xl">
               {getGreeting()}, {user?.full_name?.split(" ")[0] || "Gardener"}!
