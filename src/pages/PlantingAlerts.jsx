@@ -479,20 +479,20 @@ export default function PlantingAlerts() {
                   })}
                 </div>
               ) : (
-                <Card className="bg-card/80 backdrop-blur-sm border-border">
-                  <CardContent className="text-center py-8">
-                    <CheckCircle2 className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="font-semibold text-foreground mb-2">No plants ready for planting today</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Check back during active planting seasons for your zone.
-                    </p>
-                    <Link to={createPageUrl("PlantLibrary")}>
-                      <Button variant="outline">
-                        Browse All Plants
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
+               <Card className="bg-card/80 backdrop-blur-sm border-border">
+                 <CardContent className="text-center py-12 md:py-16">
+                   <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-accent mx-auto mb-4" />
+                   <h3 className="font-semibold text-lg text-foreground mb-2">Perfect timing!</h3>
+                   <p className="text-sm text-muted-foreground mb-6">
+                     No plants are optimal to plant today, but check back during your active planting seasons.
+                   </p>
+                   <Link to={createPageUrl("PlantLibrary")}>
+                     <Button variant="outline" size="sm">
+                       Explore Plant Library
+                     </Button>
+                   </Link>
+                 </CardContent>
+               </Card>
               )}
             </motion.div>
           </AnimatePresence>
