@@ -344,37 +344,52 @@ export default function Assistant() {
       if (response.suggested_plants?.length > 0) {
         const allPlants = await Plant.list();
         response.suggested_plants.forEach((suggestedName) => {
+          if (!suggestedName || !suggestedName.trim()) return;
+          
           const normalizedSuggested = suggestedName.toLowerCase().trim();
+          
+          // Exact match first
           let matchedPlant = allPlants.find(
-            (p) => p.name.toLowerCase().trim() === normalizedSuggested
+            (p) => p.name.toLowerCase().trim() === normalizedSuggested ||
+                   p.common_name?.toLowerCase().trim() === normalizedSuggested
           );
-          if (!matchedPlant)
-          matchedPlant = allPlants.find(
-            (p) =>
-            p.name.toLowerCase().includes(normalizedSuggested) ||
-            normalizedSuggested.includes(p.name.toLowerCase())
-          );
+          
+          // Try common_name field
           if (!matchedPlant) {
-            const cleanSuggested = normalizedSuggested.
-            replace(/\b(plant|herb|flower|vegetable|fruit)\b/g, '').
-            trim();
-            matchedPlant = allPlants.find((p) => {
-              const cleanPlantName = p.name.
-              toLowerCase().
-              replace(/\b(plant|herb|flower|vegetable|fruit)\b/g, '').
-              trim();
-              return (
-                cleanPlantName === cleanSuggested ||
-                cleanPlantName.includes(cleanSuggested) ||
-                cleanSuggested.includes(cleanPlantName));
-
-            });
+            matchedPlant = allPlants.find(
+              (p) => p.common_name?.toLowerCase().includes(normalizedSuggested)
+            );
           }
-          if (
-          matchedPlant &&
-          !plantCards.find((p) => p.id === matchedPlant.id))
-
-          plantCards.push(matchedPlant);
+          
+          // Try partial match on name
+          if (!matchedPlant) {
+            matchedPlant = allPlants.find(
+              (p) => p.name.toLowerCase().includes(normalizedSuggested) ||
+                     normalizedSuggested.includes(p.name.toLowerCase())
+            );
+          }
+          
+          // Try with cleanup (remove descriptors)
+          if (!matchedPlant) {
+            const cleanSuggested = normalizedSuggested
+              .replace(/\b(plant|herb|flower|vegetable|fruit|seeds?|seedling|variety)\b/gi, '')
+              .trim();
+            
+            if (cleanSuggested) {
+              matchedPlant = allPlants.find((p) => {
+                const cleanName = p.name.toLowerCase()
+                  .replace(/\b(plant|herb|flower|vegetable|fruit|seeds?|seedling|variety)\b/gi, '')
+                  .trim();
+                return cleanName === cleanSuggested || 
+                       cleanName.includes(cleanSuggested) ||
+                       cleanSuggested.includes(cleanName);
+              });
+            }
+          }
+          
+          if (matchedPlant && !plantCards.find((p) => p.id === matchedPlant.id)) {
+            plantCards.push(matchedPlant);
+          }
         });
       }
 
