@@ -624,48 +624,43 @@ export default function PlantingAlerts() {
                     </CardHeader>
                     <CardContent className="p-4 pt-0 space-y-2.5 text-xs md:text-sm">
                       <div className="flex gap-2 flex-wrap">
-                        <Badge className={`text-xs capitalize ${categoryColors[plant.category]}`}>
-                          {plant.category}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {plant.season} Planting
-                        </Badge>
-                      </div>
+                         <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category]}`}>
+                           {plant.category}
+                         </Badge>
+                         <Badge variant="outline" className="text-[10px] md:text-xs">
+                           {plant.season}
+                         </Badge>
+                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 text-xs">
-                        <div className="flex items-center gap-1">
-                          <Sun className="w-3 h-3 text-secondary" />
-                          <span className="text-muted-foreground capitalize">
-                            {plant.sun_requirements?.replace("_", " ")}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Droplets className="w-3 h-3 text-secondary" />
-                          <span className="text-muted-foreground capitalize">
-                            {plant.water_needs} Water
-                          </span>
-                        </div>
-                      </div>
+                       <div className="space-y-1">
+                         <div className="flex items-center gap-2">
+                           <Sun className="w-3 h-3 text-secondary flex-shrink-0" />
+                           <span className="text-muted-foreground capitalize text-[10px] md:text-xs truncate">
+                             {plant.sun_requirements?.replace("_", " ")}
+                           </span>
+                         </div>
+                         <div className="flex items-center gap-2">
+                           <Droplets className="w-3 h-3 text-secondary flex-shrink-0" />
+                           <span className="text-muted-foreground capitalize text-[10px] md:text-xs">
+                             {plant.water_needs}
+                           </span>
+                         </div>
+                       </div>
 
-                      {plant.days_to_maturity && (
-                        <p className="text-xs text-muted-foreground">
-                          <span className="font-medium">Harvest:</span> {plant.days_to_maturity} days
-                        </p>
-                      )}
+                       {plant.days_to_maturity && (
+                         <p className="text-[10px] md:text-xs text-muted-foreground">
+                           <span className="font-medium">Matures in:</span> {plant.days_to_maturity}d
+                         </p>
+                       )}
 
-                      <p className="text-xs text-muted-foreground">
-                        <span className="font-medium">Optimal window:</span> {plant.optimalWeeks}
-                      </p>
-
-                      <Button
-                        size="sm"
-                        className="w-full"
-                        variant="outline"
-                        onClick={() => addPlantToGarden(plant)}
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add to Garden
-                      </Button>
+                       <Button
+                         size="sm"
+                         className="w-full h-8 text-xs"
+                         onClick={() => addPlantToGarden(plant)}
+                       >
+                         <Plus className="w-3.5 h-3.5 mr-1" />
+                         Add
+                       </Button>
                     </CardContent>
                   </Card>
                 ))}
