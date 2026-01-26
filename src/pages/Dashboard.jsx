@@ -9,9 +9,8 @@ import {
   Clock,
   AlertCircle,
   Sprout,
-  Sun,
-  Calendar
-} from "lucide-react";
+  Sun } from
+"lucide-react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
