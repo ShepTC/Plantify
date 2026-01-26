@@ -14,7 +14,6 @@ import {
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
-import { BookOpen, ArrowRight } from "lucide-react";
 
 import WeeklyPlantingAlerts from "../components/dashboard/WeeklyPlantingAlerts";
 import PlantingProgress from "../components/dashboard/PlantingProgress";
@@ -74,18 +73,6 @@ export default function Dashboard() {
     if (month >= 6 && month <= 8) return "Summer growing season is in full swing!";
     if (month >= 9 && month <= 11) return "Fall planting time for cool-season crops.";
     return "Winter planning season - prepare for next year!";
-  };
-
-  const getPlantOfTheDay = () => {
-    if (!user?.growing_zone || recommendedPlants.length === 0) return null;
-    
-    // Create a deterministic seed from today's date + zone
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const seed = (today + user.growing_zone).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    
-    // Get a deterministic index from the seed
-    const index = seed % recommendedPlants.length;
-    return recommendedPlants[index];
   };
 
   if (isLoading) {
@@ -192,59 +179,6 @@ export default function Dashboard() {
 
         </div>
 
-        {/* Plant Library Discover */}
-        <Link to={createPageUrl("PlantLibrary")} className="group block">
-          <Card className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                      <BookOpen className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground">Discover Plants</h3>
-                      <p className="text-sm text-muted-foreground">Expand your garden with new varieties</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-primary/60 group-hover:translate-x-1 transition-transform flex-shrink-0" />
-                </div>
-                
-                {getPlantOfTheDay() && (
-                  <Link 
-                    to={`${createPageUrl("PlantLibrary")}?plant=${encodeURIComponent(getPlantOfTheDay().name)}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="block hover:bg-primary/10 transition-colors rounded-lg"
-                  >
-                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-2 hover:border-primary/40">
-                      <p className="text-xs font-semibold text-primary uppercase tracking-wide">Plant of the Day</p>
-                      <p className="font-semibold text-foreground">{getPlantOfTheDay().name}</p>
-                      <p className="text-xs text-muted-foreground">{getPlantOfTheDay().category}</p>
-                    </div>
-                  </Link>
-                )}
-                
-                {user?.growing_zone && (
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    <div className="bg-primary/10 rounded-lg p-2 text-center">
-                      <p className="text-xs text-muted-foreground">Your Zone</p>
-                      <p className="font-semibold text-sm text-foreground">{user.growing_zone}</p>
-                    </div>
-                    <div className="bg-secondary/10 rounded-lg p-2 text-center">
-                      <p className="text-xs text-muted-foreground">In Garden</p>
-                      <p className="font-semibold text-sm text-foreground">{userPlants.length}</p>
-                    </div>
-                    <div className="bg-accent/10 rounded-lg p-2 text-center">
-                      <p className="text-xs text-muted-foreground">Week</p>
-                      <p className="font-semibold text-sm text-foreground">{currentWeek}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
         {/* Alerts & Progress */}
         <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
           <WeeklyPlantingAlerts
@@ -257,9 +191,12 @@ export default function Dashboard() {
           <PlantingProgress userPlants={userPlants} />
         </div>
 
-        {/* Weather & Quick Actions */}
+        {/* Weather / Map & Quick Actions */}
         <div className="space-y-4 pt-4 md:space-y-8">
-          <WeatherInsights user={user} />
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
+            <WeatherInsights user={user} />
+            <LocationMap user={user} />
+          </div>
 
           <Card className="bg-card/80 backdrop-blur-sm border-border">
             <CardHeader className="p-4 md:p-6">
