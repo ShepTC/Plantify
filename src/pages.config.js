@@ -4,11 +4,11 @@ import HealthScanner from './pages/HealthScanner';
 import Home from './pages/Home';
 import ImageUploader from './pages/ImageUploader';
 import MyGarden from './pages/MyGarden';
-import PlantLibrary from './pages/PlantLibrary';
 import PlantingAlerts from './pages/PlantingAlerts';
 import Profile from './pages/Profile';
 import RequestPlant from './pages/RequestPlant';
 import Upgrade from './pages/Upgrade';
+import PlantLibrary from './pages/PlantLibrary';
 import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
@@ -20,11 +20,11 @@ export const PAGES = {
     "Home": Home,
     "ImageUploader": ImageUploader,
     "MyGarden": MyGarden,
-    "PlantLibrary": PlantLibrary,
     "PlantingAlerts": PlantingAlerts,
     "Profile": Profile,
     "RequestPlant": RequestPlant,
     "Upgrade": Upgrade,
+    "PlantLibrary": PlantLibrary,
     "Dashboard": Dashboard,
 }
 

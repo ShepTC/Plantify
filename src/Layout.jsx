@@ -203,46 +203,46 @@ export default function Layout({ children, currentPageName }) {
     <SidebarProvider>
       <style>{`
         :root {
-          --background: 42 45% 98%;
-          --foreground: 28 25% 15%;
-          --card: 38 50% 96%;
-          --card-foreground: 28 25% 15%;
-          --popover: 38 50% 96%;
-          --popover-foreground: 28 25% 15%;
-          --primary: 95 50% 45%;
-          --primary-foreground: 42 45% 98%;
-          --secondary: 35 65% 55%;
-          --secondary-foreground: 28 25% 15%;
-          --muted: 40 35% 90%;
-          --muted-foreground: 28 15% 45%;
-          --accent: 110 45% 50%;
-          --accent-foreground: 42 45% 98%;
-          --destructive: 8 75% 58%;
-          --destructive-foreground: 42 45% 98%;
-          --border: 40 30% 80%;
-          --input: 40 30% 80%;
-          --ring: 95 50% 45%;
+          --background: 42 45% 100%;
+          --foreground: 28 25% 8%;
+          --card: 42 45% 96%;
+          --card-foreground: 28 25% 8%;
+          --popover: 42 45% 96%;
+          --popover-foreground: 28 25% 8%;
+          --primary: 95 60% 40%;
+          --primary-foreground: 42 45% 100%;
+          --secondary: 35 65% 48%;
+          --secondary-foreground: 42 45% 100%;
+          --muted: 40 30% 85%;
+          --muted-foreground: 28 25% 35%;
+          --accent: 110 55% 45%;
+          --accent-foreground: 42 45% 100%;
+          --destructive: 8 85% 50%;
+          --destructive-foreground: 42 45% 100%;
+          --border: 40 25% 75%;
+          --input: 40 25% 75%;
+          --ring: 95 60% 40%;
         }
         .dark {
-          --background: 30 18% 8%;
-          --foreground: 42 25% 92%;
-          --card: 32 20% 12%;
-          --card-foreground: 42 25% 92%;
-          --popover: 30 18% 8%;
-          --popover-foreground: 42 25% 92%;
-          --primary: 100 55% 58%;
-          --primary-foreground: 30 18% 8%;
-          --secondary: 38 70% 60%;
-          --secondary-foreground: 30 18% 8%;
-          --muted: 30 15% 18%;
-          --muted-foreground: 40 10% 65%;
-          --accent: 115 48% 55%;
-          --accent-foreground: 42 25% 92%;
-          --destructive: 8 70% 58%;
-          --destructive-foreground: 42 25% 92%;
-          --border: 32 15% 22%;
-          --input: 32 15% 22%;
-          --ring: 100 55% 58%;
+          --background: 30 18% 5%;
+          --foreground: 42 25% 98%;
+          --card: 32 20% 10%;
+          --card-foreground: 42 25% 98%;
+          --popover: 30 18% 5%;
+          --popover-foreground: 42 25% 98%;
+          --primary: 100 65% 62%;
+          --primary-foreground: 30 18% 5%;
+          --secondary: 38 75% 65%;
+          --secondary-foreground: 30 18% 5%;
+          --muted: 30 15% 22%;
+          --muted-foreground: 40 12% 75%;
+          --accent: 115 58% 60%;
+          --accent-foreground: 30 18% 5%;
+          --destructive: 8 80% 58%;
+          --destructive-foreground: 42 25% 98%;
+          --border: 32 15% 28%;
+          --input: 32 15% 28%;
+          --ring: 100 65% 62%;
         }
 
         /* --- PASTEL PALETTE --- */
