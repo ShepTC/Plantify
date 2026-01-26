@@ -155,6 +155,18 @@ export default function Dashboard() {
           </Card>
         }
 
+        {/* Alerts & Progress */}
+        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
+          <WeeklyPlantingAlerts
+            currentWeek={currentWeek}
+            userPlants={userPlants}
+            userZone={user?.growing_zone}
+            userLocation={user?.location}
+            onPlantUpdate={loadDashboardData} />
+
+          <PlantingProgress userPlants={userPlants} />
+        </div>
+
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
           <StatCard
@@ -177,18 +189,6 @@ export default function Dashboard() {
             value={userPlants.filter((p) => p.status === "harvested").length}
             icon={<Sun className="h-4 w-4 text-accent md:h-6 md:w-6" />} />
 
-        </div>
-
-        {/* Alerts & Progress */}
-        <div className="grid gap-4 lg:grid-cols-1 md:gap-8">
-          <WeeklyPlantingAlerts
-            currentWeek={currentWeek}
-            userPlants={userPlants}
-            userZone={user?.growing_zone}
-            userLocation={user?.location}
-            onPlantUpdate={loadDashboardData} />
-
-          <PlantingProgress userPlants={userPlants} />
         </div>
 
         {/* Weather / Map & Quick Actions */}
