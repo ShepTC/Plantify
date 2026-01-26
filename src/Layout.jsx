@@ -209,19 +209,19 @@ export default function Layout({ children, currentPageName }) {
           --card-foreground: 28 25% 15%;
           --popover: 38 50% 96%;
           --popover-foreground: 28 25% 15%;
-          --primary: 85 45% 42%;
+          --primary: 95 50% 45%;
           --primary-foreground: 42 45% 98%;
           --secondary: 35 65% 55%;
           --secondary-foreground: 28 25% 15%;
           --muted: 40 35% 90%;
           --muted-foreground: 28 15% 45%;
-          --accent: 28 60% 62%;
+          --accent: 110 45% 50%;
           --accent-foreground: 42 45% 98%;
           --destructive: 8 75% 58%;
           --destructive-foreground: 42 45% 98%;
           --border: 40 30% 80%;
           --input: 40 30% 80%;
-          --ring: 85 45% 42%;
+          --ring: 95 50% 45%;
         }
         .dark {
           --background: 30 18% 8%;
@@ -230,59 +230,59 @@ export default function Layout({ children, currentPageName }) {
           --card-foreground: 42 25% 92%;
           --popover: 30 18% 8%;
           --popover-foreground: 42 25% 92%;
-          --primary: 88 50% 55%;
+          --primary: 100 55% 58%;
           --primary-foreground: 30 18% 8%;
           --secondary: 38 70% 60%;
           --secondary-foreground: 30 18% 8%;
           --muted: 30 15% 18%;
           --muted-foreground: 40 10% 65%;
-          --accent: 28 55% 58%;
+          --accent: 115 48% 55%;
           --accent-foreground: 42 25% 92%;
           --destructive: 8 70% 58%;
           --destructive-foreground: 42 25% 92%;
           --border: 32 15% 22%;
           --input: 32 15% 22%;
-          --ring: 88 50% 55%;
+          --ring: 100 55% 58%;
         }
 
         /* --- PASTEL PALETTE --- */
         :root[data-palette="pastel"] {
-          --background: 48 55% 97%;
-          --foreground: 25 30% 18%;
-          --card: 45 50% 94%;
-          --card-foreground: 25 30% 18%;
-          --popover: 45 50% 94%;
-          --popover-foreground: 25 30% 18%;
-          --primary: 95 40% 52%;
-          --primary-foreground: 48 55% 97%;
-          --secondary: 20 55% 62%;
-          --secondary-foreground: 25 30% 18%;
-          --muted: 45 40% 88%;
-          --muted-foreground: 25 20% 45%;
-          --accent: 158 45% 58%;
-          --accent-foreground: 25 30% 18%;
-          --border: 45 35% 82%;
-          --input: 45 35% 82%;
-          --ring: 95 40% 52%;
+          --background: 280 45% 97%;
+          --foreground: 280 25% 18%;
+          --card: 280 40% 94%;
+          --card-foreground: 280 25% 18%;
+          --popover: 280 40% 94%;
+          --popover-foreground: 280 25% 18%;
+          --primary: 270 55% 62%;
+          --primary-foreground: 280 45% 97%;
+          --secondary: 290 50% 68%;
+          --secondary-foreground: 280 25% 18%;
+          --muted: 280 30% 88%;
+          --muted-foreground: 280 15% 45%;
+          --accent: 260 48% 70%;
+          --accent-foreground: 280 25% 18%;
+          --border: 280 30% 82%;
+          --input: 280 30% 82%;
+          --ring: 270 55% 62%;
         }
         .dark[data-palette="pastel"] {
-          --background: 28 22% 9%;
-          --foreground: 45 30% 90%;
-          --card: 30 25% 13%;
-          --card-foreground: 45 30% 90%;
-          --popover: 28 22% 9%;
-          --popover-foreground: 45 30% 90%;
-          --primary: 98 48% 62%;
-          --primary-foreground: 28 22% 9%;
-          --secondary: 22 65% 68%;
-          --secondary-foreground: 28 22% 9%;
-          --muted: 28 18% 20%;
-          --muted-foreground: 40 12% 65%;
-          --accent: 160 42% 62%;
-          --accent-foreground: 45 30% 90%;
-          --border: 30 20% 24%;
-          --input: 30 20% 24%;
-          --ring: 98 48% 62%;
+          --background: 280 20% 10%;
+          --foreground: 280 20% 90%;
+          --card: 280 18% 14%;
+          --card-foreground: 280 20% 90%;
+          --popover: 280 20% 10%;
+          --popover-foreground: 280 20% 90%;
+          --primary: 270 60% 68%;
+          --primary-foreground: 280 20% 10%;
+          --secondary: 290 55% 72%;
+          --secondary-foreground: 280 20% 10%;
+          --muted: 280 15% 20%;
+          --muted-foreground: 280 10% 65%;
+          --accent: 260 50% 65%;
+          --accent-foreground: 280 20% 90%;
+          --border: 280 15% 24%;
+          --input: 280 15% 24%;
+          --ring: 270 60% 68%;
         }
 
         /* --- OCEAN PALETTE --- */
