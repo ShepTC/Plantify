@@ -1016,6 +1016,19 @@ export default function Assistant() {
             </div>
           </div>
       </div>
+      <PlantDetailView
+        plant={selectedPlantDetail}
+        userZone={user?.growing_zone}
+        open={!!selectedPlantDetail}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setSelectedPlantDetail(null);
+          }
+        }}
+        onAddPlant={handleAddPlant}
+        isAdded={selectedPlantDetail ? userPlantIds.has(selectedPlantDetail.id) : false}
+        userPlantData={null}
+      />
     </>);
 
 }
