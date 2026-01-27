@@ -101,7 +101,7 @@ export default function FeatureCarousel() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center mb-4"
+              className="w-16 h-16 flex items-center justify-center mb-4"
             >
               <CurrentIcon className="w-8 h-8 text-primary" />
             </motion.div>
