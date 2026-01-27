@@ -597,7 +597,7 @@ export default function Assistant() {
                     </div>
                   </div>
                   {message.suggestedPlants?.length > 0 &&
-                <div className="w-full mt-3 pl-10">
+                <div className="w-full mt-3 flex flex-col items-center">
                       <p className="text-xs font-medium text-primary mb-1.5 flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
                         Plants I recommend:
