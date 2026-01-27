@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
-import { Sparkles, Bot, Camera, Zap, Crown } from 'lucide-react';
+import { Sparkles, Camera, Zap, Crown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+
+const GREEN_CHAT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/42d7337fe_GreenChatLogo.png";
 
 export default function PremiumMenu() {
   const premiumTools = [
     {
       name: "AI Garden Helper",
       description: "Get personalized advice from our AI assistant",
-      icon: Bot,
+      icon: "image",
       url: createPageUrl("Assistant"),
       gradient: "from-purple-500 via-purple-600 to-pink-500",
       shadowColor: "shadow-purple-500/50"
@@ -52,7 +54,11 @@ export default function PremiumMenu() {
                   {tool.name}
                 </h3>
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${tool.gradient} flex items-center justify-center shadow-2xl group-hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] group-hover:scale-110 transition-all duration-300`}>
-                  <tool.icon className="w-6 h-6 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
+                  {tool.icon === "image" ? (
+                    <img src={GREEN_CHAT_LOGO} alt="Garden Helper" className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
+                  ) : (
+                    <tool.icon className="w-6 h-6 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
+                  )}
                 </div>
 
                 {/* Sparkle decorations */}
