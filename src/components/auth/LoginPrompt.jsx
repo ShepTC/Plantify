@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { LogIn, Sparkles, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/components/utils';
-import FeatureCarousel from './FeatureCarousel';
 
 export default function LoginPrompt() {
   const [currentTheme, setCurrentTheme] = useState('light');
@@ -19,11 +19,22 @@ export default function LoginPrompt() {
   }, []);
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+    const dashboardUrl = window.location.origin + createPageUrl('Dashboard');
+    base44.auth.redirectToLogin(dashboardUrl);
   };
 
   const getLogoUrl = () => {
-    return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/0d5963d75_LogoAll.png";
+    switch (currentPalette) {
+      case 'pastel':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/bee4fbc3e_PlantifyPastelLogo.png";
+      case 'ocean':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/6ff3caca3_PlantifyOceanLogo.png";
+      case 'sunset':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/046b7b36c_PlantifySunsetLogo.png";
+      case 'default':
+      default:
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/04c895d97_PlantifyGardenLogo.png";
+    }
   };
 
   const getBackgroundColors = () => {
@@ -56,10 +67,10 @@ export default function LoginPrompt() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center space-y-3 md:space-y-8"
+            className="text-center space-y-8"
           >
             {/* Logo */}
-            <div className="flex justify-center pt-8">
+            <div className="flex justify-center">
               <img 
                 src={getLogoUrl()} 
                 alt="Plantify Logo" 
@@ -77,8 +88,27 @@ export default function LoginPrompt() {
               </p>
             </div>
 
-            {/* Feature Carousel */}
-            <FeatureCarousel />
+            {/* Features */}
+            <div className="space-y-3 text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Leaf className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-foreground">Track your garden's progress</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-foreground">Get personalized planting advice</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Leaf className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-foreground">Never miss a planting window</span>
+              </div>
+            </div>
 
             {/* CTA Button */}
             <Button 
