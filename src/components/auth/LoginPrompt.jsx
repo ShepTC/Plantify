@@ -39,21 +39,21 @@ export default function LoginPrompt() {
     switch (currentPalette) {
       case 'pastel':
         return currentTheme === 'dark' 
-          ? 'from-purple-950/30 via-green-950/20 to-emerald-950/25'
-          : 'from-purple-50/50 via-green-50/70 to-emerald-100/60';
+          ? 'from-purple-950/40 via-green-950/30 to-pink-950/30'
+          : 'from-purple-100/60 via-green-100/80 to-pink-100/60';
       case 'ocean':
         return currentTheme === 'dark'
-          ? 'from-teal-950/30 via-green-950/20 to-emerald-950/25'
-          : 'from-teal-50/50 via-green-50/70 to-emerald-100/60';
+          ? 'from-teal-950/40 via-cyan-950/30 to-blue-950/30'
+          : 'from-teal-100/60 via-cyan-100/80 to-blue-100/60';
       case 'sunset':
         return currentTheme === 'dark'
-          ? 'from-orange-950/25 via-green-950/20 to-amber-950/25'
-          : 'from-orange-50/40 via-green-50/70 to-amber-100/50';
+          ? 'from-orange-950/40 via-amber-950/30 to-yellow-950/30'
+          : 'from-orange-100/60 via-amber-100/80 to-yellow-100/60';
       case 'default':
       default:
         return currentTheme === 'dark'
-          ? 'from-green-950/30 via-emerald-950/25 to-teal-950/30'
-          : 'from-green-50/60 via-emerald-50/80 to-teal-50/70';
+          ? 'from-green-950/40 via-emerald-950/35 to-lime-950/40'
+          : 'from-green-100/70 via-emerald-100/90 to-lime-100/70';
     }
   };
 
@@ -104,35 +104,40 @@ export default function LoginPrompt() {
 
       <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-background">
         
-        {/* Enchanted Background Layers */}
+        {/* Garden Background with Pattern */}
         <div className={`absolute inset-0 bg-gradient-to-br ${getBackgroundColors()}`} />
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c55e' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
         
         {/* Floating Decorative Elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Floating leaf elements */}
-          <div className="absolute top-20 left-20 animate-sparkle">
-            <Leaf className="w-4 h-4 text-green-600/30 dark:text-green-400/30" style={{ animationDelay: '0s' }} />
+          {/* Floating garden elements */}
+          <div className="absolute top-20 left-20 animate-float" style={{ animationDelay: '0s' }}>
+            <Leaf className="w-6 h-6 text-green-500/40 dark:text-green-400/40" />
           </div>
-          <div className="absolute top-40 right-32 animate-sparkle">
-            <Leaf className="w-3 h-3 text-emerald-600/25 dark:text-emerald-400/25" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-40 right-32 animate-float" style={{ animationDelay: '2s' }}>
+            <Sparkles className="w-4 h-4 text-emerald-500/35 dark:text-emerald-400/35" />
           </div>
-          <div className="absolute bottom-32 left-40 animate-sparkle">
-            <Leaf className="w-5 h-5 text-teal-600/30 dark:text-teal-400/30" style={{ animationDelay: '4s' }} />
+          <div className="absolute bottom-32 left-40 animate-float" style={{ animationDelay: '4s' }}>
+            <Leaf className="w-5 h-5 text-primary/40" />
           </div>
-          <div className="absolute bottom-20 right-20 animate-sparkle">
-            <Sparkles className="w-3 h-3 text-green-600/20 dark:text-green-400/20" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute bottom-20 right-20 animate-float" style={{ animationDelay: '3s' }}>
+            <Sparkles className="w-5 h-5 text-accent/30" />
           </div>
+          <div className="absolute top-1/3 right-1/4 animate-float" style={{ animationDelay: '1s' }}>
+            <Leaf className="w-4 h-4 text-secondary/35" />
+          </div>
+
+          {/* Growth orbs */}
+          <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-primary/20 rounded-full animate-dewdrop blur-sm" style={{ animationDelay: '0s' }} />
+          <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-accent/25 rounded-full animate-dewdrop blur-sm" style={{ animationDelay: '3s' }} />
+          <div className="absolute bottom-1/3 left-1/4 w-4 h-4 bg-secondary/15 rounded-full animate-dewdrop blur-sm" style={{ animationDelay: '6s' }} />
           
-          {/* Floating dewdrops/orbs */}
-          <div className="absolute top-32 right-40 w-2 h-2 bg-green-500/20 dark:bg-green-400/20 rounded-full animate-dewdrop" style={{ animationDelay: '0s' }} />
-          <div className="absolute top-60 left-32 w-3 h-3 bg-emerald-500/15 dark:bg-emerald-400/15 rounded-full animate-dewdrop" style={{ animationDelay: '3s' }} />
-          <div className="absolute bottom-40 right-60 w-1.5 h-1.5 bg-teal-500/25 dark:bg-teal-400/25 rounded-full animate-dewdrop" style={{ animationDelay: '6s' }} />
-          
-          {/* Gentle wave elements */}
+          {/* Garden atmosphere glow */}
           <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-full blur-3xl animate-gentle-wave" />
-            <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-tl from-teal-500/10 to-green-500/10 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '4s' }} />
-            <div className="absolute top-1/2 right-1/3 w-36 h-36 bg-gradient-to-br from-emerald-500/8 to-green-500/8 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '6s' }} />
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-primary/15 to-accent/10 rounded-full blur-3xl animate-gentle-wave" />
+            <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-tl from-secondary/12 to-primary/10 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '4s' }} />
+            <div className="absolute top-1/2 right-1/3 w-36 h-36 bg-gradient-to-br from-accent/12 to-primary/8 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '6s' }} />
+            <div className="absolute bottom-1/4 left-1/3 w-44 h-44 bg-gradient-to-tr from-primary/8 to-secondary/10 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '2s' }} />
           </div>
         </div>
 
@@ -149,10 +154,10 @@ export default function LoginPrompt() {
           }}
           className="relative z-10"
         >
-          <Card className="w-full max-w-md frosted-glass shadow-2xl animate-float border-2 border-green-200/30 dark:border-green-800/30">
+          <Card className="w-full max-w-md frosted-glass shadow-2xl animate-float border-2 border-primary/30 dark:border-primary/20">
             <CardHeader className="text-center pb-2 relative">
               {/* Decorative top border */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/0 via-green-500/50 to-green-500/0" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary/60 to-primary/0" />
               
               <motion.div 
                 className="w-28 h-28 mx-auto flex items-center justify-center mb-4 relative"
@@ -160,8 +165,8 @@ export default function LoginPrompt() {
                 transition={{ type: "spring", stiffness: 300, damping: 10 }}
               >
                 {/* Glowing ring behind logo */}
-                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-500/20 rounded-full blur-xl" />
-                <div className="absolute inset-2 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-full animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/25 to-accent/20 rounded-full blur-xl" />
+                <div className="absolute inset-2 bg-gradient-to-br from-primary/15 to-accent/10 rounded-full animate-pulse" />
                 
                 <img 
                   src={getLogoUrl()} 
@@ -175,10 +180,10 @@ export default function LoginPrompt() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <CardTitle className="text-4xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-700 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-2">
+                <CardTitle className="text-4xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-2">
                   Welcome to Plantify
                 </CardTitle>
-                <CardDescription className="text-green-700/80 dark:text-green-300/80 text-lg font-medium">
+                <CardDescription className="text-primary/80 dark:text-primary/70 text-lg font-medium">
                   🌱 Cultivate your digital garden journey
                 </CardDescription>
               </motion.div>
@@ -193,20 +198,20 @@ export default function LoginPrompt() {
               >
                 {/* Feature highlights */}
                 <div className="flex items-center gap-3 text-sm text-foreground/80">
-                  <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-primary" />
                   </div>
                   <span>AI-powered planting insights</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-foreground/80">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                    <Leaf className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center flex-shrink-0">
+                    <Leaf className="w-4 h-4 text-accent" />
                   </div>
                   <span>Personalized growing calendar</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-foreground/80">
-                  <div className="w-8 h-8 rounded-full bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-                    <Leaf className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                  <div className="w-8 h-8 rounded-full bg-secondary/15 flex items-center justify-center flex-shrink-0">
+                    <Leaf className="w-4 h-4 text-secondary" />
                   </div>
                   <span>Expert garden guidance</span>
                 </div>
@@ -222,7 +227,7 @@ export default function LoginPrompt() {
               >
                 <Button 
                   size="lg" 
-                  className="w-full text-lg py-7 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group border-0"
+                  className="w-full text-lg py-7 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group border-0"
                   onClick={handleLogin}
                 >
                   {/* Button background animation */}
@@ -245,18 +250,18 @@ export default function LoginPrompt() {
           </Card>
         </motion.div>
 
-        {/* Subtle Growing Vines Animation (Corner Elements) */}
+        {/* Garden vine decorations */}
         <div className="absolute bottom-0 left-0 w-32 h-32 pointer-events-none">
-          <svg className="w-full h-full text-green-600/10 dark:text-green-400/10 animate-gentle-wave" viewBox="0 0 100 100">
+          <svg className="w-full h-full text-primary/15 dark:text-primary/10 animate-gentle-wave" viewBox="0 0 100 100">
             <path 
               d="M0,100 Q20,80 40,85 T80,70 L85,65 L80,60 Q60,65 40,75 T0,90 Z" 
               fill="currentColor"
             />
           </svg>
         </div>
-        
+
         <div className="absolute top-0 right-0 w-28 h-28 pointer-events-none rotate-180">
-          <svg className="w-full h-full text-emerald-600/10 dark:text-emerald-400/10 animate-gentle-wave" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
+          <svg className="w-full h-full text-accent/15 dark:text-accent/10 animate-gentle-wave" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
             <path 
               d="M0,100 Q20,80 40,85 T80,70 L85,65 L80,60 Q60,65 40,75 T0,90 Z" 
               fill="currentColor"
