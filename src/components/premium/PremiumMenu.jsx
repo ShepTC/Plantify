@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/components/utils';
 import { Sparkles, Camera, Zap, Crown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const GREEN_CHAT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/7fb8eaed4_newlogowhite.png";
+const CAMERA_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5dfad1c9a_CameraLogofinal.png";
 
 export default function PremiumMenu() {
   const [chatLogoUrl, setChatLogoUrl] = useState('');
@@ -32,6 +33,7 @@ export default function PremiumMenu() {
       name: "AI Garden Helper",
       description: "Get personalized advice from our AI assistant",
       icon: "image",
+      logoUrl: chatLogoUrl,
       url: createPageUrl("Assistant"),
       gradient: "from-purple-500 via-purple-600 to-pink-500",
       shadowColor: "shadow-purple-500/50"
@@ -39,7 +41,8 @@ export default function PremiumMenu() {
     {
       name: "Plant Health Scanner",
       description: "Diagnose plant diseases with AI photo analysis",
-      icon: Camera,
+      icon: "image",
+      logoUrl: CAMERA_LOGO,
       url: createPageUrl("HealthScanner"),
       gradient: "from-green-500 via-emerald-500 to-teal-500",
       shadowColor: "shadow-green-500/50"
@@ -75,7 +78,7 @@ export default function PremiumMenu() {
                 </h3>
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${tool.gradient} flex items-center justify-center shadow-2xl group-hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] group-hover:scale-110 transition-all duration-300`}>
                   {tool.icon === "image" ? (
-                    <img src={GREEN_CHAT_LOGO} alt="Garden Helper" className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
+                    <img src={tool.logoUrl || GREEN_CHAT_LOGO} alt={tool.name} className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
                   ) : (
                     <tool.icon className="w-6 h-6 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
                   )}
