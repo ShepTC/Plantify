@@ -38,7 +38,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { createPageUrl } from '@/components/utils';
 
 
-const GREEN_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/42d7337fe_GreenChatLogo.png";
+const GREEN_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/374d491f7_Newlogogreen.png";
 
 export default function Assistant() {
   const navigate = useNavigate();
