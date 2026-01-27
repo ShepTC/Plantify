@@ -199,6 +199,11 @@ export default function Layout({ children, currentPageName }) {
     }
   };
 
+  // Full-screen pages without layout
+  if (currentPageName === "Welcome") {
+    return children;
+  }
+
   return (
     <SidebarProvider>
       <style>{`
