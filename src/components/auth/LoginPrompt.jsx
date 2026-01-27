@@ -72,18 +72,19 @@ export default function LoginPrompt() {
               <h1 className="text-4xl font-bold text-foreground">
                 Welcome to Plantify
               </h1>
+
+              {/* Long Logo */}
+              <div className="flex justify-center py-2">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5136579f4_PlantifylongFinal.png" 
+                  alt="Plantify Long Logo" 
+                  className="w-full max-w-md h-auto object-contain"
+                />
+              </div>
+
               <p className="text-muted-foreground text-lg">
                 Your personal garden companion
               </p>
-            </div>
-
-            {/* Long Logo */}
-            <div className="flex justify-center">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5136579f4_PlantifylongFinal.png" 
-                alt="Plantify Long Logo" 
-                className="w-full max-w-lg h-auto object-contain"
-              />
             </div>
 
             {/* Feature Carousel */}
