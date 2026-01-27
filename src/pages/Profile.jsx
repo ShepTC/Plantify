@@ -6,6 +6,7 @@ import { UploadFile } from "@/integrations/Core"; // Added UploadFile import
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   User as UserIcon,
   MapPin,
@@ -18,7 +19,8 @@ import {
   Camera,
   Thermometer,
   ChevronRight,
-  Cloud } from
+  Cloud,
+  LogOut } from
 "lucide-react";
 // motion is still used for the loading screen, keep it
 
