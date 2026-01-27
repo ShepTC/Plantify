@@ -4,7 +4,7 @@ import { createPageUrl } from '@/components/utils';
 import { Sparkles, Camera, Zap, Crown } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
-const GREEN_CHAT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/a5d07b692_logowhite.png";
+const GREEN_CHAT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/8fc6f5c35_logowhite.png";
 
 export default function PremiumMenu() {
   const premiumTools = [
