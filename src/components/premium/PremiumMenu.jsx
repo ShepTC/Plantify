@@ -19,7 +19,8 @@ export default function PremiumMenu() {
     {
       name: "Plant Health Scanner",
       description: "Diagnose plant diseases with AI photo analysis",
-      icon: Camera,
+      icon: "image",
+      image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/9fe3579ff_CameraLogoFinal.png",
       url: createPageUrl("HealthScanner"),
       gradient: "from-green-500 via-emerald-500 to-teal-500",
       shadowColor: "shadow-green-500/50"
