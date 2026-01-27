@@ -89,32 +89,32 @@ export default function LoginPrompt() {
 
             {/* Features */}
             <div className="space-y-3 text-left">
-              <div className="relative group">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
-                <div className="relative flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Leaf className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-foreground">Track your garden's progress</span>
                 </div>
+                <span className="text-foreground">Track your garden's progress</span>
               </div>
-              <div className="relative group">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
-                <div className="relative flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-foreground">Get personalized planting advice</span>
                 </div>
+                <span className="text-foreground">Get personalized planting advice</span>
               </div>
-              <div className="relative group">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
-                <div className="relative flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Leaf className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-foreground">Discover what plants you can plant today</span>
                 </div>
+                <span className="text-foreground">Discover what plants you can plant today</span>
               </div>
             </div>
 
