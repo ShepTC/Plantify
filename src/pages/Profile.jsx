@@ -526,6 +526,19 @@ export default function Profile() {
             </CardContent>
           </Card>
         )}
+
+        {/* Logout Button */}
+        <Card className="bg-card border-border">
+          <CardContent className="p-4">
+            <Button
+              variant="outline"
+              onClick={() => User.logout()}
+              className="w-full flex items-center justify-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30 hover:border-destructive">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>);
 }
