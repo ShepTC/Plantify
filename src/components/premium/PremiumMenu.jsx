@@ -56,7 +56,7 @@ export default function PremiumMenu() {
                 </h3>
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${tool.gradient} flex items-center justify-center shadow-2xl group-hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] group-hover:scale-110 transition-all duration-300`}>
                   {tool.icon === "image" ? (
-                    <img src={GREEN_CHAT_LOGO} alt="Garden Helper" className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
+                    <img src={tool.image || GREEN_CHAT_LOGO} alt={tool.name} className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
                   ) : (
                     <tool.icon className="w-6 h-6 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.9)]" />
                   )}
