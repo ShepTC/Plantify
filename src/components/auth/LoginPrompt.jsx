@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LogIn, Sparkles, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createPageUrl } from '@/components/utils';
 
 export default function LoginPrompt() {
   const [currentTheme, setCurrentTheme] = useState('light');
@@ -18,7 +19,8 @@ export default function LoginPrompt() {
   }, []);
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(window.location.origin + '/#/Dashboard');
+    const dashboardUrl = window.location.origin + createPageUrl('Dashboard');
+    base44.auth.redirectToLogin(dashboardUrl);
   };
 
   const getLogoUrl = () => {
