@@ -39,21 +39,21 @@ export default function LoginPrompt() {
     switch (currentPalette) {
       case 'pastel':
         return currentTheme === 'dark' 
-          ? 'from-purple-900/20 via-pink-900/10 to-purple-800/20'
-          : 'from-purple-100/40 via-pink-50/60 to-purple-200/40';
+          ? 'from-purple-950/30 via-green-950/20 to-emerald-950/25'
+          : 'from-purple-50/50 via-green-50/70 to-emerald-100/60';
       case 'ocean':
         return currentTheme === 'dark'
-          ? 'from-blue-900/20 via-teal-900/10 to-cyan-800/20'
-          : 'from-blue-100/40 via-teal-50/60 to-cyan-200/40';
+          ? 'from-teal-950/30 via-green-950/20 to-emerald-950/25'
+          : 'from-teal-50/50 via-green-50/70 to-emerald-100/60';
       case 'sunset':
         return currentTheme === 'dark'
-          ? 'from-orange-900/20 via-red-900/10 to-yellow-800/20'
-          : 'from-orange-100/40 via-red-50/60 to-yellow-200/40';
+          ? 'from-orange-950/25 via-green-950/20 to-amber-950/25'
+          : 'from-orange-50/40 via-green-50/70 to-amber-100/50';
       case 'default':
       default:
         return currentTheme === 'dark'
-          ? 'from-green-900/20 via-emerald-900/10 to-teal-800/20'
-          : 'from-green-100/40 via-emerald-50/60 to-teal-200/40';
+          ? 'from-green-950/30 via-emerald-950/25 to-teal-950/30'
+          : 'from-green-50/60 via-emerald-50/80 to-teal-50/70';
     }
   };
 
@@ -109,29 +109,30 @@ export default function LoginPrompt() {
         
         {/* Floating Decorative Elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Floating sparkles */}
+          {/* Floating leaf elements */}
           <div className="absolute top-20 left-20 animate-sparkle">
-            <Sparkles className="w-4 h-4 text-primary/40" style={{ animationDelay: '0s' }} />
+            <Leaf className="w-4 h-4 text-green-600/30 dark:text-green-400/30" style={{ animationDelay: '0s' }} />
           </div>
           <div className="absolute top-40 right-32 animate-sparkle">
-            <Sparkles className="w-3 h-3 text-secondary/30" style={{ animationDelay: '2s' }} />
+            <Leaf className="w-3 h-3 text-emerald-600/25 dark:text-emerald-400/25" style={{ animationDelay: '2s' }} />
           </div>
           <div className="absolute bottom-32 left-40 animate-sparkle">
-            <Sparkles className="w-5 h-5 text-accent/35" style={{ animationDelay: '4s' }} />
+            <Leaf className="w-5 h-5 text-teal-600/30 dark:text-teal-400/30" style={{ animationDelay: '4s' }} />
           </div>
           <div className="absolute bottom-20 right-20 animate-sparkle">
-            <Sparkles className="w-3 h-3 text-primary/25" style={{ animationDelay: '1.5s' }} />
+            <Sparkles className="w-3 h-3 text-green-600/20 dark:text-green-400/20" style={{ animationDelay: '1.5s' }} />
           </div>
           
           {/* Floating dewdrops/orbs */}
-          <div className="absolute top-32 right-40 w-2 h-2 bg-primary/20 rounded-full animate-dewdrop" style={{ animationDelay: '0s' }} />
-          <div className="absolute top-60 left-32 w-3 h-3 bg-secondary/15 rounded-full animate-dewdrop" style={{ animationDelay: '3s' }} />
-          <div className="absolute bottom-40 right-60 w-1.5 h-1.5 bg-accent/25 rounded-full animate-dewdrop" style={{ animationDelay: '6s' }} />
+          <div className="absolute top-32 right-40 w-2 h-2 bg-green-500/20 dark:bg-green-400/20 rounded-full animate-dewdrop" style={{ animationDelay: '0s' }} />
+          <div className="absolute top-60 left-32 w-3 h-3 bg-emerald-500/15 dark:bg-emerald-400/15 rounded-full animate-dewdrop" style={{ animationDelay: '3s' }} />
+          <div className="absolute bottom-40 right-60 w-1.5 h-1.5 bg-teal-500/25 dark:bg-teal-400/25 rounded-full animate-dewdrop" style={{ animationDelay: '6s' }} />
           
           {/* Gentle wave elements */}
           <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-primary/5 to-secondary/5 rounded-full blur-3xl animate-gentle-wave" />
-            <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-tl from-accent/5 to-primary/5 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '4s' }} />
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-full blur-3xl animate-gentle-wave" />
+            <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-tl from-teal-500/10 to-green-500/10 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '4s' }} />
+            <div className="absolute top-1/2 right-1/3 w-36 h-36 bg-gradient-to-br from-emerald-500/8 to-green-500/8 rounded-full blur-3xl animate-gentle-wave" style={{ animationDelay: '6s' }} />
           </div>
         </div>
 
@@ -222,7 +223,7 @@ export default function LoginPrompt() {
 
         {/* Subtle Growing Vines Animation (Corner Elements) */}
         <div className="absolute bottom-0 left-0 w-32 h-32 pointer-events-none">
-          <svg className="w-full h-full text-primary/10 animate-gentle-wave" viewBox="0 0 100 100">
+          <svg className="w-full h-full text-green-600/10 dark:text-green-400/10 animate-gentle-wave" viewBox="0 0 100 100">
             <path 
               d="M0,100 Q20,80 40,85 T80,70 L85,65 L80,60 Q60,65 40,75 T0,90 Z" 
               fill="currentColor"
@@ -231,7 +232,7 @@ export default function LoginPrompt() {
         </div>
         
         <div className="absolute top-0 right-0 w-28 h-28 pointer-events-none rotate-180">
-          <svg className="w-full h-full text-secondary/10 animate-gentle-wave" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
+          <svg className="w-full h-full text-emerald-600/10 dark:text-emerald-400/10 animate-gentle-wave" viewBox="0 0 100 100" style={{ animationDelay: '2s' }}>
             <path 
               d="M0,100 Q20,80 40,85 T80,70 L85,65 L80,60 Q60,65 40,75 T0,90 Z" 
               fill="currentColor"
