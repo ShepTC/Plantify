@@ -105,7 +105,7 @@ export default function LoginPrompt() {
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Leaf className="w-5 h-5 text-primary" />
                 </div>
-                <span className="text-foreground">Never miss a planting window</span>
+                <span className="text-foreground">Discover what plants you can plant today</span>
               </div>
             </div>
 
