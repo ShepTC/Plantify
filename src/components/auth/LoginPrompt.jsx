@@ -18,7 +18,7 @@ export default function LoginPrompt() {
   }, []);
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(window.location.origin + '/#/Dashboard');
   };
 
   const getLogoUrl = () => {
