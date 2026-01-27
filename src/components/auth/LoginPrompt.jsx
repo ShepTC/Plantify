@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User } from '@/entities/User';
+import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LogIn, Sparkles, Leaf } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function LoginPrompt() {
   }, []);
 
   const handleLogin = () => {
-    User.login();
+    base44.auth.redirectToLogin();
   };
 
   const getLogoUrl = () => {
