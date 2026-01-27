@@ -82,7 +82,7 @@ export default function FeatureCarousel() {
   return (
     <div className="w-full space-y-6">
       {/* Feature Card */}
-      <div className="relative h-48 flex items-center justify-center">
+      <div className="relative h-64 flex flex-col items-center justify-start pt-8">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={current}
