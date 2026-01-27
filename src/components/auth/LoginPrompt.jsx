@@ -23,7 +23,17 @@ export default function LoginPrompt() {
   };
 
   const getLogoUrl = () => {
-    return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/04c895d97_PlantifyGardenLogo.png";
+    switch (currentPalette) {
+      case 'pastel':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/bee4fbc3e_PlantifyPastelLogo.png";
+      case 'ocean':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/6ff3caca3_PlantifyOceanLogo.png";
+      case 'sunset':
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/046b7b36c_PlantifySunsetLogo.png";
+      case 'default':
+      default:
+        return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/04c895d97_PlantifyGardenLogo.png";
+    }
   };
 
   const getBackgroundColors = () => {
@@ -81,7 +91,7 @@ export default function LoginPrompt() {
             <div className="space-y-3 text-left">
               <div className="flex items-center gap-3">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 dark:from-green-600 dark:via-emerald-600 dark:to-lime-600 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
                   <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Leaf className="w-5 h-5 text-primary" />
                   </div>
@@ -90,7 +100,7 @@ export default function LoginPrompt() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 dark:from-green-600 dark:via-emerald-600 dark:to-lime-600 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
                   <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
@@ -99,7 +109,7 @@ export default function LoginPrompt() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 dark:from-green-600 dark:via-emerald-600 dark:to-lime-600 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
                   <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Sprout className="w-5 h-5 text-primary" />
                   </div>
