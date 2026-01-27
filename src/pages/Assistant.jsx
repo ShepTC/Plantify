@@ -837,7 +837,7 @@ export default function Assistant() {
                   }>
 
                     {message.type === 'assistant' &&
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
                         {colorPalette === 'default' ?
                     <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                     <Bot className="w-5 h-5 text-white" />
