@@ -98,7 +98,7 @@ export default function FeatureCarousel() {
             className="absolute w-full h-full flex flex-col items-center justify-center px-6 py-8 text-center"
           >
             <div className="relative mb-4">
-              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md" />
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-70 blur-md" />
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
