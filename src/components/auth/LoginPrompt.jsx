@@ -59,7 +59,7 @@ export default function LoginPrompt() {
             className="text-center space-y-8"
           >
             {/* Logo */}
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-8">
               <img 
                 src={getLogoUrl()} 
                 alt="Plantify Logo" 
