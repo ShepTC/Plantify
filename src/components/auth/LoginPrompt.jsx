@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { LogIn, Sparkles, Leaf, Sprout } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/components/utils';
+import FeatureCarousel from './FeatureCarousel';
 
 export default function LoginPrompt() {
   const [currentTheme, setCurrentTheme] = useState('light');
