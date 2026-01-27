@@ -68,10 +68,10 @@ export default function LoginPrompt() {
             </div>
 
             {/* Title */}
-            <div className="space-y-2">
-              <h1 className="text-4xl font-bold text-foreground">
-                Welcome to
-              </h1>
+            <div className="space-y-0">
+                    <h1 className="text-4xl font-bold text-foreground">
+                      Welcome to
+                    </h1>
 
               {/* Long Logo */}
               <div className="flex justify-center py-2">
