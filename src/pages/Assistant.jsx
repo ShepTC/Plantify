@@ -814,7 +814,7 @@ export default function Assistant() {
                   <PanelLeft className="w-5 h-5" />
                 </Button>
               }
-              {colorPalette === 'default' || colorPalette === 'sunset' ?
+              {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
               <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border border-border">
                   <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
                 </div> :
