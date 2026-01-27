@@ -78,7 +78,7 @@ export default function LoginPrompt() {
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/4d2bef4ab_PlantifyLogofinal.png" 
                   alt="Plantify Logo" 
-                  className="w-full max-w-md h-auto object-contain"
+                  className="w-full max-w-md h-auto object-contain scale-75"
                 />
               </div>
 
