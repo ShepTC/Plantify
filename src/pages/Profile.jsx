@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { User } from "@/entities/User";
+import { base44 } from "@/api/base44Client";
 import { UploadFile } from "@/integrations/Core"; // Added UploadFile import
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -532,10 +533,7 @@ export default function Profile() {
           <CardContent className="p-4">
             <Button
               variant="outline"
-              onClick={() => {
-                const welcomeUrl = window.location.origin + createPageUrl('Welcome');
-                User.logout(welcomeUrl);
-              }}
+              onClick={() => base44.auth.logout(createPageUrl('Welcome'))}
               className="w-full flex items-center justify-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30 hover:border-destructive">
               <LogOut className="w-4 h-4" />
               Logout
