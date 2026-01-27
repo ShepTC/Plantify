@@ -118,7 +118,51 @@ export default function FeatureCarousel() {
         </AnimatePresence>
       </div>
 
+      {/* Navigation Controls */}
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => paginate(-1)}
+          className="h-9 w-9 rounded-lg border border-border/50 hover:bg-muted"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
 
+        {/* Dots */}
+        <div className="flex gap-2 justify-center flex-1">
+          {features.map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => {
+                setDirection(index > current ? 1 : -1);
+                setCurrent(index);
+              }}
+              className={`h-1.5 rounded-full transition-all ${
+                index === current
+                  ? 'bg-primary w-6'
+                  : 'bg-muted-foreground/30 w-1.5 hover:bg-muted-foreground/50'
+              }`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.95 }}
+            />
+          ))}
+        </div>
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => paginate(1)}
+          className="h-9 w-9 rounded-lg border border-border/50 hover:bg-muted"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {/* Counter */}
+      <div className="text-center text-xs text-muted-foreground">
+        {current + 1} / {features.length}
+      </div>
     </div>
   );
 }
