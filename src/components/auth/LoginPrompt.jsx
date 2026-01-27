@@ -23,7 +23,7 @@ export default function LoginPrompt() {
   };
 
   const getLogoUrl = () => {
-    return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/33817aa80_LogoAll.png";
+    return "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/0d5963d75_LogoAll.png";
   };
 
   const getBackgroundColors = () => {
