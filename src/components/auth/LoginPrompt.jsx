@@ -56,7 +56,7 @@ export default function LoginPrompt() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center space-y-8"
+            className="text-center space-y-3 md:space-y-8"
           >
             {/* Logo */}
             <div className="flex justify-center pt-8">
