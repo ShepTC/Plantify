@@ -41,6 +41,7 @@ import { createPageUrl } from '@/components/utils';
 const GREEN_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/374d491f7_Newlogogreen.png";
 const SUNSET_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/7ced5ca45_ChatLogoSunset.png";
 const PASTEL_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/10aed8d4c_ChatPastelLogo.png";
+const OCEAN_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/459893860_OceanChatLogo.png";
 
 export default function Assistant() {
   const navigate = useNavigate();
@@ -454,6 +455,7 @@ export default function Assistant() {
   const getBotLogo = () => {
     if (colorPalette === 'sunset') return SUNSET_BOT_LOGO;
     if (colorPalette === 'pastel') return PASTEL_BOT_LOGO;
+    if (colorPalette === 'ocean') return OCEAN_BOT_LOGO;
     return GREEN_BOT_LOGO;
   };
 
@@ -492,7 +494,7 @@ export default function Assistant() {
           </button>
 
           <div className="flex items-center gap-2.5 flex-1 justify-center">
-            {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+            {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
             <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                 <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
               </div> :
@@ -565,7 +567,7 @@ export default function Assistant() {
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden ${
                     message.type === 'user' ?
                     'bg-gradient-to-br from-primary to-secondary shadow-md' :
-                    colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`
+                    colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`
                     }>
 
                       {message.type === 'user' ?
@@ -578,7 +580,7 @@ export default function Assistant() {
 
                     <UserIcon className="w-4 h-4 text-primary-foreground" /> :
 
-                    colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+                    colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
                     <img src={getBotLogo()} alt="Bot" className="w-full h-full object-cover" /> :
                     <Bot className="w-4 h-4 text-white" />
                     }
@@ -633,8 +635,8 @@ export default function Assistant() {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-2 max-w-[95%] mr-auto">
 
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
-                  {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
+                  {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
                 <img src={getBotLogo()} alt="Bot" className="w-full h-full object-cover" /> :
                 <Loader2 className="w-4 h-4 text-white animate-spin" />
                 }
@@ -750,7 +752,7 @@ export default function Assistant() {
             <div className="p-3 border-b border-border/50">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                  {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+                  {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                       <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
                     </div> :
@@ -814,7 +816,7 @@ export default function Assistant() {
                   <PanelLeft className="w-5 h-5" />
                 </Button>
               }
-              {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+              {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
               <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border border-border">
                   <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
                 </div> :
@@ -845,8 +847,8 @@ export default function Assistant() {
                   }>
 
                     {message.type === 'assistant' &&
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
-                        {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                        {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
                     <img src={getBotLogo()} alt="Bot" className="w-full h-full object-cover" /> :
                     <Bot className="w-5 h-5 text-white" />
                     }
@@ -915,8 +917,8 @@ export default function Assistant() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-4 justify-start">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
-                    {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' ?
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                    {colorPalette === 'default' || colorPalette === 'sunset' || colorPalette === 'pastel' || colorPalette === 'ocean' ?
                   <img src={getBotLogo()} alt="Bot" className="w-full h-full object-cover" /> :
                   <Loader2 className="w-5 h-5 text-white animate-spin" />
                   }
