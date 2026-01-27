@@ -77,36 +77,8 @@ export default function LoginPrompt() {
               </p>
             </div>
 
-            {/* Features */}
-            <div className="space-y-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
-                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Leaf className="w-5 h-5 text-primary" />
-                  </div>
-                </div>
-                <span className="text-foreground">Track your garden's progress</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
-                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                  </div>
-                </div>
-                <span className="text-foreground">Get personalized planting advice</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
-                  <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Sprout className="w-5 h-5 text-primary" />
-                  </div>
-                </div>
-                <span className="text-foreground">Discover what plants you can plant today</span>
-              </div>
-            </div>
+            {/* Feature Carousel */}
+            <FeatureCarousel />
 
             {/* CTA Button */}
             <Button 
