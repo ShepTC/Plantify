@@ -525,17 +525,7 @@ export default function Layout({ children, currentPageName }) {
                                                                 </button>
                                     </PopoverTrigger>
                     <PopoverContent className="p-3 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-card text-popover-foreground mr-4 px-4 py-4 z-50 outline-none w-[80vw] max-w-xs rounded-xl shadow-xl border border-border relative overflow-hidden">
-                      {/* Diagonal lines background */}
-                      <div className="absolute bottom-0 -right-10 left-10 h-[85%] pointer-events-none opacity-25">
-                        <img 
-                          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/40f73253e_lines.png"
-                          alt=""
-                          className="w-full h-full object-cover saturate-150"
-                        />
-                      </div>
-                      <div className="relative z-10">
-                        <PremiumMenu />
-                      </div>
+                      <PremiumMenu />
                     </PopoverContent>
                   </Popover> :
 
