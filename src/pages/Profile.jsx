@@ -532,7 +532,10 @@ export default function Profile() {
           <CardContent className="p-4">
             <Button
               variant="outline"
-              onClick={() => User.logout()}
+              onClick={() => {
+                const welcomeUrl = window.location.origin + createPageUrl('Welcome');
+                User.logout(welcomeUrl);
+              }}
               className="w-full flex items-center justify-center gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30 hover:border-destructive">
               <LogOut className="w-4 h-4" />
               Logout
