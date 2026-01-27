@@ -554,9 +554,9 @@ export default function Assistant() {
 
 
                     <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-md overflow-hidden ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden ${
                     message.type === 'user' ?
-                    'bg-gradient-to-br from-primary to-secondary' :
+                    'bg-gradient-to-br from-primary to-secondary shadow-md' :
                     colorPalette === 'default' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`
                     }>
 
@@ -625,7 +625,7 @@ export default function Assistant() {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-2 max-w-[95%] mr-auto">
 
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-md overflow-hidden ${colorPalette === 'default' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
                   {colorPalette === 'default' ?
                 <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                 <Loader2 className="w-4 h-4 text-white animate-spin" />
@@ -807,7 +807,7 @@ export default function Assistant() {
                 </Button>
               }
               {colorPalette === 'default' ?
-              <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden shadow-sm border border-border">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border border-border">
                   <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
                 </div> :
 
@@ -907,7 +907,7 @@ export default function Assistant() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-4 justify-start">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
                     {colorPalette === 'default' ?
                   <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                   <Loader2 className="w-5 h-5 text-white animate-spin" />
