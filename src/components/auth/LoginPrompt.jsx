@@ -72,6 +72,11 @@ export default function LoginPrompt() {
               <h1 className="text-4xl font-bold text-foreground">
                 Welcome to Plantify
               </h1>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/42d84e67d_plantifylongfinal.png"
+                alt="Plantify leaf design"
+                className="w-32 h-auto mx-auto"
+              />
               <p className="text-muted-foreground text-lg">
                 Your personal garden companion
               </p>
