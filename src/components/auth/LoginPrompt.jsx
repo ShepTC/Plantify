@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { LogIn, Sparkles, Leaf } from 'lucide-react';
+import { LogIn, Sparkles, Leaf, Sprout } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/components/utils';
 
@@ -111,7 +111,7 @@ export default function LoginPrompt() {
                 <div className="relative group">
                   <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
                   <div className="relative w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Leaf className="w-5 h-5 text-primary" />
+                    <Sprout className="w-5 h-5 text-primary" />
                   </div>
                 </div>
                 <span className="text-foreground">Discover what plants you can plant today</span>
