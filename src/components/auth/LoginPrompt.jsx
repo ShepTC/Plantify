@@ -77,6 +77,15 @@ export default function LoginPrompt() {
               </p>
             </div>
 
+            {/* Long Logo */}
+            <div className="flex justify-center">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/5136579f4_PlantifylongFinal.png" 
+                alt="Plantify Long Logo" 
+                className="w-full max-w-lg h-auto object-contain"
+              />
+            </div>
+
             {/* Feature Carousel */}
             <FeatureCarousel />
 
