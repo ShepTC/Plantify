@@ -97,14 +97,17 @@ export default function FeatureCarousel() {
             }}
             className="absolute w-full h-full flex flex-col items-center justify-center px-6 py-8 text-center"
           >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center mb-4 shadow-lg shadow-primary/30"
-            >
-              <CurrentIcon className="w-8 h-8 text-primary" />
-            </motion.div>
+            <div className="relative mb-4">
+              <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md" />
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="relative w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
+                <CurrentIcon className="w-8 h-8 text-primary" />
+              </motion.div>
+            </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {features[current].title}
             </h3>
