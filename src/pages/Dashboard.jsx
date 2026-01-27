@@ -111,7 +111,7 @@ export default function Dashboard() {
               className="group relative inline-block">
 
               {/* Glow effect */}
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg animate-pulse" />
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-30 blur-md transition-all duration-300 group-hover:opacity-80 group-hover:blur-lg" />
               <Button
                 size="lg" className="bg-gradient-to-r text-white mx-6 md:mx-0 px-6 md:px-10 lg:px-12 py-6 md:py-7 lg:py-8 text-base md:text-lg lg:text-xl font-bold rounded-xl justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 hover:bg-primary/90 h-11 md:h-auto relative flex items-center gap-2 md:gap-3 from-purple-500 via-pink-500 to-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300">
 
