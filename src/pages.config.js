@@ -10,6 +10,7 @@ import PlantingAlerts from './pages/PlantingAlerts';
 import Profile from './pages/Profile';
 import RequestPlant from './pages/RequestPlant';
 import Upgrade from './pages/Upgrade';
+import Welcome from './pages/Welcome';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "Profile": Profile,
     "RequestPlant": RequestPlant,
     "Upgrade": Upgrade,
+    "Welcome": Welcome,
 }
 
 export const pagesConfig = {
