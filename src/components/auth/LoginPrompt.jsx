@@ -149,17 +149,24 @@ export default function LoginPrompt() {
           }}
           className="relative z-10"
         >
-          <Card className="w-full max-w-md frosted-glass shadow-2xl animate-float">
-            <CardHeader className="text-center pb-2">
+          <Card className="w-full max-w-md frosted-glass shadow-2xl animate-float border-2 border-green-200/30 dark:border-green-800/30">
+            <CardHeader className="text-center pb-2 relative">
+              {/* Decorative top border */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500/0 via-green-500/50 to-green-500/0" />
+              
               <motion.div 
-                className="w-24 h-24 mx-auto flex items-center justify-center mb-6"
+                className="w-28 h-28 mx-auto flex items-center justify-center mb-4 relative"
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 10 }}
               >
+                {/* Glowing ring behind logo */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-500/20 rounded-full blur-xl" />
+                <div className="absolute inset-2 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-full animate-pulse" />
+                
                 <img 
                   src={getLogoUrl()} 
                   alt="Plantify Logo" 
-                  className="w-24 h-24 object-contain filter drop-shadow-lg"
+                  className="w-28 h-28 object-contain filter drop-shadow-2xl relative z-10"
                 />
               </motion.div>
               
@@ -168,25 +175,42 @@ export default function LoginPrompt() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <CardTitle className="text-3xl font-bold text-slate-900 dark:text-foreground mb-2">
+                <CardTitle className="text-4xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-700 dark:from-green-400 dark:via-emerald-400 dark:to-teal-400 bg-clip-text text-transparent mb-2">
                   Welcome to Plantify
                 </CardTitle>
-                <CardDescription className="text-slate-600 dark:text-muted-foreground text-lg">
-                  Cultivate your digital garden journey.
+                <CardDescription className="text-green-700/80 dark:text-green-300/80 text-lg font-medium">
+                  🌱 Cultivate your digital garden journey
                 </CardDescription>
               </motion.div>
             </CardHeader>
             
-            <CardContent className="flex flex-col items-center space-y-6 pt-4">
-              <motion.p 
-                className="text-slate-700 dark:text-foreground/80 text-center leading-relaxed"
+            <CardContent className="flex flex-col items-center space-y-6 pt-4 px-8">
+              <motion.div
+                className="w-full space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                Join thousands of gardeners growing smarter with AI-powered planting insights, 
-                personalized alerts, and expert guidance.
-              </motion.p>
+                {/* Feature highlights */}
+                <div className="flex items-center gap-3 text-sm text-foreground/80">
+                  <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span>AI-powered planting insights</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-foreground/80">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                    <Leaf className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <span>Personalized growing calendar</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-foreground/80">
+                  <div className="w-8 h-8 rounded-full bg-teal-500/10 flex items-center justify-center flex-shrink-0">
+                    <Leaf className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <span>Expert garden guidance</span>
+                </div>
+              </motion.div>
               
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -194,28 +218,28 @@ export default function LoginPrompt() {
                 transition={{ delay: 0.7, duration: 0.5 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full"
+                className="w-full pt-2"
               >
                 <Button 
                   size="lg" 
-                  className="w-full text-lg py-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+                  className="w-full text-lg py-7 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group border-0"
                   onClick={handleLogin}
                 >
                   {/* Button background animation */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                   
                   <LogIn className="w-5 h-5 mr-3 relative z-10" />
-                  <span className="relative z-10">Enter Your Garden</span>
+                  <span className="relative z-10 font-semibold">Start Growing Today</span>
                 </Button>
               </motion.div>
               
               <motion.p 
-                className="text-xs text-slate-500 dark:text-muted-foreground text-center"
+                className="text-xs text-muted-foreground text-center pb-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.9, duration: 0.4 }}
               >
-                Secure sign-in powered by Google ✨
+                🔒 Secure sign-in with Google
               </motion.p>
             </CardContent>
           </Card>
