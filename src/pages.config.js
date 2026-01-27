@@ -1,3 +1,4 @@
+import Assistant from './pages/Assistant';
 import Calendar from './pages/Calendar';
 import Dashboard from './pages/Dashboard';
 import HealthScanner from './pages/HealthScanner';
@@ -10,11 +11,11 @@ import Profile from './pages/Profile';
 import RequestPlant from './pages/RequestPlant';
 import Upgrade from './pages/Upgrade';
 import Welcome from './pages/Welcome';
-import Assistant from './pages/Assistant';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Assistant": Assistant,
     "Calendar": Calendar,
     "Dashboard": Dashboard,
     "HealthScanner": HealthScanner,
@@ -27,7 +28,6 @@ export const PAGES = {
     "RequestPlant": RequestPlant,
     "Upgrade": Upgrade,
     "Welcome": Welcome,
-    "Assistant": Assistant,
 }
 
 export const pagesConfig = {
