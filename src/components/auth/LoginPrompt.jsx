@@ -70,7 +70,7 @@ export default function LoginPrompt() {
             {/* Title */}
             <div className="space-y-2">
               <h1 className="text-4xl font-bold text-foreground">
-                Welcome to Plantify
+                Welcome to
               </h1>
 
               {/* Long Logo */}
