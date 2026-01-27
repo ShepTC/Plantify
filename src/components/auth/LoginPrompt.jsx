@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { LogIn, Sparkles } from 'lucide-react';
+import { LogIn, Sparkles, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function LoginPrompt() {
