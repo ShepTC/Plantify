@@ -476,21 +476,21 @@ export default function Assistant() {
       {/* Mobile View */}
       <div className="block md:hidden h-screen w-full flex flex-col bg-background relative">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-card/95 backdrop-blur-sm border-b border-border/50 flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3.5 bg-card/98 backdrop-blur-xl border-b border-border/50 shadow-sm flex-shrink-0">
           <button
             onClick={() => navigate(createPageUrl('Dashboard'))}
-            className="flex items-center justify-center h-10 w-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 active:bg-muted transition-colors">
+            className="flex items-center justify-center h-11 w-11 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 active:scale-95 transition-all duration-200">
             <ArrowLeft className="w-5 h-5" />
           </button>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 flex-1 justify-center">
             {colorPalette === 'default' ?
-            <div className="w-7 h-7 rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                 <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
               </div> :
 
-            <div className="w-7 h-7 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.5)]">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.5)]">
+                <Sparkles className="w-4 h-4 text-white" />
               </div>
             }
             <span className="text-base font-semibold text-foreground">Garden Helper</span>
@@ -502,7 +502,7 @@ export default function Assistant() {
 
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <button className="flex items-center justify-center h-10 w-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 active:bg-muted transition-colors">
+              <button className="flex items-center justify-center h-11 w-11 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 active:scale-95 transition-all duration-200">
                 <Menu className="w-5 h-5" />
               </button>
             </SheetTrigger>
