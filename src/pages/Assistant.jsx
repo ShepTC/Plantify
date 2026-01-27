@@ -39,6 +39,7 @@ import { createPageUrl } from '@/components/utils';
 
 
 const GREEN_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/374d491f7_Newlogogreen.png";
+const SUNSET_BOT_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/3d8f3caac_ChatLogoSunset.png";
 
 export default function Assistant() {
   const navigate = useNavigate();
@@ -488,7 +489,10 @@ export default function Assistant() {
             <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
                 <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
               </div> :
-
+            colorPalette === 'sunset' ?
+            <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
+                <img src={SUNSET_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
+              </div> :
             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.5)]">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
@@ -557,7 +561,7 @@ export default function Assistant() {
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden ${
                     message.type === 'user' ?
                     'bg-gradient-to-br from-primary to-secondary shadow-md' :
-                    colorPalette === 'default' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`
+                    colorPalette === 'default' || colorPalette === 'sunset' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`
                     }>
 
                       {message.type === 'user' ?
@@ -572,6 +576,8 @@ export default function Assistant() {
 
                     colorPalette === 'default' ?
                     <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
+                    colorPalette === 'sunset' ?
+                    <img src={SUNSET_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                     <Bot className="w-4 h-4 text-white" />
                     }
                     </div>
@@ -625,9 +631,11 @@ export default function Assistant() {
               transition={{ duration: 0.3 }}
               className="flex items-center gap-2 max-w-[95%] mr-auto">
 
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' ? '' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_10px_rgba(168,85,247,0.4)]'}`}>
                   {colorPalette === 'default' ?
                 <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
+                colorPalette === 'sunset' ?
+                <img src={SUNSET_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                 <Loader2 className="w-4 h-4 text-white animate-spin" />
                 }
                 </div>
@@ -746,7 +754,10 @@ export default function Assistant() {
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                       <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
                     </div> :
-
+                  colorPalette === 'sunset' ?
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
+                      <img src={SUNSET_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
+                    </div> :
                   <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.4)]">
                       <Sparkles className="w-4 h-4 text-white" />
                     </div>
@@ -810,7 +821,10 @@ export default function Assistant() {
               <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border border-border">
                   <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
                 </div> :
-
+              colorPalette === 'sunset' ?
+              <div className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden border border-border">
+                  <img src={SUNSET_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
+                </div> :
               <div className="w-9 h-9 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.4)]">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
@@ -837,9 +851,11 @@ export default function Assistant() {
                   }>
 
                     {message.type === 'assistant' &&
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
                         {colorPalette === 'default' ?
                     <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
+                    colorPalette === 'sunset' ?
+                    <img src={SUNSET_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                     <Bot className="w-5 h-5 text-white" />
                     }
                       </div>
@@ -907,9 +923,11 @@ export default function Assistant() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-4 justify-start">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ${colorPalette === 'default' || colorPalette === 'sunset' ? 'border border-border' : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'}`}>
                     {colorPalette === 'default' ?
                   <img src={GREEN_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
+                  colorPalette === 'sunset' ?
+                  <img src={SUNSET_BOT_LOGO} alt="Bot" className="w-full h-full object-cover" /> :
                   <Loader2 className="w-5 h-5 text-white animate-spin" />
                   }
                   </div>
