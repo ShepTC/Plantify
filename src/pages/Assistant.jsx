@@ -741,41 +741,35 @@ export default function Assistant() {
 
           <div className="w-80 flex flex-col h-full">
             {/* Sidebar Header */}
-            <div className="p-4 border-b border-border bg-muted/30">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
+            <div className="p-3 border-b border-border/50">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
                   {colorPalette === 'default' ?
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-md border border-border">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                       <img src={GREEN_BOT_LOGO} alt="Garden Helper" className="w-full h-full object-cover" />
                     </div> :
 
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-xl flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.5)]">
-                      <Sparkles className="w-5 h-5 text-white" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.4)]">
+                      <Sparkles className="w-4 h-4 text-white" />
                     </div>
                   }
-                  <div>
-                    <h2 className="font-semibold text-foreground text-sm">Garden Helper</h2>
-                    <div className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 rounded-full px-2 py-0.5 shadow-[0_0_10px_rgba(168,85,247,0.4)]">
-                      <Sparkles className="w-2.5 h-2.5 text-white" />
-                      <span className="text-[9px] font-bold text-white">Pro</span>
-                    </div>
-                  </div>
+                  <span className="text-sm font-medium text-foreground">Garden Helper</span>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsSidebarCollapsed(true)}
-                  className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg">
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
 
                   <PanelLeftClose className="w-4 h-4" />
                 </Button>
               </div>
-              <Button
+              <button
                 onClick={createNewChat}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-sm">
-                <Plus className="w-4 h-4 mr-2" />
-                New Chat
-              </Button>
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-transparent hover:bg-muted/50 text-foreground border border-border/50 rounded-lg transition-all duration-200">
+                <Plus className="w-4 h-4" />
+                <span className="text-sm">New chat</span>
+              </button>
             </div>
             
             {/* Chat History */}
