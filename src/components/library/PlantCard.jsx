@@ -159,10 +159,10 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
                 className="group relative inline-block w-full"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-300 via-sky-300 to-cyan-300 opacity-70 blur-md transition-all duration-300 group-hover:opacity-100 group-hover:blur-lg" />
+                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-300 via-pink-300 to-orange-300 opacity-70 blur-md transition-all duration-300 group-hover:opacity-100 group-hover:blur-lg" />
                 <Button
                   size="sm"
-                  className="relative w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+                  className="relative w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white shadow-xl hover:shadow-2xl transition-all duration-300"
                 >
                   Ask Assistant
                 </Button>
