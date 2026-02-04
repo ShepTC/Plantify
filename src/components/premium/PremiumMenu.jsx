@@ -12,7 +12,7 @@ export default function PremiumMenu() {
       name: "AI Garden Helper",
       description: "Get personalized advice from our AI assistant",
       icon: "image",
-      url: createPageUrl("Assistant"),
+      url: createPageUrl("Assistant") + "?newChat=true",
       gradient: "from-purple-500 via-purple-600 to-pink-500",
       shadowColor: "shadow-purple-500/50"
     },

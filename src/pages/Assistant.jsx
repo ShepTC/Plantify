@@ -80,9 +80,16 @@ export default function Assistant() {
       // Check for highlighted plant ID in URL
       const urlParams = new URLSearchParams(window.location.search);
       const highlightPlantId = urlParams.get('highlightPlantId');
+      const newChatParam = urlParams.get('newChat');
+      
       if (highlightPlantId) {
         await loadPlantContext(highlightPlantId);
         // Clear the URL parameter after loading
+        window.history.replaceState({}, '', createPageUrl('Assistant'));
+      } else if (newChatParam === 'true') {
+        // Create a new chat when coming from premium menu
+        await createNewChat();
+        // Clear the URL parameter after creating new chat
         window.history.replaceState({}, '', createPageUrl('Assistant'));
       }
     };
