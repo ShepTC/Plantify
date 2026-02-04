@@ -544,8 +544,8 @@ export default function Assistant() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-primary/10 rounded-full mx-auto flex items-center justify-center mb-4 animate-pulse">
-            <Bot className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4 animate-pulse overflow-hidden">
+            <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
           </div>
           <p className="text-muted-foreground">Loading your garden assistant...</p>
         </div>
