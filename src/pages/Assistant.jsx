@@ -540,16 +540,26 @@ export default function Assistant() {
     return GREEN_BOT_LOGO;
   };
 
-  if (isInitializing)
-  return (
-    <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
+  if (isInitializing) {
+    const initPalette = document.documentElement.getAttribute('data-palette') || 'default';
+    const getInitLogo = () => {
+      if (initPalette === 'sunset') return SUNSET_BOT_LOGO;
+      if (initPalette === 'pastel') return PASTEL_BOT_LOGO;
+      if (initPalette === 'ocean') return OCEAN_BOT_LOGO;
+      return GREEN_BOT_LOGO;
+    };
+    
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4 animate-pulse overflow-hidden">
-            <img src={getBotLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
+            <img src={getInitLogo()} alt="Garden Helper" className="w-full h-full object-cover" />
           </div>
           <p className="text-muted-foreground">Loading your garden assistant...</p>
         </div>
-      </div>);
+      </div>
+    );
+  }
 
 
   if (!user) return <LoginPrompt />;
