@@ -66,6 +66,7 @@ export default function Assistant() {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [contextPlant, setContextPlant] = useState(null);
 
 
   useEffect(() => {
@@ -73,7 +74,58 @@ export default function Assistant() {
     // Get color palette from document
     const palette = document.documentElement.getAttribute('data-palette') || 'default';
     setColorPalette(palette);
+
+    // Check for highlighted plant ID in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightPlantId = urlParams.get('highlightPlantId');
+    if (highlightPlantId) {
+      loadPlantContext(highlightPlantId);
+    }
   }, []);
+
+  const loadPlantContext = async (plantId) => {
+    try {
+      const allPlants = await Plant.list();
+      const plant = allPlants.find(p => p.id === plantId);
+      if (plant) {
+        setContextPlant(plant);
+        // Create a new chat with this plant as context
+        await createNewChatWithPlant(plant);
+      }
+    } catch (error) {
+      console.error('Error loading plant context:', error);
+    }
+  };
+
+  const createNewChatWithPlant = async (plant) => {
+    const welcomeMessage = {
+      id: 1,
+      type: 'assistant',
+      content: `I'm ready to help you with ${plant.name}! Ask me anything about growing, caring for, or harvesting this plant.`,
+      timestamp: new Date().toISOString(),
+      suggestedPlantIds: []
+    };
+
+    const savedChat = await ChatHistory.create({
+      title: `Chat about ${plant.name}`,
+      messages: [welcomeMessage]
+    });
+
+    const newChat = {
+      id: savedChat.id,
+      title: savedChat.title,
+      messages: [{
+        ...welcomeMessage,
+        timestamp: new Date(welcomeMessage.timestamp),
+        suggestedPlants: []
+      }],
+      createdAt: new Date(savedChat.created_date)
+    };
+
+    setChatHistory((prev) => [newChat, ...prev]);
+    setCurrentChatId(savedChat.id);
+    setMessages(newChat.messages);
+  };
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -260,6 +312,26 @@ export default function Assistant() {
     } else {
       context += `\n- The user doesn't have any plants in their garden yet.\n`;
     }
+    
+    // Add context plant information if available
+    if (contextPlant) {
+      context += `\n**IMPORTANT CONTEXT**: The user is specifically asking about ${contextPlant.name}.\n`;
+      context += `Here's detailed information about this plant:\n`;
+      context += `- Category: ${contextPlant.category}\n`;
+      context += `- Type: ${contextPlant.plant_type}\n`;
+      if (contextPlant.botanical_name) context += `- Botanical name: ${contextPlant.botanical_name}\n`;
+      if (contextPlant.days_to_maturity) context += `- Days to maturity: ${contextPlant.days_to_maturity}\n`;
+      if (contextPlant.sun_requirements) context += `- Sun requirements: ${contextPlant.sun_requirements}\n`;
+      if (contextPlant.water_needs) context += `- Water needs: ${contextPlant.water_needs}\n`;
+      if (contextPlant.spacing) context += `- Spacing: ${contextPlant.spacing}\n`;
+      if (contextPlant.planting_depth) context += `- Planting depth: ${contextPlant.planting_depth}\n`;
+      if (contextPlant.growing_tips) context += `- Growing tips: ${contextPlant.growing_tips}\n`;
+      if (contextPlant.companion_plants?.length > 0) {
+        context += `- Companion plants: ${contextPlant.companion_plants.join(', ')}\n`;
+      }
+      context += `\nFocus your responses on this specific plant unless the user asks about something else.\n`;
+    }
+    
     context += `\n`;
     return context;
   };
@@ -545,6 +617,29 @@ export default function Assistant() {
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           <div className="pt-1 pb-4 pl-2 space-y-4">
+            {/* Context Plant Card - Mobile */}
+            {contextPlant && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mx-2 mb-4 mt-2"
+              >
+                <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-400/10 border-2 border-purple-400/50 dark:border-purple-600/50 rounded-xl p-3 shadow-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center shadow-md">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-foreground">Chatting about:</p>
+                      <p className="text-sm font-bold text-foreground">{contextPlant.name}</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    All responses will focus on this plant. Ask me anything!
+                  </p>
+                </div>
+              </motion.div>
+            )}
             <AnimatePresence>
               {messages.map((message) =>
               <motion.div
@@ -835,6 +930,29 @@ export default function Assistant() {
           {/* Messages Area */}
           <ScrollArea className="flex-1 px-6 py-4" ref={scrollAreaRef}>
             <div className="space-y-6 max-w-4xl mx-auto">
+              {/* Context Plant Card - Desktop */}
+              {contextPlant && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6"
+                >
+                  <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-400/10 border-2 border-purple-400/50 dark:border-purple-600/50 rounded-2xl p-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-xl flex items-center justify-center shadow-md">
+                        <Sparkles className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-muted-foreground">Chatting about:</p>
+                        <p className="text-lg font-bold text-foreground">{contextPlant.name}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-3">
+                      All responses will focus on this plant. Ask me anything about growing, caring for, or harvesting it!
+                    </p>
+                  </div>
+                </motion.div>
+              )}
               {messages.map((message) =>
               <motion.div
                 key={message.id}
