@@ -108,7 +108,7 @@ export default function Assistant() {
     const welcomeMessage = {
       id: 1,
       type: 'assistant',
-      content: `I'm ready to help you with **${plant.name}**! Ask me anything about growing, caring for, or harvesting this plant.`,
+      content: `I'm ready to help you with ${plant.name}! Ask me anything about growing, caring for, or harvesting this plant.`,
       timestamp: new Date().toISOString(),
       suggestedPlantIds: []
     };
