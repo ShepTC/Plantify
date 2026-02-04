@@ -70,17 +70,24 @@ export default function Assistant() {
 
 
   useEffect(() => {
-    loadUserData();
-    // Get color palette from document
-    const palette = document.documentElement.getAttribute('data-palette') || 'default';
-    setColorPalette(palette);
+    const initializeAssistant = async () => {
+      await loadUserData();
+      
+      // Get color palette from document
+      const palette = document.documentElement.getAttribute('data-palette') || 'default';
+      setColorPalette(palette);
 
-    // Check for highlighted plant ID in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const highlightPlantId = urlParams.get('highlightPlantId');
-    if (highlightPlantId) {
-      loadPlantContext(highlightPlantId);
-    }
+      // Check for highlighted plant ID in URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const highlightPlantId = urlParams.get('highlightPlantId');
+      if (highlightPlantId) {
+        await loadPlantContext(highlightPlantId);
+        // Clear the URL parameter after loading
+        window.history.replaceState({}, '', createPageUrl('Assistant'));
+      }
+    };
+
+    initializeAssistant();
   }, []);
 
   const loadPlantContext = async (plantId) => {
@@ -89,7 +96,7 @@ export default function Assistant() {
       const plant = allPlants.find(p => p.id === plantId);
       if (plant) {
         setContextPlant(plant);
-        // Create a new chat with this plant as context
+        // Always create a brand new chat with this plant as context
         await createNewChatWithPlant(plant);
       }
     } catch (error) {
@@ -101,13 +108,13 @@ export default function Assistant() {
     const welcomeMessage = {
       id: 1,
       type: 'assistant',
-      content: `I'm ready to help you with ${plant.name}! Ask me anything about growing, caring for, or harvesting this plant.`,
+      content: `I'm ready to help you with **${plant.name}**! Ask me anything about growing, caring for, or harvesting this plant.`,
       timestamp: new Date().toISOString(),
       suggestedPlantIds: []
     };
 
     const savedChat = await ChatHistory.create({
-      title: `Chat about ${plant.name}`,
+      title: `${plant.name} Chat`,
       messages: [welcomeMessage]
     });
 
@@ -119,9 +126,11 @@ export default function Assistant() {
         timestamp: new Date(welcomeMessage.timestamp),
         suggestedPlants: []
       }],
-      createdAt: new Date(savedChat.created_date)
+      createdAt: new Date(savedChat.created_date),
+      contextPlantId: plant.id
     };
 
+    // Add to beginning of chat history
     setChatHistory((prev) => [newChat, ...prev]);
     setCurrentChatId(savedChat.id);
     setMessages(newChat.messages);
