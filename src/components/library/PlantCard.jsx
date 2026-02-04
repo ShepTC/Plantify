@@ -3,6 +3,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sprout, Flower, Droplets, Sun, Plus, CheckCircle, Calendar, Leaf, Apple } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/components/utils";
 
 const categoryIcons = {
   vegetables: <Sprout className="w-8 h-8 sm:w-10 sm:h-10" />,
@@ -28,7 +30,7 @@ const categoryBadgeColors = {
   herbs: "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900/50 dark:text-teal-300 dark:border-teal-700"
 };
 
-export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClick }) {
+export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClick, isPremium }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -150,25 +152,42 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
         </CardContent>
         
         <CardFooter className="p-2 sm:p-4 pt-0">
-          <Button
-            size="sm"
-            className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4"
-            onClick={handleAddClick}
-            disabled={isAdded}
-            variant={isAdded ? "secondary" : "default"}>
+          <div className="flex flex-col gap-2 w-full">
+            {isPremium && (
+              <Link 
+                to={createPageUrl(`Assistant?highlightPlantId=${plant.id}`)} 
+                className="group relative inline-block w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-300 via-sky-300 to-cyan-300 opacity-70 blur-md transition-all duration-300 group-hover:opacity-100 group-hover:blur-lg" />
+                <Button
+                  size="sm"
+                  className="relative w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+                >
+                  Ask Assistant
+                </Button>
+              </Link>
+            )}
+            <Button
+              size="sm"
+              className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4"
+              onClick={handleAddClick}
+              disabled={isAdded}
+              variant={isAdded ? "secondary" : "default"}>
 
-            {isAdded ?
-            <>
-                <CheckCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-1" />
-                <span className="hidden xs:inline sm:inline">Added</span>
-                <span className="xs:hidden sm:hidden">✓</span>
-              </> :
+              {isAdded ?
+              <>
+                  <CheckCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-1" />
+                  <span className="hidden xs:inline sm:inline">Added</span>
+                  <span className="xs:hidden sm:hidden">✓</span>
+                </> :
 
-            <>
-                <Plus className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-              </>
-            }
-          </Button>
+              <>
+                  <Plus className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
+                </>
+              }
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>);

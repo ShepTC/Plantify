@@ -561,6 +561,7 @@ export default function PlantLibrary() {
                   isAdded={userPlantIds.has(plant.id)}
                   userZone={user?.growing_zone}
                   onClick={() => handlePlantSelect(plant)}
+                  isPremium={user?.is_premium}
                   />
 
                       </motion.div>
