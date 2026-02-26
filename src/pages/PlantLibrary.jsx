@@ -110,9 +110,9 @@ export default function PlantLibrary() {
     } else {
       const lowercasedTerm = searchTerm.toLowerCase();
       filtered = processedPlants.filter((plant) =>
-      plant.name.toLowerCase().includes(lowercasedTerm) ||
-      plant.category.toLowerCase().includes(lowercasedTerm) ||
-      plant.botanical_name.toLowerCase().includes(lowercasedTerm)
+      plant.name?.toLowerCase().includes(lowercasedTerm) ||
+      plant.category?.toLowerCase().includes(lowercasedTerm) ||
+      plant.botanical_name?.toLowerCase().includes(lowercasedTerm)
       );
     }
 
