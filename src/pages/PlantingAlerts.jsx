@@ -95,7 +95,6 @@ export default function PlantingAlerts() {
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [plantsByCategoryToday, setPlantsByCategoryToday] = useState({});
-  const [viewMode, setViewMode] = useState('shelf'); // 'shelf' or 'category'
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const isPlantableToday = useCallback((plant, userZone, dayNumber) => {
