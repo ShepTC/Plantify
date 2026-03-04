@@ -344,15 +344,7 @@ export default function PlantingAlerts() {
   };
 
   const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setViewMode('category');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleBackToShelf = () => {
-    setSelectedCategory(null);
-    setViewMode('shelf');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSelectedCategory(prev => prev === category ? null : category);
   };
 
   if (isLoading) {
