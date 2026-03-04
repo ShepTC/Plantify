@@ -14,7 +14,6 @@ import {
   Sun,
   Droplets,
   Sprout,
-  ArrowLeft,
   Flower
 } from "lucide-react";
 import { Link } from "react-router-dom";
