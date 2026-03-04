@@ -555,8 +555,8 @@ export default function PlantingAlerts() {
           </Card>
         )}
 
-        {/* This Week Section - Only show if there are additional weekly plants and in shelf view */}
-        {viewMode === 'shelf' && plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length > 0 && (
+        {/* This Week Section */}
+        {plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length > 0 && (
           <Card className="bg-card/80 backdrop-blur-sm border-border">
             <CardHeader className="pb-4 md:pb-6">
               <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-foreground">
