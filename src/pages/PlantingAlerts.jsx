@@ -441,149 +441,118 @@ export default function PlantingAlerts() {
           onAddPlant={addPlantToGarden}
         />
 
-        {/* Category Shelf View */}
-        {viewMode === 'shelf' && (
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key="shelf-view"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              className="space-y-6"
-            >
-              {hasPlantsToday ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                  {Object.entries(categoryData).map(([key, category]) => {
-                    const plantCount = plantsByCategoryToday[key]?.length || 0;
-                    if (plantCount === 0) return null;
+        {/* Category Shelf + Inline Plants */}
+        {hasPlantsToday ? (
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4">
+            {Object.entries(categoryData).map(([key, category]) => {
+              const plants = plantsByCategoryToday[key] || [];
+              if (plants.length === 0) return null;
+              const isSelected = selectedCategory === key;
 
-                    return (
-                      <motion.div key={key} variants={itemVariants} layout>
-                        <CategoryCard
-                          category={category}
-                          plantCount={plantCount}
-                          onClick={() => handleCategorySelect(key)}
-                        />
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              ) : (
-               <Card className="bg-card/80 backdrop-blur-sm border-border">
-                 <CardContent className="text-center py-12 md:py-16">
-                   <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-accent mx-auto mb-4" />
-                   <h3 className="font-semibold text-lg text-foreground mb-2">Perfect timing!</h3>
-                   <p className="text-sm text-muted-foreground mb-6">
-                     No plants are optimal to plant today, but check back during your active planting seasons.
-                   </p>
-                   <Link to={createPageUrl("PlantLibrary")}>
-                     <Button variant="outline" size="sm">
-                       Explore Plant Library
-                     </Button>
-                   </Link>
-                 </CardContent>
-               </Card>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        )}
-
-        {/* Individual Category View */}
-        {viewMode === 'category' && selectedCategory && (
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key="category-view"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="bg-card/80 backdrop-blur-sm border-border">
-               <CardHeader className="pb-4 md:pb-6">
-                 <div className="flex items-center justify-between gap-4">
-                   <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-foreground">
-                     {categoryIcons[selectedCategory]}
-                     <span className="capitalize font-semibold">{selectedCategory}</span>
-                   </CardTitle>
-                   <Button variant="ghost" size="sm" onClick={handleBackToShelf} className="text-xs md:text-sm">
-                     <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5" />
-                     Back
-                   </Button>
-                 </div>
-               </CardHeader>
-               <CardContent>
-                  <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
+              return (
+                <motion.div key={key} variants={itemVariants} layout>
+                  {/* Category Header - clickable to toggle highlight */}
+                  <button
+                    onClick={() => handleCategorySelect(key)}
+                    className={`w-full text-left rounded-2xl border transition-all duration-300 px-4 py-3 md:px-5 md:py-4 flex items-center justify-between gap-3 ${
+                      isSelected
+                        ? 'bg-primary/10 border-primary/40'
+                        : 'bg-card/80 border-border hover:border-primary/30 hover:bg-muted/40'
+                    }`}
                   >
-                    {plantsByCategoryToday[selectedCategory].map((plant) => (
-                      <motion.div key={plant.id} variants={itemVariants}>
-                        <Card className="bg-muted/30 border-border hover:border-primary/50 transition-all duration-300">
-                          <CardHeader className="p-2 md:p-4 pb-2 md:pb-3">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-foreground truncate text-xs md:text-sm leading-tight">{plant.name}</h3>
-                                <p className="text-[10px] md:text-xs text-muted-foreground italic truncate mt-0.5">{plant.botanical_name}</p>
-                              </div>
-                              <div className="flex-shrink-0 ml-1 md:ml-2">
-                                <div className="w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">
-                                  {categoryIcons[plant.category]}
-                                </div>
-                              </div>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="p-2 md:p-4 pt-0 space-y-2 md:space-y-3">
-                            <div className="flex gap-1 md:gap-2 flex-wrap">
-                              <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category]} px-1.5 py-0.5`}>
-                                {plant.category}
-                              </Badge>
-                              <Badge variant="outline" className="text-[10px] md:text-xs px-1.5 py-0.5">
-                                {plant.season} Planting
-                              </Badge>
-                            </div>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br ${category.color}`}>
+                        <category.icon className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm md:text-base text-foreground">{category.name}</p>
+                        <p className="text-xs text-muted-foreground">{plants.length} plant{plants.length !== 1 ? 's' : ''} ready</p>
+                      </div>
+                    </div>
+                    <div className={`text-xs font-medium px-2.5 py-1 rounded-full transition-colors ${isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                      {isSelected ? 'Highlighted' : 'View'}
+                    </div>
+                  </button>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 text-[10px] md:text-xs">
-                              <div className="flex items-center gap-1">
-                                <Sun className="w-2.5 h-2.5 md:w-3 h-3 md:h-3 text-secondary flex-shrink-0" />
-                                <span className="text-muted-foreground capitalize truncate">
-                                  {plant.sun_requirements?.replace("_", " ")}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Droplets className="w-2.5 h-2.5 md:w-3 h-3 md:h-3 text-secondary flex-shrink-0" />
-                                <span className="text-muted-foreground capitalize truncate">
-                                  {plant.water_needs} Water
-                                </span>
-                              </div>
-                            </div>
-
-                            {plant.days_to_maturity && (
-                              <p className="text-[10px] md:text-xs text-muted-foreground">
-                                <span className="font-medium">Harvest:</span> {plant.days_to_maturity} days
-                              </p>
-                            )}
-
-                            <Button
-                              size="sm"
-                              className="w-full h-7 md:h-8 text-[10px] md:text-xs"
-                              onClick={() => addPlantToGarden(plant)}
-                            >
-                              <Plus className="w-3 h-3 md:w-4 md:h-4 mr-1" />
-                              <span className="hidden sm:inline">Add to Garden</span>
-                              <span className="sm:hidden">Add</span>
-                            </Button>
-                          </CardContent>
-                        </Card>
+                  {/* Inline Plants Grid */}
+                  <AnimatePresence>
+                    {isSelected && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 pt-3">
+                          {plants.map((plant) => (
+                            <motion.div key={plant.id} variants={itemVariants} initial="hidden" animate="visible">
+                              <Card className="bg-muted/30 border-border hover:border-primary/50 transition-all duration-300">
+                                <CardHeader className="p-2 md:p-4 pb-2 md:pb-3">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1 min-w-0">
+                                      <h3 className="font-semibold text-foreground truncate text-xs md:text-sm leading-tight">{plant.name}</h3>
+                                      <p className="text-[10px] md:text-xs text-muted-foreground italic truncate mt-0.5">{plant.botanical_name}</p>
+                                    </div>
+                                    <div className="flex-shrink-0 ml-1 md:ml-2 w-4 h-4 md:w-5 md:h-5 flex items-center justify-center">
+                                      {categoryIcons[plant.category]}
+                                    </div>
+                                  </div>
+                                </CardHeader>
+                                <CardContent className="p-2 md:p-4 pt-0 space-y-2 md:space-y-3">
+                                  <div className="flex gap-1 md:gap-2 flex-wrap">
+                                    <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category]} px-1.5 py-0.5`}>
+                                      {plant.category}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-[10px] md:text-xs px-1.5 py-0.5">
+                                      {plant.season} Planting
+                                    </Badge>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 text-[10px] md:text-xs">
+                                    <div className="flex items-center gap-1">
+                                      <Sun className="w-2.5 h-2.5 md:w-3 md:h-3 text-secondary flex-shrink-0" />
+                                      <span className="text-muted-foreground capitalize truncate">{plant.sun_requirements?.replace("_", " ")}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Droplets className="w-2.5 h-2.5 md:w-3 md:h-3 text-secondary flex-shrink-0" />
+                                      <span className="text-muted-foreground capitalize truncate">{plant.water_needs} Water</span>
+                                    </div>
+                                  </div>
+                                  {plant.days_to_maturity && (
+                                    <p className="text-[10px] md:text-xs text-muted-foreground">
+                                      <span className="font-medium">Harvest:</span> {plant.days_to_maturity} days
+                                    </p>
+                                  )}
+                                  <Button size="sm" className="w-full h-7 md:h-8 text-[10px] md:text-xs" onClick={() => addPlantToGarden(plant)}>
+                                    <Plus className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                                    <span className="hidden sm:inline">Add to Garden</span>
+                                    <span className="sm:hidden">Add</span>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </motion.div>
+                          ))}
+                        </div>
                       </motion.div>
-                    ))}
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </AnimatePresence>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <Card className="bg-card/80 backdrop-blur-sm border-border">
+            <CardContent className="text-center py-12 md:py-16">
+              <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-accent mx-auto mb-4" />
+              <h3 className="font-semibold text-lg text-foreground mb-2">Perfect timing!</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                No plants are optimal to plant today, but check back during your active planting seasons.
+              </p>
+              <Link to={createPageUrl("PlantLibrary")}>
+                <Button variant="outline" size="sm">Explore Plant Library</Button>
+              </Link>
+            </CardContent>
+          </Card>
         )}
 
         {/* This Week Section - Only show if there are additional weekly plants and in shelf view */}
