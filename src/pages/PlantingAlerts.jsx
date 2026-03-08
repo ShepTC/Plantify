@@ -452,6 +452,11 @@ export default function PlantingAlerts() {
 
   const hasPlantsToday = Object.values(plantsByCategoryToday).some(p => p.length > 0);
 
+  const methodBadgeStyle = {
+    direct_sow: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700",
+    transplant: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700"
+  };
+
   return (
     <div className="min-h-screen bg-background p-3 md:p-6 pb-20 md:pb-6">
       <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
