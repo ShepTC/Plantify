@@ -27,7 +27,7 @@ import {
   SidebarFooter,
   SidebarProvider,
   SidebarTrigger } from
-"@/components/ui/sidebar";
+"@/components/ui/sidebar.jsx";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import BottomNavBar from "./components/layout/BottomNavBar";
