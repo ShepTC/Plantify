@@ -75,6 +75,22 @@ const categoryData = {
     bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
     borderColor: "border-yellow-200 dark:border-yellow-700",
     description: "Hardy grains and cereals"
+  },
+  direct_sow: {
+    name: "Direct Sow",
+    icon: Sprout,
+    color: "from-emerald-500 to-emerald-600",
+    bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
+    borderColor: "border-emerald-200 dark:border-emerald-700",
+    description: "Sow directly into the ground"
+  },
+  transplant: {
+    name: "Transplant",
+    icon: Flower,
+    color: "from-blue-500 to-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-900/20",
+    borderColor: "border-blue-200 dark:border-blue-700",
+    description: "Start indoors and transplant out"
   }
 };
 
