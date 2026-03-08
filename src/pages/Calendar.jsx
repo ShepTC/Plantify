@@ -67,7 +67,9 @@ const categoryColors = {
   herbs: "bg-gradient-to-r from-teal-500/40 to-teal-500/30 text-teal-100 border border-teal-500/50 backdrop-blur-sm",
   flowers: "bg-gradient-to-r from-pink-500/40 to-pink-500/30 text-pink-100 border border-pink-500/50 backdrop-blur-sm",
   fruits: "bg-gradient-to-r from-red-500/40 to-red-500/30 text-red-100 border border-red-500/50 backdrop-blur-sm",
-  grains: "bg-gradient-to-r from-yellow-500/40 to-yellow-500/30 text-yellow-100 border border-yellow-500/50 backdrop-blur-sm"
+  grains: "bg-gradient-to-r from-yellow-500/40 to-yellow-500/30 text-yellow-100 border border-yellow-500/50 backdrop-blur-sm",
+  direct_sow: "bg-gradient-to-r from-emerald-500/40 to-emerald-500/30 text-emerald-100 border border-emerald-500/50 backdrop-blur-sm",
+  transplant: "bg-gradient-to-r from-blue-500/40 to-blue-500/30 text-blue-100 border border-blue-500/50 backdrop-blur-sm"
 };
 
 const categoryIcons = {

@@ -25,6 +25,16 @@ import CategoryCard from "../components/library/CategoryCard";
 import PlantingWeatherCard from "../components/alerts/PlantingWeatherCard";
 import { motion, AnimatePresence } from "framer-motion";
 
+const isDateInMMDDRange = (currentDate, fromMMDD, toMMDD) => {
+  if (!fromMMDD || !toMMDD) return false;
+  const year = currentDate.getFullYear();
+  const from = new Date(`${year}-${fromMMDD}`);
+  const to = new Date(`${year}-${toMMDD}`);
+  if (isNaN(from.getTime()) || isNaN(to.getTime())) return false;
+  if (from > to) return currentDate >= from || currentDate <= to;
+  return currentDate >= from && currentDate <= to;
+};
+
 const categoryData = {
   vegetables: {
     name: "Vegetables",
