@@ -367,6 +367,7 @@ export default function CalendarPage() {
                 eventType: 'planting'
               });
             }
+            hasSpecificPlantingData = true;
           }
         }
       }
