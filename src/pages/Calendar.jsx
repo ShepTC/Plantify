@@ -371,7 +371,6 @@ export default function CalendarPage() {
 
       // Transplant events (date-based)
       if (userPlant.status === 'planned' && plantData.transplant_zones) {
-        const userZone = userZone2;
         const txZone = plantData.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
         if (txZone) {
           const fromMMDD = txZone.transplant_from || txZone.from;
