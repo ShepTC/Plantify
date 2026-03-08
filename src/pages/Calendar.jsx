@@ -929,8 +929,8 @@ export default function CalendarPage() {
                             <Badge variant="outline" className="text-xs capitalize">
                               {planting.season}
                             </Badge>
-                            <Badge className={categoryColors[planting.category]}>
-                              {planting.category}
+                            <Badge className={categoryColors[planting.category] || "bg-gradient-to-r from-slate-500/40 to-slate-500/30 text-slate-100 border border-slate-500/50"}>
+                              {planting.category === 'direct_sow' ? 'Direct Sow' : planting.category === 'transplant' ? 'Transplant' : planting.category}
                             </Badge>
                           </div>
                         </div>
