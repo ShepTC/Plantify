@@ -343,6 +343,8 @@ export default function CalendarPage() {
       const plantData = plantMap[userPlant.plant_id];
       if (!plantData) return;
 
+      let hasSpecificPlantingData = false;
+
       // Direct Sow events (date-based)
       if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
         const dsZone = plantData.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
