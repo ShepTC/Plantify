@@ -286,18 +286,48 @@ export default function PlantingAlerts() {
       // --- Plant Today/This Week Logic ---
       const plantsForToday = [];
       const plantsForWeek = [];
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
       const categoryPlantsToday = {
         vegetables: [],
         fruits: [],
         herbs: [],
         flowers: [],
-        grains: []
+        grains: [],
+        direct_sow: [],
+        transplant: []
       };
 
       // Check ALL plants from the library, not just user plants
       allPlants.forEach((plant) => {
         // Skip plants already in recommendations or already added by user
         if (recommendationIds.has(plant.id) || userPlantIds.has(plant.id)) return;
+
+        const userZone = currentUser.growing_zone;
+
+        // --- Direct Sow check ---
+        if (plant.direct_sow_zones) {
+          const dsZone = plant.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+          if (dsZone && isDateInMMDDRange(today, dsZone.from, dsZone.to)) {
+            const plantWithMethod = { ...plant, plantingMethod: 'direct_sow', methodLabel: 'Direct Sow' };
+            if (categoryPlantsToday.direct_sow.length < 4) categoryPlantsToday.direct_sow.push(plantWithMethod);
+          }
+        }
+
+        // --- Transplant check ---
+        if (plant.transplant_zones) {
+          const txZone = plant.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+          if (txZone) {
+            // transplant_zones use transplant_from/transplant_to for outdoor transplanting
+            const fromDate = txZone.transplant_from || txZone.from;
+            const toDate = txZone.transplant_to || txZone.to;
+            if (fromDate && toDate && isDateInMMDDRange(today, fromDate, toDate)) {
+              const plantWithMethod = { ...plant, plantingMethod: 'transplant', methodLabel: 'Transplant' };
+              if (categoryPlantsToday.transplant.length < 4) categoryPlantsToday.transplant.push(plantWithMethod);
+            }
+          }
+        }
 
         if (isPlantableToday(plant, currentUser.growing_zone, dayNumber)) {
           // Re-find zone data here for season calculation to avoid duplicate isPlantableToday call
