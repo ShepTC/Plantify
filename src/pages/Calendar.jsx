@@ -333,7 +333,8 @@ export default function CalendarPage() {
     setRemindersByDate(remindersByDateMap);
   }, []); // setRemindersByDate is a stable setter, format is an external utility
 
-  const processCalendarEvents = useCallback((userPlants, userZone, plantMap) => {
+  const processCalendarEvents = useCallback((userPlants, userZone2, plantMap) => {
+    const userZone = userZone2;
     const plantings = {};
     const harvests = {};
     const currentYear = getYear(currentDate); // Make sure this uses the component's currentDate
