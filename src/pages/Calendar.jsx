@@ -401,7 +401,7 @@ export default function CalendarPage() {
 
       if (userPlant.status === 'planned' && plantData.planting_zones) {
         const zoneData = plantData.planting_zones.find(
-          (z) => z.zone === userZone2 || z.zone === userZone2.substring(0, userZone2.length - 1)
+          (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
         );
         if (!zoneData) return;
 
