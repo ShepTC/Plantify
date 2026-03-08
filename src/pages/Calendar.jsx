@@ -399,7 +399,11 @@ export default function CalendarPage() {
         }
       }
 
-      if (userPlant.status === 'planned' && plantData.planting_zones) {
+      // Skip planting_zones if more specific direct_sow or transplant data exists for this zone
+      const hasDirectSow = plantData.direct_sow_zones?.some(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+      const hasTransplant = plantData.transplant_zones?.some(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+
+      if (userPlant.status === 'planned' && plantData.planting_zones && !hasDirectSow && !hasTransplant) {
         const zoneData = plantData.planting_zones.find(
           (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
         );
