@@ -77,7 +77,9 @@ const categoryIcons = {
   herbs: <Sprout className="w-3 h-3" />,
   flowers: <Flower className="w-3 h-3" />,
   fruits: <Sprout className="w-3 h-3" />,
-  grains: <Sprout className="w-3 h-3" />
+  grains: <Sprout className="w-3 h-3" />,
+  direct_sow: <Sprout className="w-3 h-3" />,
+  transplant: <Flower className="w-3 h-3" />
 };
 
 // Helper function to calculate event spans for cleaner rendering
