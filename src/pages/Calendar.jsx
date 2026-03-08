@@ -343,8 +343,6 @@ export default function CalendarPage() {
       const plantData = plantMap[userPlant.plant_id];
       if (!plantData) return;
 
-      let hasSpecificPlantingData = false;
-
       // Direct Sow events (date-based)
       if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
         const dsZone = plantData.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
@@ -367,7 +365,6 @@ export default function CalendarPage() {
                 eventType: 'planting'
               });
             }
-            hasSpecificPlantingData = true;
           }
         }
       }
@@ -398,13 +395,11 @@ export default function CalendarPage() {
                 });
               }
             }
-            hasSpecificPlantingData = true;
           }
         }
       }
 
-      // Only fall back to generic planting_zones if no specific direct_sow or transplant data was found
-      if (!hasSpecificPlantingData && userPlant.status === 'planned' && plantData.planting_zones) {
+      if (userPlant.status === 'planned' && plantData.planting_zones) {
         const zoneData = plantData.planting_zones.find(
           (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
         );
