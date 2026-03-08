@@ -342,6 +342,64 @@ export default function CalendarPage() {
       const plantData = plantMap[userPlant.plant_id];
       if (!plantData) return;
 
+      // Direct Sow events (date-based)
+      if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
+        const userZone = userZone2;
+        const dsZone = plantData.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+        if (dsZone?.from) {
+          const fromDate = new Date(`${currentYear}-${dsZone.from}`);
+          const toDate = dsZone.to ? new Date(`${currentYear}-${dsZone.to}`) : fromDate;
+          if (!isNaN(fromDate.getTime())) {
+            const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
+            const endWeek = getWeek(toDate, { weekStartsOn: 0 });
+            for (let week = startWeek; week <= endWeek; week++) {
+              const weekKey = `${currentYear}-${week}`;
+              if (!plantings[weekKey]) plantings[weekKey] = [];
+              plantings[weekKey].push({
+                name: plantData.name,
+                category: 'direct_sow',
+                userPlantId: userPlant.id,
+                plantData,
+                season: 'Direct Sow',
+                optimalWeeks: `${dsZone.from} – ${dsZone.to || dsZone.from}`,
+                eventType: 'planting'
+              });
+            }
+          }
+        }
+      }
+
+      // Transplant events (date-based)
+      if (userPlant.status === 'planned' && plantData.transplant_zones) {
+        const userZone = userZone2;
+        const txZone = plantData.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+        if (txZone) {
+          const fromMMDD = txZone.transplant_from || txZone.from;
+          const toMMDD = txZone.transplant_to || txZone.to;
+          if (fromMMDD) {
+            const fromDate = new Date(`${currentYear}-${fromMMDD}`);
+            const toDate = toMMDD ? new Date(`${currentYear}-${toMMDD}`) : fromDate;
+            if (!isNaN(fromDate.getTime())) {
+              const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
+              const endWeek = getWeek(toDate, { weekStartsOn: 0 });
+              for (let week = startWeek; week <= endWeek; week++) {
+                const weekKey = `${currentYear}-${week}`;
+                if (!plantings[weekKey]) plantings[weekKey] = [];
+                plantings[weekKey].push({
+                  name: plantData.name,
+                  category: 'transplant',
+                  userPlantId: userPlant.id,
+                  plantData,
+                  season: 'Transplant',
+                  optimalWeeks: `${fromMMDD} – ${toMMDD || fromMMDD}`,
+                  eventType: 'planting'
+                });
+              }
+            }
+          }
+        }
+      }
+
       if (userPlant.status === 'planned' && plantData.planting_zones) {
         const zoneData = plantData.planting_zones.find(
           (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
