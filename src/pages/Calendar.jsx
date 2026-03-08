@@ -599,29 +599,27 @@ export default function CalendarPage() {
 
   // Get all planting events for the current month
   const getMonthPlantings = useCallback(() => {
-    const plantingEvents = [];
     const currentYear = getYear(currentDate);
     const currentMonth = currentDate.getMonth();
+    
+    // Deduplicate: one entry per userPlantId+category combo, tracking earliest week in month
+    const deduped = {}; // key: `${userPlantId}-${category}`
     
     Object.entries(plantingsByWeek).forEach(([weekKey, plants]) => {
       plants.forEach(plant => {
         const [year, week] = weekKey.split('-').map(Number);
-        if (year === currentYear) {
-          // Approximate week to month
-          const weekDate = new Date(year, 0, 1 + (week - 1) * 7);
-          if (weekDate.getMonth() === currentMonth) {
-            plantingEvents.push({
-              ...plant,
-              weekKey,
-              weekNumber: week,
-              date: weekDate
-            });
-          }
+        if (year !== currentYear) return;
+        const weekDate = new Date(year, 0, 1 + (week - 1) * 7);
+        if (weekDate.getMonth() !== currentMonth) return;
+        
+        const key = `${plant.userPlantId}-${plant.category}`;
+        if (!deduped[key] || week < deduped[key].weekNumber) {
+          deduped[key] = { ...plant, weekKey, weekNumber: week, date: weekDate };
         }
       });
     });
     
-    return plantingEvents.sort((a, b) => a.weekNumber - b.weekNumber);
+    return Object.values(deduped).sort((a, b) => a.weekNumber - b.weekNumber);
   }, [plantingsByWeek, currentDate]);
 
   // Get all harvest events for the current month
