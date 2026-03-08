@@ -398,11 +398,13 @@ export default function CalendarPage() {
                 });
               }
             }
+            hasSpecificPlantingData = true;
           }
         }
       }
 
-      if (userPlant.status === 'planned' && plantData.planting_zones) {
+      // Only fall back to generic planting_zones if no specific direct_sow or transplant data was found
+      if (!hasSpecificPlantingData && userPlant.status === 'planned' && plantData.planting_zones) {
         const zoneData = plantData.planting_zones.find(
           (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
         );
