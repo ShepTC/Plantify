@@ -399,11 +399,7 @@ export default function CalendarPage() {
         }
       }
 
-      // Skip planting_zones if more specific direct_sow or transplant data exists for this zone
-      const hasDirectSow = plantData.direct_sow_zones?.some(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
-      const hasTransplant = plantData.transplant_zones?.some(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
-
-      if (userPlant.status === 'planned' && plantData.planting_zones && !hasDirectSow && !hasTransplant) {
+      if (userPlant.status === 'planned' && plantData.planting_zones) {
         const zoneData = plantData.planting_zones.find(
           (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
         );
@@ -599,27 +595,29 @@ export default function CalendarPage() {
 
   // Get all planting events for the current month
   const getMonthPlantings = useCallback(() => {
+    const plantingEvents = [];
     const currentYear = getYear(currentDate);
     const currentMonth = currentDate.getMonth();
-    
-    // Deduplicate: one entry per userPlantId+category combo, tracking earliest week in month
-    const deduped = {}; // key: `${userPlantId}-${category}`
     
     Object.entries(plantingsByWeek).forEach(([weekKey, plants]) => {
       plants.forEach(plant => {
         const [year, week] = weekKey.split('-').map(Number);
-        if (year !== currentYear) return;
-        const weekDate = new Date(year, 0, 1 + (week - 1) * 7);
-        if (weekDate.getMonth() !== currentMonth) return;
-        
-        const key = `${plant.userPlantId}-${plant.category}`;
-        if (!deduped[key] || week < deduped[key].weekNumber) {
-          deduped[key] = { ...plant, weekKey, weekNumber: week, date: weekDate };
+        if (year === currentYear) {
+          // Approximate week to month
+          const weekDate = new Date(year, 0, 1 + (week - 1) * 7);
+          if (weekDate.getMonth() === currentMonth) {
+            plantingEvents.push({
+              ...plant,
+              weekKey,
+              weekNumber: week,
+              date: weekDate
+            });
+          }
         }
       });
     });
     
-    return Object.values(deduped).sort((a, b) => a.weekNumber - b.weekNumber);
+    return plantingEvents.sort((a, b) => a.weekNumber - b.weekNumber);
   }, [plantingsByWeek, currentDate]);
 
   // Get all harvest events for the current month
