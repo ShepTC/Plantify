@@ -561,12 +561,18 @@ export default function PlantingAlerts() {
                                 </CardHeader>
                                 <CardContent className="p-2 md:p-4 pt-0 space-y-2 md:space-y-3">
                                   <div className="flex gap-1 md:gap-2 flex-wrap">
-                                    <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category]} px-1.5 py-0.5`}>
+                                    <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category] || ''} px-1.5 py-0.5`}>
                                       {plant.category}
                                     </Badge>
-                                    <Badge variant="outline" className="text-[10px] md:text-xs px-1.5 py-0.5">
-                                      {plant.season} Planting
-                                    </Badge>
+                                    {plant.plantingMethod ? (
+                                      <Badge className={`text-[10px] md:text-xs px-1.5 py-0.5 border ${methodBadgeStyle[plant.plantingMethod]}`}>
+                                        {plant.methodLabel}
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="outline" className="text-[10px] md:text-xs px-1.5 py-0.5">
+                                        {plant.season} Planting
+                                      </Badge>
+                                    )}
                                   </div>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 text-[10px] md:text-xs">
                                     <div className="flex items-center gap-1">
