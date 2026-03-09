@@ -414,6 +414,8 @@ export default function CalendarPage() {
           if (window.start && window.end) {
             for (let week = window.start; week <= window.end; week++) {
               const weekKey = `${currentYear}-${week}`;
+              // Skip if this plant already has a specific direct_sow or transplant entry for this week
+              if (plantings[weekKey]?.some(p => p.userPlantId === userPlant.id && (p.category === 'direct_sow' || p.category === 'transplant'))) continue;
               if (!plantings[weekKey]) {
                 plantings[weekKey] = [];
               }
@@ -665,6 +667,8 @@ export default function CalendarPage() {
   }, [remindersByDate, currentDate]);
 
   const monthPlantings = getMonthPlantings();
+  const monthDirectSow = monthPlantings.filter(p => p.category === 'direct_sow');
+  const monthTransplant = monthPlantings.filter(p => p.category === 'transplant');
   const monthHarvests = getMonthHarvests();
   const monthReminders = getMonthReminders();
 
@@ -779,22 +783,26 @@ export default function CalendarPage() {
         <Header />
         
         <Tabs defaultValue="all" className="w-full" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="all" className="text-xs md:text-sm">
-              <CalendarIcon className="w-4 h-4 mr-1 md:mr-2" />
-              All Events
+          <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsTrigger value="all" className="text-[10px] md:text-sm px-1 md:px-3">
+              <span className="hidden md:inline-flex items-center gap-1"><CalendarIcon className="w-4 h-4 mr-1" />All</span>
+              <span className="md:hidden">All</span>
             </TabsTrigger>
-            <TabsTrigger value="planting" className="text-xs md:text-sm">
-              <Sprout className="w-4 h-4 mr-1 md:mr-2" />
-              Planting
+            <TabsTrigger value="direct_sow" className="text-[10px] md:text-sm px-1 md:px-3">
+              <span className="hidden md:inline-flex items-center gap-1"><Sprout className="w-4 h-4 mr-1" />Direct Sow</span>
+              <span className="md:hidden">Sow</span>
             </TabsTrigger>
-            <TabsTrigger value="harvest" className="text-xs md:text-sm">
-              <SunIcon className="w-4 h-4 mr-1 md:mr-2" />
-              Harvest
+            <TabsTrigger value="transplant" className="text-[10px] md:text-sm px-1 md:px-3">
+              <span className="hidden md:inline-flex items-center gap-1"><Leaf className="w-4 h-4 mr-1" />Transplant</span>
+              <span className="md:hidden">Trans.</span>
             </TabsTrigger>
-            <TabsTrigger value="reminders" className="text-xs md:text-sm">
-              <ListChecks className="w-4 h-4 mr-1 md:mr-2" />
-              Tasks
+            <TabsTrigger value="harvest" className="text-[10px] md:text-sm px-1 md:px-3">
+              <span className="hidden md:inline-flex items-center gap-1"><SunIcon className="w-4 h-4 mr-1" />Harvest</span>
+              <span className="md:hidden">Harvest</span>
+            </TabsTrigger>
+            <TabsTrigger value="reminders" className="text-[10px] md:text-sm px-1 md:px-3">
+              <span className="hidden md:inline-flex items-center gap-1"><ListChecks className="w-4 h-4 mr-1" />Tasks</span>
+              <span className="md:hidden">Tasks</span>
             </TabsTrigger>
           </TabsList>
 
@@ -900,23 +908,23 @@ export default function CalendarPage() {
             </div>
           </TabsContent>
 
-          {/* Planting Tab */}
-          <TabsContent value="planting" className="space-y-3">
+          {/* Direct Sow Tab */}
+          <TabsContent value="direct_sow" className="space-y-3">
             <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthPlantings.length === 0 ? (
+              {monthDirectSow.length === 0 ? (
                 <Card className="border-border">
                   <CardContent className="p-8 text-center">
                     <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No planting windows this month</p>
+                    <p className="text-muted-foreground">No direct sow windows this month</p>
                   </CardContent>
                 </Card>
               ) : (
-                monthPlantings.map((planting, idx) => (
+                monthDirectSow.map((planting, idx) => (
                   <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[planting.category]}`}>
-                          {categoryIcons[planting.category]}
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors.direct_sow}`}>
+                          {categoryIcons.direct_sow}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
@@ -926,12 +934,47 @@ export default function CalendarPage() {
                               <Clock className="w-3 h-3 mr-1" />
                               Week {planting.weekNumber}
                             </Badge>
-                            <Badge variant="outline" className="text-xs capitalize">
-                              {planting.season}
+                            <Badge className={categoryColors.direct_sow}>Direct Sow</Badge>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
+                          <Trash2 className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Transplant Tab */}
+          <TabsContent value="transplant" className="space-y-3">
+            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
+              {monthTransplant.length === 0 ? (
+                <Card className="border-border">
+                  <CardContent className="p-8 text-center">
+                    <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-muted-foreground">No transplant windows this month</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                monthTransplant.map((planting, idx) => (
+                  <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors.transplant}`}>
+                          {categoryIcons.transplant}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              <Clock className="w-3 h-3 mr-1" />
+                              Week {planting.weekNumber}
                             </Badge>
-                            <Badge className={categoryColors[planting.category] || "bg-gradient-to-r from-slate-500/40 to-slate-500/30 text-slate-100 border border-slate-500/50"}>
-                              {planting.category === 'direct_sow' ? 'Direct Sow' : planting.category === 'transplant' ? 'Transplant' : planting.category}
-                            </Badge>
+                            <Badge className={categoryColors.transplant}>Transplant</Badge>
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
