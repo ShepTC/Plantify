@@ -339,7 +339,6 @@ export default function PlantingAlerts() {
       });
 
       setPlantToday(plantsForToday);
-      setPlantThisWeek(plantsForWeek);
       setPlantsByCategoryToday(categoryPlantsToday);
 
     } catch (error) {
