@@ -198,7 +198,7 @@ export default function PlantingAlerts() {
         allPlants.forEach(candidatePlant => {
           // Skip plants already in garden or not plantable today
           if (userPlantIds.has(candidatePlant.id)) return;
-          if (!isPlantableToday(candidatePlant, currentUser.growing_zone, dayNumber)) return;
+          if (!isPlantableToday(candidatePlant, currentUser.growing_zone, now)) return;
 
           const candidateCommonName = (candidatePlant.common_name || candidatePlant.name).toLowerCase();
           
