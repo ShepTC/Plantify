@@ -783,297 +783,115 @@ export default function CalendarPage() {
       <div className="max-w-5xl mx-auto w-full">
         <Header />
         
-        <Tabs defaultValue="all" className="w-full" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="all" className="text-xs md:text-sm">
-              <CalendarIcon className="w-4 h-4 mr-1 md:mr-2" />
-              <span className="hidden md:inline">All Events</span>
-              <span className="md:hidden">All</span>
-            </TabsTrigger>
-            <TabsTrigger value="planting" className="text-xs md:text-sm">
-              <Sprout className="w-4 h-4 mr-1 md:mr-2" />
-              Planting
-            </TabsTrigger>
-            <TabsTrigger value="harvest" className="text-xs md:text-sm">
-              <SunIcon className="w-4 h-4 mr-1 md:mr-2" />
-              Harvest
-            </TabsTrigger>
-            <TabsTrigger value="reminders" className="text-xs md:text-sm">
-              <ListChecks className="w-4 h-4 mr-1 md:mr-2" />
-              Tasks
-            </TabsTrigger>
-          </TabsList>
-
-          {/* All Events Tab */}
-          <TabsContent value="all" className="space-y-3">
-            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthPlantings.length === 0 && monthHarvests.length === 0 && monthReminders.length === 0 ? (
-                <Card className="border-border">
-                  <CardContent className="p-8 text-center">
-                    <CalendarIcon className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No events scheduled for this month</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <>
-                  {[...monthPlantings.map(p => ({...p, type: 'planting'})), 
-                    ...monthHarvests.map(h => ({...h, type: 'harvest'})),
-                    ...monthReminders.map(r => ({...r, type: 'reminder'}))]
-                    .sort((a, b) => a.date - b.date)
-                    .map((event, idx) => {
-                      if (event.type === 'planting') {
-                        return (
-                          <Card key={`planting-${idx}`} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(event, 'planting')}>
-                            <CardContent className="p-4">
-                              <div className="flex items-start gap-3">
-                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[event.category]}`}>
-                                  {categoryIcons[event.category]}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-foreground mb-1">{event.name}</h3>
-                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                                    <Badge variant="outline" className="text-xs">
-                                      <Clock className="w-3 h-3 mr-1" />
-                                      Week {event.weekNumber}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-xs capitalize">
-                                      {event.season}
-                                    </Badge>
-                                  </div>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'planting'); }}>
-                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      } else if (event.type === 'harvest') {
-                        return (
-                          <Card key={`harvest-${idx}`} className="border-border hover:border-yellow-500/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(event, 'harvest')}>
-                            <CardContent className="p-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-500/40 to-orange-500/30 border border-yellow-500/50">
-                                  <SunIcon className="w-5 h-5 text-yellow-100" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-semibold text-foreground mb-1">{event.name}</h3>
-                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                                    <Badge variant="outline" className="text-xs">
-                                      <CalendarIcon className="w-3 h-3 mr-1" />
-                                      {format(event.date, 'MMM d, yyyy')}
-                                    </Badge>
-                                    <Badge variant="secondary" className="text-xs capitalize">
-                                      {event.status}
-                                    </Badge>
-                                  </div>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'harvest'); }}>
-                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      } else {
-                        return (
-                          <Card key={`reminder-${idx}`} className={`border-border hover:border-purple-500/50 transition-colors cursor-pointer ${event.is_completed ? 'opacity-60' : ''}`} onClick={() => handleViewEvent(event, 'reminder')}>
-                            <CardContent className="p-4">
-                              <div className="flex items-start gap-3">
-                                <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${event.is_completed ? 'bg-gray-200 dark:bg-gray-800' : 'bg-purple-100 dark:bg-purple-900/40'}`}>
-                                  {event.is_completed ? <CheckCircle2 className="w-5 h-5 text-gray-500" /> : <ListChecks className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h3 className={`font-semibold mb-1 ${event.is_completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{event.title}</h3>
-                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                                    <Badge variant="outline" className="text-xs">
-                                      <CalendarIcon className="w-3 h-3 mr-1" />
-                                      {format(event.date, 'MMM d, yyyy')}
-                                    </Badge>
-                                  </div>
-                                </div>
-                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(event, 'reminder'); }}>
-                                  <Trash2 className="w-4 h-4 text-muted-foreground" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      }
-                    })}
-                </>
-              )}
+        <div className="space-y-6" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+          {/* Pill Toggle for Planting */}
+          <div className="flex justify-center">
+            <div className="flex bg-muted rounded-full p-1 border border-border">
+              <button
+                onClick={() => setPlantingView('direct_sow')}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  plantingView === 'direct_sow'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Direct Sow
+              </button>
+              <button
+                onClick={() => setPlantingView('transplant')}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                  plantingView === 'transplant'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Transplant
+              </button>
             </div>
-          </TabsContent>
+          </div>
 
-          {/* Planting Tab with pill toggle */}
-          <TabsContent value="planting" className="space-y-3">
-            {/* Pill Toggle */}
-            <div className="flex justify-center mb-4">
-              <div className="flex bg-muted rounded-full p-1 border border-border">
-                <button
-                  onClick={() => setPlantingView('direct_sow')}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    plantingView === 'direct_sow'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Direct Sow
-                </button>
-                <button
-                  onClick={() => setPlantingView('transplant')}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    plantingView === 'transplant'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  Transplant
-                </button>
-              </div>
-            </div>
-
-            <div className="max-h-[calc(100vh-330px)] overflow-y-auto space-y-3 pr-2">
-              {(plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).length === 0 ? (
-                <Card className="border-border">
-                  <CardContent className="p-8 text-center">
-                    {plantingView === 'direct_sow'
-                      ? <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                      : <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />}
-                    <p className="text-muted-foreground">
-                      No {plantingView === 'direct_sow' ? 'direct sow' : 'transplant'} windows this month
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                (plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).map((planting, idx) => (
-                  <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[planting.category]}`}>
-                          {categoryIcons[planting.category]}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              <Clock className="w-3 h-3 mr-1" />
-                              Week {planting.weekNumber}
-                            </Badge>
-                            <Badge className={categoryColors[planting.category]}>
-                              {planting.category === 'direct_sow' ? 'Direct Sow' : 'Transplant'}
-                            </Badge>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
-                          <Trash2 className="w-4 h-4 text-muted-foreground" />
-                        </Button>
+          {/* Planting List */}
+          <div className="space-y-3">
+            {(plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).length === 0 ? (
+              <Card className="border-border">
+                <CardContent className="p-8 text-center">
+                  {plantingView === 'direct_sow'
+                    ? <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                    : <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />}
+                  <p className="text-muted-foreground">
+                    No {plantingView === 'direct_sow' ? 'direct sow' : 'transplant'} windows this month
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              (plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).map((planting, idx) => (
+                <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[planting.category]}`}>
+                        {categoryIcons[planting.category]}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
-          </TabsContent>
-
-          {/* Harvest Tab */}
-          <TabsContent value="harvest" className="space-y-3">
-            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthHarvests.length === 0 ? (
-                <Card className="border-border">
-                  <CardContent className="p-8 text-center">
-                    <SunIcon className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No harvests scheduled this month</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Week {planting.weekNumber}
+                          </Badge>
+                          <Badge className={categoryColors[planting.category]}>
+                            {planting.category === 'direct_sow' ? 'Direct Sow' : 'Transplant'}
+                          </Badge>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
+                        <Trash2 className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
-              ) : (
-                monthHarvests.map((harvest, idx) => (
-                  <Card key={idx} className="border-border hover:border-yellow-500/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(harvest, 'harvest')}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-500/40 to-orange-500/30 border border-yellow-500/50">
-                          <SunIcon className="w-5 h-5 text-yellow-100" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground mb-1">{harvest.name}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">
-                            {harvest.actualPlantingDate && `Planted ${format(new Date(harvest.actualPlantingDate), 'MMM d')}`}
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              <CalendarIcon className="w-3 h-3 mr-1" />
-                              {format(harvest.date, 'MMM d, yyyy')}
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs capitalize">
-                              {harvest.status}
-                            </Badge>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(harvest, 'harvest'); }}>
-                          <Trash2 className="w-4 h-4 text-muted-foreground" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
-          </TabsContent>
+              ))
+            )}
+          </div>
 
-          {/* Reminders Tab */}
-          <TabsContent value="reminders" className="space-y-3">
-            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthReminders.length === 0 ? (
-                <Card className="border-border">
-                  <CardContent className="p-8 text-center">
-                    <ListChecks className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No tasks or reminders this month</p>
+          {/* Harvest Dates - always visible */}
+          {monthHarvests.length > 0 && (
+            <div className="space-y-3">
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                <SunIcon className="w-4 h-4" /> Upcoming Harvests
+              </h2>
+              {monthHarvests.map((harvest, idx) => (
+                <Card key={idx} className="border-border hover:border-yellow-500/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(harvest, 'harvest')}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-yellow-500/40 to-orange-500/30 border border-yellow-500/50">
+                        <SunIcon className="w-5 h-5 text-yellow-100" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-foreground mb-1">{harvest.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {harvest.actualPlantingDate && `Planted ${format(new Date(harvest.actualPlantingDate), 'MMM d')}`}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            <CalendarIcon className="w-3 h-3 mr-1" />
+                            {format(harvest.date, 'MMM d, yyyy')}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs capitalize">
+                            {harvest.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(harvest, 'harvest'); }}>
+                        <Trash2 className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
-              ) : (
-                monthReminders.map((reminder, idx) => (
-                  <Card key={idx} className={`border-border hover:border-purple-500/50 transition-colors cursor-pointer ${reminder.is_completed ? 'opacity-60' : ''}`} onClick={() => handleViewEvent(reminder, 'reminder')}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${reminder.is_completed ? 'bg-gray-200 dark:bg-gray-800' : 'bg-purple-100 dark:bg-purple-900/40'}`}>
-                          {reminder.is_completed ? <CheckCircle2 className="w-5 h-5 text-gray-500" /> : <ListChecks className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`font-semibold mb-1 ${reminder.is_completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{reminder.title}</h3>
-                          {reminder.description && (
-                            <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{reminder.description}</p>
-                          )}
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              <CalendarIcon className="w-3 h-3 mr-1" />
-                              {format(reminder.date, 'MMM d, yyyy')}
-                            </Badge>
-                            {!reminder.is_completed && (
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-6 px-2 text-xs"
-                                onClick={(e) => { e.stopPropagation(); handleCompleteReminder(reminder.id); }}
-                              >
-                                <CheckCircle2 className="w-3 h-3 mr-1" />
-                                Complete
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(reminder, 'reminder'); }}>
-                          <Trash2 className="w-4 h-4 text-muted-foreground" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+              ))}
             </div>
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
 
         {/* Full Screen Plant Details Dialog */}
         <Dialog open={isFullScreenOpen} onOpenChange={setIsFullScreenOpen}>
