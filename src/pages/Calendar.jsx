@@ -666,6 +666,7 @@ export default function CalendarPage() {
     return reminderEvents.sort((a, b) => a.date - b.date);
   }, [remindersByDate, currentDate]);
 
+  const [plantingView, setPlantingView] = useState('direct_sow');
   const monthPlantings = getMonthPlantings();
   const monthDirectSow = monthPlantings.filter(p => p.category === 'direct_sow');
   const monthTransplant = monthPlantings.filter(p => p.category === 'transplant');
@@ -783,26 +784,23 @@ export default function CalendarPage() {
         <Header />
         
         <Tabs defaultValue="all" className="w-full" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-          <TabsList className="grid w-full grid-cols-5 mb-6">
-            <TabsTrigger value="all" className="text-[10px] md:text-sm px-1 md:px-3">
-              <span className="hidden md:inline-flex items-center gap-1"><CalendarIcon className="w-4 h-4 mr-1" />All</span>
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="all" className="text-xs md:text-sm">
+              <CalendarIcon className="w-4 h-4 mr-1 md:mr-2" />
+              <span className="hidden md:inline">All Events</span>
               <span className="md:hidden">All</span>
             </TabsTrigger>
-            <TabsTrigger value="direct_sow" className="text-[10px] md:text-sm px-1 md:px-3">
-              <span className="hidden md:inline-flex items-center gap-1"><Sprout className="w-4 h-4 mr-1" />Direct Sow</span>
-              <span className="md:hidden">Sow</span>
+            <TabsTrigger value="planting" className="text-xs md:text-sm">
+              <Sprout className="w-4 h-4 mr-1 md:mr-2" />
+              Planting
             </TabsTrigger>
-            <TabsTrigger value="transplant" className="text-[10px] md:text-sm px-1 md:px-3">
-              <span className="hidden md:inline-flex items-center gap-1"><Leaf className="w-4 h-4 mr-1" />Transplant</span>
-              <span className="md:hidden">Trans.</span>
+            <TabsTrigger value="harvest" className="text-xs md:text-sm">
+              <SunIcon className="w-4 h-4 mr-1 md:mr-2" />
+              Harvest
             </TabsTrigger>
-            <TabsTrigger value="harvest" className="text-[10px] md:text-sm px-1 md:px-3">
-              <span className="hidden md:inline-flex items-center gap-1"><SunIcon className="w-4 h-4 mr-1" />Harvest</span>
-              <span className="md:hidden">Harvest</span>
-            </TabsTrigger>
-            <TabsTrigger value="reminders" className="text-[10px] md:text-sm px-1 md:px-3">
-              <span className="hidden md:inline-flex items-center gap-1"><ListChecks className="w-4 h-4 mr-1" />Tasks</span>
-              <span className="md:hidden">Tasks</span>
+            <TabsTrigger value="reminders" className="text-xs md:text-sm">
+              <ListChecks className="w-4 h-4 mr-1 md:mr-2" />
+              Tasks
             </TabsTrigger>
           </TabsList>
 
@@ -908,63 +906,53 @@ export default function CalendarPage() {
             </div>
           </TabsContent>
 
-          {/* Direct Sow Tab */}
-          <TabsContent value="direct_sow" className="space-y-3">
-            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthDirectSow.length === 0 ? (
-                <Card className="border-border">
-                  <CardContent className="p-8 text-center">
-                    <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No direct sow windows this month</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                monthDirectSow.map((planting, idx) => (
-                  <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors.direct_sow}`}>
-                          {categoryIcons.direct_sow}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              <Clock className="w-3 h-3 mr-1" />
-                              Week {planting.weekNumber}
-                            </Badge>
-                            <Badge className={categoryColors.direct_sow}>Direct Sow</Badge>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
-                          <Trash2 className="w-4 h-4 text-muted-foreground" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+          {/* Planting Tab with pill toggle */}
+          <TabsContent value="planting" className="space-y-3">
+            {/* Pill Toggle */}
+            <div className="flex justify-center mb-4">
+              <div className="flex bg-muted rounded-full p-1 border border-border">
+                <button
+                  onClick={() => setPlantingView('direct_sow')}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                    plantingView === 'direct_sow'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Direct Sow
+                </button>
+                <button
+                  onClick={() => setPlantingView('transplant')}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                    plantingView === 'transplant'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Transplant
+                </button>
+              </div>
             </div>
-          </TabsContent>
 
-          {/* Transplant Tab */}
-          <TabsContent value="transplant" className="space-y-3">
-            <div className="max-h-[calc(100vh-280px)] overflow-y-auto space-y-3 pr-2">
-              {monthTransplant.length === 0 ? (
+            <div className="max-h-[calc(100vh-330px)] overflow-y-auto space-y-3 pr-2">
+              {(plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).length === 0 ? (
                 <Card className="border-border">
                   <CardContent className="p-8 text-center">
-                    <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
-                    <p className="text-muted-foreground">No transplant windows this month</p>
+                    {plantingView === 'direct_sow'
+                      ? <Sprout className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                      : <Leaf className="w-12 h-12 mx-auto text-muted-foreground mb-3" />}
+                    <p className="text-muted-foreground">
+                      No {plantingView === 'direct_sow' ? 'direct sow' : 'transplant'} windows this month
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
-                monthTransplant.map((planting, idx) => (
+                (plantingView === 'direct_sow' ? monthDirectSow : monthTransplant).map((planting, idx) => (
                   <Card key={idx} className="border-border hover:border-primary/50 transition-colors cursor-pointer" onClick={() => handleOpenFullScreen(planting, 'planting')}>
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors.transplant}`}>
-                          {categoryIcons.transplant}
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${categoryColors[planting.category]}`}>
+                          {categoryIcons[planting.category]}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
@@ -974,7 +962,9 @@ export default function CalendarPage() {
                               <Clock className="w-3 h-3 mr-1" />
                               Week {planting.weekNumber}
                             </Badge>
-                            <Badge className={categoryColors.transplant}>Transplant</Badge>
+                            <Badge className={categoryColors[planting.category]}>
+                              {planting.category === 'direct_sow' ? 'Direct Sow' : 'Transplant'}
+                            </Badge>
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); handleDeleteEvent(planting, 'planting'); }}>
