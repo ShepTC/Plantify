@@ -115,7 +115,6 @@ export default function PlantingAlerts() {
   const [currentWeek, setCurrentWeek] = useState(1);
   const [currentDay, setCurrentDay] = useState(1);
   const [plantToday, setPlantToday] = useState([]);
-  const [plantThisWeek, setPlantThisWeek] = useState([]);
   const [userPlants, setUserPlants] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
