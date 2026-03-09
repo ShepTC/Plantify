@@ -791,7 +791,7 @@ export default function CalendarPage() {
                 onClick={() => setPlantingView('direct_sow')}
                 className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                   plantingView === 'direct_sow'
-                    ? 'bg-background text-foreground shadow-sm'
+                    ? 'bg-gradient-to-r from-green-400/30 to-emerald-400/20 text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -801,7 +801,7 @@ export default function CalendarPage() {
                 onClick={() => setPlantingView('transplant')}
                 className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                   plantingView === 'transplant'
-                    ? 'bg-background text-foreground shadow-sm'
+                    ? 'bg-gradient-to-r from-blue-400/30 to-cyan-400/20 text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
