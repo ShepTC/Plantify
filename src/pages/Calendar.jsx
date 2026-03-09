@@ -789,36 +789,26 @@ export default function CalendarPage() {
             <div className="flex bg-muted rounded-full p-1 border border-border">
               <button
                 onClick={() => setPlantingView('direct_sow')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 active:scale-95 ${
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                   plantingView === 'direct_sow'
-                    ? 'bg-gradient-to-r from-green-400/80 to-emerald-500/80 text-white shadow-sm animate-bounce-once'
+                    ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
-                style={plantingView === 'direct_sow' ? { animation: 'pillBounce 0.35s ease' } : {}}
               >
-                🌱 Direct Sow
+                Direct Sow
               </button>
               <button
                 onClick={() => setPlantingView('transplant')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 active:scale-95 ${
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                   plantingView === 'transplant'
-                    ? 'bg-gradient-to-r from-blue-400/80 to-cyan-500/80 text-white shadow-sm'
+                    ? 'bg-background text-foreground shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
-                style={plantingView === 'transplant' ? { animation: 'pillBounce 0.35s ease' } : {}}
               >
-                🪴 Transplant
+                Transplant
               </button>
             </div>
           </div>
-          <style>{`
-            @keyframes pillBounce {
-              0% { transform: scale(1); }
-              30% { transform: scale(1.12); }
-              60% { transform: scale(0.95); }
-              100% { transform: scale(1); }
-            }
-          `}</style>
 
           {/* Planting List */}
           <div className="space-y-3">
