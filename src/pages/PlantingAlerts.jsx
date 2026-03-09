@@ -155,6 +155,7 @@ export default function PlantingAlerts() {
       }
 
       const now = new Date();
+      now.setHours(0, 0, 0, 0);
       const startOfYear = new Date(now.getFullYear(), 0, 1);
       const dayNumber = Math.ceil((now.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
       const weekNumber = Math.ceil(dayNumber / 7);
