@@ -286,7 +286,6 @@ export default function PlantingAlerts() {
 
       // --- Plant Today/This Week Logic ---
       const plantsForToday = [];
-      const plantsForWeek = [];
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
