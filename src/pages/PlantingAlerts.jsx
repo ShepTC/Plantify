@@ -122,25 +122,27 @@ export default function PlantingAlerts() {
   const [plantsByCategoryToday, setPlantsByCategoryToday] = useState({});
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const isPlantableToday = useCallback((plant, userZone, dayNumber) => {
-    if (!plant.planting_zones) return false;
+  const isPlantableToday = useCallback((plant, userZone, today) => {
+    const zone = userZone;
+    const zoneShort = userZone.substring(0, userZone.length - 1);
 
-    const zoneData = plant.planting_zones.find(z =>
-      z.zone === userZone ||
-      z.zone === userZone.substring(0, userZone.length - 1)
-    );
+    // Check direct sow window
+    if (plant.direct_sow_zones) {
+      const dsZone = plant.direct_sow_zones.find(z => z.zone === zone || z.zone === zoneShort);
+      if (dsZone && isDateInMMDDRange(today, dsZone.from, dsZone.to)) return true;
+    }
 
-    if (!zoneData) return false;
+    // Check transplant outdoor window
+    if (plant.transplant_zones) {
+      const txZone = plant.transplant_zones.find(z => z.zone === zone || z.zone === zoneShort);
+      if (txZone) {
+        const from = txZone.transplant_from || txZone.from;
+        const to = txZone.transplant_to || txZone.to;
+        if (from && to && isDateInMMDDRange(today, from, to)) return true;
+      }
+    }
 
-    const springStartDay = zoneData.spring_start_week * 7;
-    const springEndDay = zoneData.spring_end_week * 7;
-    const fallStartDay = zoneData.fall_start_week ? zoneData.fall_start_week * 7 : null;
-    const fallEndDay = zoneData.fall_end_week ? zoneData.fall_end_week * 7 : null;
-
-    const isSpringPlanting = dayNumber >= springStartDay && dayNumber <= springEndDay;
-    const isFallPlanting = fallStartDay && fallEndDay && dayNumber >= fallStartDay && dayNumber <= fallEndDay;
-
-    return isSpringPlanting || isFallPlanting;
+    return false;
   }, []);
 
   const loadPlantingData = useCallback(async () => {
