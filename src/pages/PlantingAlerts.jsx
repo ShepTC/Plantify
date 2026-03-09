@@ -251,7 +251,7 @@ export default function PlantingAlerts() {
           allPlants.forEach(plant => {
             if (alreadyRecommendedIds.has(plant.id)) return;
             if (userPlantIds.has(plant.id)) return;
-            if (!isPlantableToday(plant, currentUser.growing_zone, dayNumber)) return;
+            if (!isPlantableToday(plant, currentUser.growing_zone, now)) return;
             
             const plantCommonName = (plant.common_name || plant.name).toLowerCase();
             if (favoriteCommonNames.includes(plantCommonName)) return;
