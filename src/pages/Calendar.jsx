@@ -343,57 +343,77 @@ export default function CalendarPage() {
       const plantData = plantMap[userPlant.plant_id];
       if (!plantData) return;
 
-      // Direct Sow events (date-based)
+      // Helper: parse MM-DD into a Date, handling year-crossing windows
+      const parseMMDD = (mmdd, referenceYear) => {
+        if (!mmdd) return null;
+        return new Date(`${referenceYear}-${mmdd}`);
+      };
+
+      // Direct Sow events (MM-DD based)
       if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
         const dsZone = plantData.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
         if (dsZone?.from) {
-          const fromDate = new Date(`${currentYear}-${dsZone.from}`);
-          const toDate = dsZone.to ? new Date(`${currentYear}-${dsZone.to}`) : fromDate;
-          if (!isNaN(fromDate.getTime())) {
+          let fromDate = parseMMDD(dsZone.from, currentYear);
+          let toDate = dsZone.to ? parseMMDD(dsZone.to, currentYear) : fromDate;
+          if (fromDate && !isNaN(fromDate.getTime())) {
+            // Handle year-crossing: if to < from, to is in the next year
+            if (toDate < fromDate) toDate = parseMMDD(dsZone.to, currentYear + 1);
             const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
             const endWeek = getWeek(toDate, { weekStartsOn: 0 });
-            for (let week = startWeek; week <= endWeek; week++) {
+            const weekRange = toDate < fromDate
+              ? [...Array(53 - startWeek + endWeek).keys()].map(i => (startWeek + i > 52 ? startWeek + i - 52 : startWeek + i))
+              : Array.from({ length: endWeek - startWeek + 1 }, (_, i) => startWeek + i);
+            weekRange.forEach(week => {
               const weekKey = `${currentYear}-${week}`;
               if (!plantings[weekKey]) plantings[weekKey] = [];
-              plantings[weekKey].push({
-                name: plantData.name,
-                category: 'direct_sow',
-                userPlantId: userPlant.id,
-                plantData,
-                season: 'Direct Sow',
-                optimalWeeks: `${dsZone.from} – ${dsZone.to || dsZone.from}`,
-                eventType: 'planting'
-              });
-            }
+              if (!plantings[weekKey].some(p => p.userPlantId === userPlant.id && p.category === 'direct_sow')) {
+                plantings[weekKey].push({
+                  name: plantData.name,
+                  category: 'direct_sow',
+                  userPlantId: userPlant.id,
+                  plantData,
+                  season: 'Direct Sow',
+                  optimalWeeks: `${dsZone.from} – ${dsZone.to || dsZone.from}`,
+                  eventType: 'planting'
+                });
+              }
+            });
           }
         }
       }
 
-      // Transplant events (date-based)
+      // Transplant events (MM-DD based, uses transplant_from/transplant_to for outdoor dates)
       if (userPlant.status === 'planned' && plantData.transplant_zones) {
         const txZone = plantData.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
         if (txZone) {
           const fromMMDD = txZone.transplant_from || txZone.from;
           const toMMDD = txZone.transplant_to || txZone.to;
           if (fromMMDD) {
-            const fromDate = new Date(`${currentYear}-${fromMMDD}`);
-            const toDate = toMMDD ? new Date(`${currentYear}-${toMMDD}`) : fromDate;
-            if (!isNaN(fromDate.getTime())) {
+            let fromDate = parseMMDD(fromMMDD, currentYear);
+            let toDate = toMMDD ? parseMMDD(toMMDD, currentYear) : fromDate;
+            if (fromDate && !isNaN(fromDate.getTime())) {
+              // Handle year-crossing
+              if (toDate < fromDate) toDate = parseMMDD(toMMDD, currentYear + 1);
               const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
               const endWeek = getWeek(toDate, { weekStartsOn: 0 });
-              for (let week = startWeek; week <= endWeek; week++) {
+              const weekRange = toDate < fromDate
+                ? [...Array(53 - startWeek + endWeek).keys()].map(i => (startWeek + i > 52 ? startWeek + i - 52 : startWeek + i))
+                : Array.from({ length: endWeek - startWeek + 1 }, (_, i) => startWeek + i);
+              weekRange.forEach(week => {
                 const weekKey = `${currentYear}-${week}`;
                 if (!plantings[weekKey]) plantings[weekKey] = [];
-                plantings[weekKey].push({
-                  name: plantData.name,
-                  category: 'transplant',
-                  userPlantId: userPlant.id,
-                  plantData,
-                  season: 'Transplant',
-                  optimalWeeks: `${fromMMDD} – ${toMMDD || fromMMDD}`,
-                  eventType: 'planting'
-                });
-              }
+                if (!plantings[weekKey].some(p => p.userPlantId === userPlant.id && p.category === 'transplant')) {
+                  plantings[weekKey].push({
+                    name: plantData.name,
+                    category: 'transplant',
+                    userPlantId: userPlant.id,
+                    plantData,
+                    season: 'Transplant',
+                    optimalWeeks: `${fromMMDD} – ${toMMDD || fromMMDD}`,
+                    eventType: 'planting'
+                  });
+                }
+              });
             }
           }
         }
