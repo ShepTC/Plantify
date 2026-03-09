@@ -592,79 +592,7 @@ export default function PlantingAlerts() {
           </Card>
         )}
 
-        {/* This Week Section */}
-        {plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length > 0 && (
-          <Card className="bg-card/80 backdrop-blur-sm border-border">
-            <CardHeader className="pb-4 md:pb-6">
-              <CardTitle className="flex items-center gap-3 text-lg md:text-xl text-foreground">
-                <Calendar className="w-5 h-5 text-secondary" />
-                <span>Good This Week</span>
-                <Badge variant="outline" className="ml-auto text-xs">
-                  {plantThisWeek.filter(p => !plantToday.some(pt => pt.id === p.id)).length} options
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 md:px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                {plantThisWeek.filter((plant) => !plantToday.some((p) => p.id === plant.id)).map((plant) => (
-                  <Card key={plant.id} className="bg-muted/20 border-border hover:border-secondary/50 transition-all duration-300">
-                    <CardHeader className="pb-3 p-4">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm md:text-base text-foreground truncate">{plant.name}</h3>
-                          <p className="text-xs md:text-sm text-muted-foreground italic truncate mt-0.5">{plant.botanical_name}</p>
-                        </div>
-                        <div className="flex-shrink-0 text-secondary">
-                          {categoryIcons[plant.category]}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0 space-y-2.5 text-xs md:text-sm">
-                      <div className="flex gap-2 flex-wrap">
-                         <Badge className={`text-[10px] md:text-xs capitalize ${categoryColors[plant.category]}`}>
-                           {plant.category}
-                         </Badge>
-                         <Badge variant="outline" className="text-[10px] md:text-xs">
-                           {plant.season}
-                         </Badge>
-                       </div>
 
-                       <div className="space-y-1">
-                         <div className="flex items-center gap-2">
-                           <Sun className="w-3 h-3 text-secondary flex-shrink-0" />
-                           <span className="text-muted-foreground capitalize text-[10px] md:text-xs truncate">
-                             {plant.sun_requirements?.replace("_", " ")}
-                           </span>
-                         </div>
-                         <div className="flex items-center gap-2">
-                           <Droplets className="w-3 h-3 text-secondary flex-shrink-0" />
-                           <span className="text-muted-foreground capitalize text-[10px] md:text-xs">
-                             {plant.water_needs}
-                           </span>
-                         </div>
-                       </div>
-
-                       {plant.days_to_maturity && (
-                         <p className="text-[10px] md:text-xs text-muted-foreground">
-                           <span className="font-medium">Matures in:</span> {plant.days_to_maturity}d
-                         </p>
-                       )}
-
-                       <Button
-                         size="sm"
-                         className="w-full h-8 text-xs"
-                         onClick={() => addPlantToGarden(plant)}
-                       >
-                         <Plus className="w-3.5 h-3.5 mr-1" />
-                         Add
-                       </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
