@@ -238,7 +238,7 @@ export default function CalendarPage() {
   const [user, setUser] = useState(null);
 
   // Processed data for the current view
-  const [plantingsByWeek, setPlantingsByWeek] = useState({});
+  const [plantingsList, setPlantingsList] = useState([]);
   const [harvestsByDate, setHarvestsByDate] = useState({});
   const [remindersByDate, setRemindersByDate] = useState({});
 
