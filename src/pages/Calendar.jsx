@@ -399,39 +399,7 @@ export default function CalendarPage() {
         }
       }
 
-      if (userPlant.status === 'planned' && plantData.planting_zones) {
-        const zoneData = plantData.planting_zones.find(
-          (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
-        );
-        if (!zoneData) return;
 
-        const windows = [
-          { start: zoneData.spring_start_week, end: zoneData.spring_end_week, season: 'Spring' },
-          { start: zoneData.fall_start_week, end: zoneData.fall_end_week, season: 'Fall' }];
-
-
-        windows.forEach((window) => {
-          if (window.start && window.end) {
-            for (let week = window.start; week <= window.end; week++) {
-              const weekKey = `${currentYear}-${week}`;
-              // Skip if this plant already has a specific direct_sow or transplant entry for this week
-              if (plantings[weekKey]?.some(p => p.userPlantId === userPlant.id && (p.category === 'direct_sow' || p.category === 'transplant'))) continue;
-              if (!plantings[weekKey]) {
-                plantings[weekKey] = [];
-              }
-              plantings[weekKey].push({
-                name: plantData.name,
-                category: plantData.category,
-                userPlantId: userPlant.id,
-                plantData: plantData,
-                season: window.season,
-                optimalWeeks: `Weeks ${window.start}-${window.end}`,
-                eventType: 'planting'
-              });
-            }
-          }
-        });
-      }
 
       if (userPlant.harvest_date) {
         const harvestBaseDate = new Date(userPlant.harvest_date);
