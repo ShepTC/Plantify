@@ -386,8 +386,8 @@ export default function CalendarPage() {
       if (userPlant.status === 'planned' && plantData.transplant_zones) {
         const txZone = plantData.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
         if (txZone) {
-          const fromMMDD = txZone.transplant_from || txZone.from;
-          const toMMDD = txZone.transplant_to || txZone.to;
+          const fromMMDD = txZone.from;
+          const toMMDD = txZone.to;
           if (fromMMDD) {
             let fromDate = parseMMDD(fromMMDD, currentYear);
             let toDate = toMMDD ? parseMMDD(toMMDD, currentYear) : fromDate;
