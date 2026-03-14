@@ -656,8 +656,19 @@ export default function CalendarPage() {
 
   const [plantingView, setPlantingView] = useState('direct_sow');
   const monthPlantings = getMonthPlantings();
-  const monthDirectSow = monthPlantings.filter(p => p.category === 'direct_sow');
-  const monthTransplant = monthPlantings.filter(p => p.category === 'transplant');
+  // Deduplicate: one card per plant (userPlantId) per category
+  const monthDirectSow = Object.values(
+    monthPlantings.filter(p => p.category === 'direct_sow').reduce((acc, p) => {
+      if (!acc[p.userPlantId]) acc[p.userPlantId] = p;
+      return acc;
+    }, {})
+  );
+  const monthTransplant = Object.values(
+    monthPlantings.filter(p => p.category === 'transplant').reduce((acc, p) => {
+      if (!acc[p.userPlantId]) acc[p.userPlantId] = p;
+      return acc;
+    }, {})
+  );
   const monthHarvests = getMonthHarvests();
   const monthReminders = getMonthReminders();
 
