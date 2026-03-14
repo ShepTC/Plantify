@@ -5,6 +5,7 @@ import { Plant } from "@/entities/Plant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircle, Sprout, Leaf, Sun, Clock } from "lucide-react";
+import { Clock as ClockIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { addDays, format } from "date-fns";
