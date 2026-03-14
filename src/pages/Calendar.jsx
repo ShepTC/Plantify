@@ -666,7 +666,7 @@ export default function CalendarPage() {
       const monthName = new Date(2000, month - 1, 1).toLocaleString('default', { month: 'short' });
       return `${monthName} ${ordinal(day)}`;
     };
-    if (parts.length === 2 && parts[0] !== parts[1]) {
+    if (parts.length === 2) {
       return `${formatPart(parts[0])} to ${formatPart(parts[1])}`;
     }
     return formatPart(parts[0]);
