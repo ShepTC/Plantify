@@ -850,7 +850,7 @@ export default function CalendarPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{formatOptimalWeeks(planting.optimalWeeks)}</p>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="outline" className="text-xs">
                             <Clock className="w-3 h-3 mr-1" />
