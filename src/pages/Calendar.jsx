@@ -654,6 +654,24 @@ export default function CalendarPage() {
     return reminderEvents.sort((a, b) => a.date - b.date);
   }, [remindersByDate, currentDate]);
 
+  const formatOptimalWeeks = (optimalWeeks) => {
+    if (!optimalWeeks) return '';
+    const ordinal = (n) => {
+      const s = ['th','st','nd','rd'], v = n % 100;
+      return n + (s[(v-20)%10] || s[v] || s[0]);
+    };
+    const parts = optimalWeeks.split('–').map(s => s.trim());
+    const formatPart = (mmdd) => {
+      const [month, day] = mmdd.split('-').map(Number);
+      const monthName = new Date(2000, month - 1, 1).toLocaleString('default', { month: 'short' });
+      return `${monthName} ${ordinal(day)}`;
+    };
+    if (parts.length === 2 && parts[0] !== parts[1]) {
+      return `${formatPart(parts[0])} to ${formatPart(parts[1])}`;
+    }
+    return formatPart(parts[0]);
+  };
+
   const [plantingView, setPlantingView] = useState('direct_sow');
   const monthPlantings = getMonthPlantings();
   // Deduplicate: one card per plant (userPlantId) per category
