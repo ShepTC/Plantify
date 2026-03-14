@@ -5,7 +5,6 @@ import { Plant } from "@/entities/Plant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlusCircle, Sprout, Leaf, Sun, Clock } from "lucide-react";
-
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { addDays, format } from "date-fns";
@@ -170,20 +169,12 @@ export default function MyGarden() {
               <p className="text-muted-foreground mb-6 text-sm md:text-base">
                 Add some plants from the library to get started.
               </p>
-              <div className="flex flex-col items-center gap-3">
-                <Link to={createPageUrl("PlantLibrary")}>
-                  <Button className="w-full md:w-auto">
-                    <PlusCircle className="w-4 h-4 mr-2" />
-                    Go to Plant Library
-                  </Button>
-                </Link>
-                <Link to={createPageUrl("PlantingAlerts")}>
-                  <Button variant="outline" className="w-full md:w-auto">
-                    <Clock className="w-4 h-4 mr-2" />
-                    What Can I Plant Today?
-                  </Button>
-                </Link>
-              </div>
+              <Link to={createPageUrl("PlantLibrary")}>
+                <Button className="w-full md:w-auto">
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Go to Plant Library
+                </Button>
+              </Link>
             </CardContent>
           </Card> :
 
