@@ -111,11 +111,8 @@ export default function WeeklyPlantingAlerts({ currentWeek, userPlants, userZone
           const plantData = plantLookup[userPlant.plant_id];
           if (!plantData || !plantData.planting_zones) return;
 
-          // Find zone data for user's zone
-          const zoneData = plantData.planting_zones.find(z => 
-            z.zone === userZone || 
-            z.zone === userZone.substring(0, userZone.length - 1) // Handle 5a -> 5
-          );
+          // Find zone data for user's zone (case-insensitive)
+          const zoneData = findZone(plantData.planting_zones, userZone);
 
           if (!zoneData) return;
 

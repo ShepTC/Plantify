@@ -39,13 +39,23 @@ const DetailItem = ({ icon, label, value }) => (
 export default function PlantDetailView({ plant, userZone, open, onOpenChange, onAddPlant, isAdded, userPlantData }) {
   if (!plant) return null;
 
-  const getPlantingInfo = () => {
-    if (!userZone || !plant.planting_zones) return null;
-    return plant.planting_zones.find(
-      (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
-    );
+  const transplantInfo = findZone(plant.transplant_zones, userZone);
+  const directSowInfo = findZone(plant.direct_sow_zones, userZone);
+  // Also check legacy planting_zones for fallback display
+  const legacyZoneInfo = userZone && plant.planting_zones ? findZone(plant.planting_zones, userZone) : null;
+
+  const formatMMDD = (mmdd) => {
+    if (!mmdd) return null;
+    const [month, day] = mmdd.split('-').map(Number);
+    return new Date(2000, month - 1, day).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
-  const plantingInfo = getPlantingInfo();
+
+  const formatDateRange = (from, to) => {
+    if (!from) return null;
+    const formattedFrom = formatMMDD(from);
+    if (!to || to === from) return formattedFrom;
+    return `${formattedFrom} – ${formatMMDD(to)}`;
+  };
 
   const handleAddClick = (e) => {
     e.stopPropagation();
