@@ -352,7 +352,7 @@ export default function CalendarPage() {
 
       // Direct Sow events (MM-DD based)
       if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
-        const dsZone = plantData.direct_sow_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+        const dsZone = findZone(plantData.direct_sow_zones, userZone);
         if (dsZone?.from) {
           let fromDate = parseMMDD(dsZone.from, currentYear);
           let toDate = dsZone.to ? parseMMDD(dsZone.to, currentYear) : fromDate;
