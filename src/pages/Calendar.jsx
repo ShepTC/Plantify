@@ -383,12 +383,12 @@ export default function CalendarPage() {
         }
       }
 
-      // Transplant events (MM-DD based, uses transplant_from/transplant_to for outdoor dates)
+      // Transplant events (MM-DD based) — use only transplant_from/transplant_to for outdoor dates, never fall back to indoor sow dates
       if (userPlant.status === 'planned' && plantData.transplant_zones) {
-        const txZone = plantData.transplant_zones.find(z => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1));
+        const txZone = findZone(plantData.transplant_zones, userZone);
         if (txZone) {
-          const fromMMDD = txZone.from;
-          const toMMDD = txZone.to;
+          const fromMMDD = txZone.transplant_from || txZone.from;
+          const toMMDD = txZone.transplant_to || txZone.to;
           if (fromMMDD) {
             let fromDate = parseMMDD(fromMMDD, currentYear);
             let toDate = toMMDD ? parseMMDD(toMMDD, currentYear) : fromDate;
