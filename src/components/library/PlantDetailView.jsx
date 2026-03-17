@@ -3,8 +3,9 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  X, Sprout, Sun, Droplets, Ruler, Plus, CheckCircle, Flower, Leaf, Clock, Thermometer
+  X, Sprout, Sun, Droplets, Ruler, Plus, CheckCircle, Flower, Leaf, Clock, Thermometer, AlertCircle
 } from 'lucide-react';
+import { findZone } from "@/utils/zoneUtils";
 import { motion } from 'framer-motion';
 
 const categoryIcons = {

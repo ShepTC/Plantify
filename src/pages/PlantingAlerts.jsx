@@ -19,6 +19,7 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import LoginPrompt from "../components/auth/LoginPrompt";
+import { findZone } from "@/utils/zoneUtils";
 import RecommendedPlants from "../components/alerts/RecommendedPlants";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import CategoryCard from "../components/library/CategoryCard";

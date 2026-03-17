@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
+import { findZone } from "@/utils/zoneUtils";
 
 // Calculate confidence score based on timing and weather
 const calculateConfidence = (currentWeek, zoneData, season, weatherConditions = {}) => {
