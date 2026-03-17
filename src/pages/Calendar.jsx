@@ -58,6 +58,7 @@ import {
 } from
 "@/components/ui/dialog";
 import LoginPrompt from "../components/auth/LoginPrompt";
+import { findZone } from "@/utils/zoneUtils";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
 import { useToast } from "@/components/ui/use-toast";
