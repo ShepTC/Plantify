@@ -170,13 +170,47 @@ export default function PlantDetailView({ plant, userZone, open, onOpenChange, o
             </div>
 
             {/* Planting Info for Zone */}
-            {plantingInfo && (
+            {userZone && (transplantInfo || directSowInfo || legacyZoneInfo) && (
               <div>
-                <h3 className="font-semibold text-base mb-2 flex items-center gap-2"><Thermometer className="w-4 h-4 text-primary"/>Zone {userZone} Planting</h3>
-                <div className="bg-muted/50 rounded-lg p-3 border border-border text-sm space-y-1.5">
-                  <p><span className="font-semibold text-foreground">Spring:</span> Weeks {plantingInfo.spring_start_week}-{plantingInfo.spring_end_week}</p>
-                  {plantingInfo.fall_start_week && (
-                    <p><span className="font-semibold text-foreground">Fall:</span> Weeks {plantingInfo.fall_start_week}-{plantingInfo.fall_end_week}</p>
+                <h3 className="font-semibold text-base mb-2 flex items-center gap-2">
+                  <Thermometer className="w-4 h-4 text-primary"/>Zone {userZone} Planting
+                </h3>
+                <div className="bg-muted/50 rounded-lg p-3 border border-border text-sm space-y-2">
+
+                  {/* Transplant window */}
+                  <div>
+                    <span className="font-semibold text-foreground">Transplant (indoor sow): </span>
+                    {transplantInfo?.from
+                      ? <span>{formatDateRange(transplantInfo.from, transplantInfo.to)}</span>
+                      : <span className="text-muted-foreground italic">No data available</span>
+                    }
+                  </div>
+                  {transplantInfo?.transplant_from && (
+                    <div>
+                      <span className="font-semibold text-foreground">Transplant (outdoors): </span>
+                      <span>{formatDateRange(transplantInfo.transplant_from, transplantInfo.transplant_to)}</span>
+                    </div>
+                  )}
+
+                  {/* Direct sow window */}
+                  <div>
+                    <span className="font-semibold text-foreground">Direct Sow: </span>
+                    {directSowInfo?.from
+                      ? <span>{formatDateRange(directSowInfo.from, directSowInfo.to)}</span>
+                      : <span className="text-muted-foreground italic">No data available</span>
+                    }
+                  </div>
+
+                  {/* Legacy week-based fallback if no MM-DD data at all */}
+                  {!transplantInfo && !directSowInfo && legacyZoneInfo && (
+                    <>
+                      {legacyZoneInfo.spring_start_week && (
+                        <p><span className="font-semibold text-foreground">Spring:</span> Weeks {legacyZoneInfo.spring_start_week}–{legacyZoneInfo.spring_end_week}</p>
+                      )}
+                      {legacyZoneInfo.fall_start_week && (
+                        <p><span className="font-semibold text-foreground">Fall:</span> Weeks {legacyZoneInfo.fall_start_week}–{legacyZoneInfo.fall_end_week}</p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
