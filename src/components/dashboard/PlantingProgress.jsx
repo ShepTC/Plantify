@@ -3,17 +3,11 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Sprout,
-  Leaf,
-  Sun,
-  BookOpen } from
-"lucide-react";
+import { Sprout, BookOpen, Clock, ChevronRight } from "lucide-react";
 
 export default function PlantingProgress({ userPlants }) {
-  const plannedCount = userPlants.filter((p) => p.status === 'planned').length;
-  const plantedCount = userPlants.filter((p) => p.status === 'planted').length;
-  const harvestedCount = userPlants.filter((p) => p.status === 'harvested').length;
+  const needsPlanting = userPlants.filter((p) => p.status === 'planned').slice(0, 3);
+  const comingUp = userPlants.filter((p) => p.status === 'planted').slice(0, 3);
 
   if (userPlants.length === 0) {
     return (
@@ -30,60 +24,73 @@ export default function PlantingProgress({ userPlants }) {
             </Link>
           </div>
         </CardContent>
-      </Card>);
-
+      </Card>
+    );
   }
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border">
       <CardContent className="px-5 py-2 space-y-3">
-        <h3 className="font-semibold text-foreground">Garden Status</h3>
-        
-        {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Sprout className="w-4 h-4 text-secondary" />
-              <p className="text-xs text-muted-foreground">Planned</p>
-            </div>
-            <p className="text-2xl font-bold text-foreground">{plannedCount}</p>
-          </div>
-          
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Leaf className="w-4 h-4 text-primary" />
-              <p className="text-xs text-muted-foreground">Planted</p>
-            </div>
-            <p className="text-2xl font-bold text-foreground">{plantedCount}</p>
-          </div>
 
-          <div className="bg-muted/50 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Sun className="w-4 h-4 text-accent" />
-              <p className="text-xs text-muted-foreground">Harvested</p>
+        {/* Needs Planting */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Sprout className="w-4 h-4 text-secondary" />
+              <h3 className="font-semibold text-foreground text-sm">Needs Planting</h3>
             </div>
-            <p className="text-2xl font-bold text-foreground">{harvestedCount}</p>
+            <span className="text-xs text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+              {userPlants.filter(p => p.status === 'planned').length}
+            </span>
           </div>
+          {needsPlanting.length > 0 ? (
+            <div className="space-y-1.5">
+              {needsPlanting.map((p) => (
+                <div key={p.id} className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2">
+                  <div className="w-2 h-2 rounded-full bg-secondary flex-shrink-0" />
+                  <span className="text-sm text-foreground truncate">{p.plant_name}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground italic">Nothing planned yet</p>
+          )}
         </div>
 
-        {/* Plant Library Link Card */}
-        <Link to={createPageUrl("PlantLibrary")} className="block">
-          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="bg-primary/20 group-hover:bg-primary/30 transition-colors rounded-lg p-2">
-                  <BookOpen className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium text-foreground text-sm">Explore Plants</p>
-                  <p className="text-xs text-muted-foreground">Browse 100+ varieties</p>
-                </div>
-              </div>
-              <span className="text-primary group-hover:translate-x-1 transition-transform">→</span>
+        {/* Coming Up */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-primary" />
+              <h3 className="font-semibold text-foreground text-sm">Coming Up</h3>
             </div>
+            <span className="text-xs text-muted-foreground bg-muted rounded-full px-2 py-0.5">
+              {userPlants.filter(p => p.status === 'planted').length}
+            </span>
+          </div>
+          {comingUp.length > 0 ? (
+            <div className="space-y-1.5">
+              {comingUp.map((p) => (
+                <div key={p.id} className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2">
+                  <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground truncate">{p.plant_name}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground italic">Nothing planted yet</p>
+          )}
+        </div>
+
+        {/* Link */}
+        <Link to={createPageUrl("MyGarden")} className="block">
+          <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg px-4 py-2.5 border border-primary/20 hover:border-primary/40 transition-colors cursor-pointer group flex items-center justify-between">
+            <p className="font-medium text-foreground text-sm">View My Garden</p>
+            <ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
           </div>
         </Link>
-      </CardContent>
-    </Card>);
 
+      </CardContent>
+    </Card>
+  );
 }
