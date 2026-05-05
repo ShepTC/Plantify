@@ -1,0 +1,237 @@
+{
+  "name": "Plant",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the plant"
+    },
+    "common_name": {
+      "type": "string",
+      "description": "Simplified common name for grouping varieties (e.g. 'Tomato', 'Strawberry')"
+    },
+    "botanical_name": {
+      "type": "string",
+      "description": "Scientific botanical name"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to plant image"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "vegetables",
+        "herbs",
+        "flowers",
+        "fruits",
+        "grains"
+      ],
+      "description": "Plant category"
+    },
+    "plant_type": {
+      "type": "string",
+      "enum": [
+        "annual",
+        "perennial",
+        "biennial"
+      ],
+      "description": "Plant lifecycle type"
+    },
+    "direct_sow_zones": {
+      "type": "array",
+      "description": "Direct sow planting windows by USDA zone. Dates are MM-DD strings.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '7a', '8b')"
+          },
+          "from": {
+            "type": "string",
+            "description": "Direct sow window start (MM-DD)"
+          },
+          "to": {
+            "type": "string",
+            "description": "Direct sow window end (MM-DD)"
+          }
+        }
+      }
+    },
+    "transplant_zones": {
+      "type": "array",
+      "description": "Transplant schedule by USDA zone. 'from'/'to' = indoor sow dates; 'transplant_from'/'transplant_to' = outdoor transplant dates. All values are MM-DD strings.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '7a', '8b')"
+          },
+          "from": {
+            "type": "string",
+            "description": "Indoor sow start date (MM-DD)"
+          },
+          "to": {
+            "type": "string",
+            "description": "Indoor sow end date (MM-DD)"
+          },
+          "transplant_from": {
+            "type": "string",
+            "description": "Outdoor transplant start date (MM-DD)"
+          },
+          "transplant_to": {
+            "type": "string",
+            "description": "Outdoor transplant end date (MM-DD)"
+          }
+        }
+      }
+    },
+    "transplant_sow_zones": {
+      "type": "array",
+      "description": "Transplant sow schedule by USDA zone. Dates for starting seeds indoors specifically for transplanting. All values are MM-DD strings.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '7a', '8b')"
+          },
+          "from": {
+            "type": "string",
+            "description": "Transplant sow start date (MM-DD)"
+          },
+          "to": {
+            "type": "string",
+            "description": "Transplant sow end date (MM-DD)"
+          }
+        }
+      }
+    },
+    "planting_zones": {
+      "type": "array",
+      "description": "Unified planting schedule by USDA zone (MM-DD format). Supports separate fields for indoor sow, outdoor transplant, direct sow spring/fall. Supports year-crossing windows.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA Hardiness Zone (e.g. '7a', '8b')"
+          },
+          "transplant_spring_from": {
+            "type": "string",
+            "description": "Spring indoor sow start (MM-DD)"
+          },
+          "transplant_spring_to": {
+            "type": "string",
+            "description": "Spring indoor sow end (MM-DD)"
+          },
+          "transplant_outdoor_from": {
+            "type": "string",
+            "description": "Spring outdoor transplant start (MM-DD)"
+          },
+          "transplant_outdoor_to": {
+            "type": "string",
+            "description": "Spring outdoor transplant end (MM-DD)"
+          },
+          "direct_sow_spring_from": {
+            "type": "string",
+            "description": "Spring direct sow start (MM-DD)"
+          },
+          "direct_sow_spring_to": {
+            "type": "string",
+            "description": "Spring direct sow end (MM-DD)"
+          },
+          "direct_sow_fall_from": {
+            "type": "string",
+            "description": "Fall direct sow start (MM-DD)"
+          },
+          "direct_sow_fall_to": {
+            "type": "string",
+            "description": "Fall direct sow end (MM-DD)"
+          },
+          "transplant_fall_indoor_from": {
+            "type": "string",
+            "description": "Fall indoor sow start (MM-DD)"
+          },
+          "transplant_fall_indoor_to": {
+            "type": "string",
+            "description": "Fall indoor sow end (MM-DD)"
+          },
+          "transplant_fall_outdoor_from": {
+            "type": "string",
+            "description": "Fall outdoor transplant start (MM-DD)"
+          },
+          "transplant_fall_outdoor_to": {
+            "type": "string",
+            "description": "Fall outdoor transplant end (MM-DD)"
+          }
+        }
+      }
+    },
+    "days_to_maturity": {
+      "type": "number",
+      "description": "Average days from planting to harvest"
+    },
+    "planting_depth": {
+      "type": "string",
+      "description": "How deep to plant seeds"
+    },
+    "spacing": {
+      "type": "string",
+      "description": "Recommended spacing between plants"
+    },
+    "sun_requirements": {
+      "type": "string",
+      "enum": [
+        "full_sun",
+        "partial_sun",
+        "partial_shade",
+        "full_shade"
+      ],
+      "description": "Sunlight requirements"
+    },
+    "water_needs": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high"
+      ],
+      "description": "Water requirements"
+    },
+    "growing_tips": {
+      "type": "string",
+      "description": "Special growing instructions and tips"
+    },
+    "companion_plants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Plants that grow well together"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
