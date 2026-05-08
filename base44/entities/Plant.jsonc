@@ -4,7 +4,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "Name of the plant"
+      "description": "Name of the plant (Crop Name)"
     },
     "common_name": {
       "type": "string",
@@ -38,137 +38,9 @@
       ],
       "description": "Plant lifecycle type"
     },
-    "direct_sow_zones": {
-      "type": "array",
-      "description": "Direct sow planting windows by USDA zone. Dates are MM-DD strings.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "zone": {
-            "type": "string",
-            "description": "USDA zone (e.g. '7a', '8b')"
-          },
-          "from": {
-            "type": "string",
-            "description": "Direct sow window start (MM-DD)"
-          },
-          "to": {
-            "type": "string",
-            "description": "Direct sow window end (MM-DD)"
-          }
-        }
-      }
-    },
-    "transplant_zones": {
-      "type": "array",
-      "description": "Transplant schedule by USDA zone. 'from'/'to' = indoor sow dates; 'transplant_from'/'transplant_to' = outdoor transplant dates. All values are MM-DD strings.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "zone": {
-            "type": "string",
-            "description": "USDA zone (e.g. '7a', '8b')"
-          },
-          "from": {
-            "type": "string",
-            "description": "Indoor sow start date (MM-DD)"
-          },
-          "to": {
-            "type": "string",
-            "description": "Indoor sow end date (MM-DD)"
-          },
-          "transplant_from": {
-            "type": "string",
-            "description": "Outdoor transplant start date (MM-DD)"
-          },
-          "transplant_to": {
-            "type": "string",
-            "description": "Outdoor transplant end date (MM-DD)"
-          }
-        }
-      }
-    },
-    "transplant_sow_zones": {
-      "type": "array",
-      "description": "Transplant sow schedule by USDA zone. Dates for starting seeds indoors specifically for transplanting. All values are MM-DD strings.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "zone": {
-            "type": "string",
-            "description": "USDA zone (e.g. '7a', '8b')"
-          },
-          "from": {
-            "type": "string",
-            "description": "Transplant sow start date (MM-DD)"
-          },
-          "to": {
-            "type": "string",
-            "description": "Transplant sow end date (MM-DD)"
-          }
-        }
-      }
-    },
-    "planting_zones": {
-      "type": "array",
-      "description": "Unified planting schedule by USDA zone (MM-DD format). Supports separate fields for indoor sow, outdoor transplant, direct sow spring/fall. Supports year-crossing windows.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "zone": {
-            "type": "string",
-            "description": "USDA Hardiness Zone (e.g. '7a', '8b')"
-          },
-          "transplant_spring_from": {
-            "type": "string",
-            "description": "Spring indoor sow start (MM-DD)"
-          },
-          "transplant_spring_to": {
-            "type": "string",
-            "description": "Spring indoor sow end (MM-DD)"
-          },
-          "transplant_outdoor_from": {
-            "type": "string",
-            "description": "Spring outdoor transplant start (MM-DD)"
-          },
-          "transplant_outdoor_to": {
-            "type": "string",
-            "description": "Spring outdoor transplant end (MM-DD)"
-          },
-          "direct_sow_spring_from": {
-            "type": "string",
-            "description": "Spring direct sow start (MM-DD)"
-          },
-          "direct_sow_spring_to": {
-            "type": "string",
-            "description": "Spring direct sow end (MM-DD)"
-          },
-          "direct_sow_fall_from": {
-            "type": "string",
-            "description": "Fall direct sow start (MM-DD)"
-          },
-          "direct_sow_fall_to": {
-            "type": "string",
-            "description": "Fall direct sow end (MM-DD)"
-          },
-          "transplant_fall_indoor_from": {
-            "type": "string",
-            "description": "Fall indoor sow start (MM-DD)"
-          },
-          "transplant_fall_indoor_to": {
-            "type": "string",
-            "description": "Fall indoor sow end (MM-DD)"
-          },
-          "transplant_fall_outdoor_from": {
-            "type": "string",
-            "description": "Fall outdoor transplant start (MM-DD)"
-          },
-          "transplant_fall_outdoor_to": {
-            "type": "string",
-            "description": "Fall outdoor transplant end (MM-DD)"
-          }
-        }
-      }
+    "frost_tolerance": {
+      "type": "string",
+      "description": "Frost tolerance level (e.g. Frost-hardy, Frost-tolerant, Frost-sensitive)"
     },
     "days_to_maturity": {
       "type": "number",
@@ -211,6 +83,98 @@
         "type": "string"
       },
       "description": "Plants that grow well together"
+    },
+    "start_seeds_indoor": {
+      "type": "array",
+      "description": "Indoor seed starting date ranges by USDA zone. Maps to 'Start Seeds' column. Values are date strings (e.g. 'Jul 8-Aug 12').",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '1a', '7b')"
+          },
+          "date_range": {
+            "type": "string",
+            "description": "Date range string (e.g. 'Jul 8-Aug 12')"
+          }
+        }
+      }
+    },
+    "direct_sow_zones": {
+      "type": "array",
+      "description": "Direct sow outdoor planting windows by USDA zone using frost-relative week numbers. Maps to 'Start Seeds Outdoors (Frost Dates)' column.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '1a', '7b')"
+          },
+          "spring_start_week": {
+            "type": "number",
+            "description": "Week number for spring direct sow start (relative to last frost)"
+          },
+          "spring_end_week": {
+            "type": "number",
+            "description": "Week number for spring direct sow end (relative to last frost)"
+          },
+          "fall_start_week": {
+            "type": "number",
+            "description": "Week number for fall direct sow start (relative to first frost)"
+          },
+          "fall_end_week": {
+            "type": "number",
+            "description": "Week number for fall direct sow end (relative to first frost)"
+          }
+        }
+      }
+    },
+    "transplant_indoor": {
+      "type": "array",
+      "description": "Indoor transplant seed starting date ranges by USDA zone. Maps to 'Transplant (Frost Dates)' column. Values are date strings (e.g. 'Jun 17-Jul 1').",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '1a', '7b')"
+          },
+          "date_range": {
+            "type": "string",
+            "description": "Date range string (e.g. 'Jun 17-Jul 1')"
+          }
+        }
+      }
+    },
+    "transplant_outdoor_zones": {
+      "type": "array",
+      "description": "Outdoor transplanting windows by USDA zone using frost-relative week numbers. Maps to 'Transplant Outdoors (Frost Dates)' column.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "USDA zone (e.g. '1a', '7b')"
+          },
+          "spring_start_week": {
+            "type": "number",
+            "description": "Week number for spring outdoor transplant start (relative to last frost)"
+          },
+          "spring_end_week": {
+            "type": "number",
+            "description": "Week number for spring outdoor transplant end (relative to last frost)"
+          },
+          "fall_start_week": {
+            "type": "number",
+            "description": "Week number for fall outdoor transplant start (relative to first frost)"
+          },
+          "fall_end_week": {
+            "type": "number",
+            "description": "Week number for fall outdoor transplant end (relative to first frost)"
+          }
+        }
+      }
     }
   },
   "required": [
