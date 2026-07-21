@@ -56,8 +56,10 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
   const rows = Math.ceil(n / cols);
   const NXT = cols * 3 + 1;
   const NYT = rows * 3 + 1;
-  const W = Math.max(400, (NXT + NYT) * HW + 80);
-  const H = Math.max(260, 96 + (NXT + NYT) * HH + 60);
+  // Zoom in when there are fewer plants so the garden always fills its space.
+  const zoom = Math.max(1, Math.min(2.2, 12 / (cols * rows)));
+  const W = (NXT + NYT) * HW + 80;
+  const H = 96 + (NXT + NYT) * HH + 60;
   const ORIGX = Math.round(W / 2 - ((NXT - NYT) * HW) / 2);
   const ORIGY = 92;
 
@@ -65,7 +67,10 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
     const cv = canvasRef.current;
     if (!cv) return;
     const ctx = cv.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.imageSmoothingEnabled = false;
+    ctx.scale(zoom, zoom);
 
     let s = 99;
     const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
@@ -254,7 +259,7 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
     beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs)).forEach(drawBed);
 
     if (night) R(0, 0, W, H, '#0c0a06', 0.45);
-  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX]);
+  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom]);
 
   useEffect(() => { draw(); }, [draw]);
 
@@ -276,8 +281,8 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
   return (
     <canvas
       ref={canvasRef}
-      width={W}
-      height={H}
+      width={Math.round(W * zoom)}
+      height={Math.round(H * zoom)}
       onClick={handleClick}
       style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated', cursor: 'pointer' }}
     />
