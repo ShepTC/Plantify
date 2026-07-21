@@ -208,12 +208,23 @@ export default function MyGarden() {
             <GardenStats plants={myPlants} />
 
             {/* Pixel Garden Visual */}
-            <div className="rounded-2xl overflow-hidden border border-border shadow-sm bg-card">
-              <PixelGarden
-                userPlants={myPlants}
-                night={isNight}
-                onSelectBed={handlePlantClick}
-              />
+            <div className="relative rounded-2xl overflow-hidden border border-border shadow-lg bg-gradient-to-br from-card via-card to-secondary/30 backdrop-blur-sm">
+              <div className="relative" style={{ opacity: 0.92 }}>
+                <PixelGarden
+                  userPlants={myPlants}
+                  night={isNight}
+                  onSelectBed={handlePlantClick}
+                />
+              </div>
+              {/* Dreamy edge fades that blend the pixel art into the card */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-card via-card/70 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-card via-card/70 to-transparent" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-card via-card/60 to-transparent" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-card via-card/60 to-transparent" />
+              {/* Glassy sheen across the top */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/15 dark:via-white/5 dark:to-white/10" />
+              {/* Soft dreamy glow */}
+              <div className="pointer-events-none absolute inset-0 shadow-[inset_0_1px_2px_rgba(255,255,255,0.25)] dark:shadow-[inset_0_1px_2px_rgba(255,255,255,0.08)]" />
             </div>
 
             {/* Growing Plants */}
