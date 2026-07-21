@@ -314,16 +314,6 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
   const selUp = selBed ? selBed.up : null;
   const details = selUp && plantDataMap ? (plantDataMap[selUp.plant_id] || {}) : {};
 
-  const leftPct = selBed ? (selBed.x / W) * 100 : 0;
-  const topPct = selBed ? (selBed.y / H) * 100 : 0;
-  const placeLeft = leftPct > 58;
-  const placeBelow = topPct < 34;
-  const cardTransform = placeBelow
-    ? 'translate(-50%, 14px)'
-    : placeLeft
-      ? 'translate(calc(-100% - 10px), -50%)'
-      : 'translate(10px, -50%)';
-
   const pretty = (s) => (s ? String(s).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : '');
   const statusStyles = {
     planned: 'bg-blue-500/15 text-blue-600 dark:text-blue-300',
@@ -343,18 +333,13 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
 
       <AnimatePresence>
         {selBed && selUp && (
-          <div
-            className="pointer-events-none absolute z-20"
-            style={{ left: `${leftPct}%`, top: `${topPct}%` }}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+            className="mx-auto mt-3 w-full max-w-sm rounded-2xl border border-border bg-card/85 backdrop-blur-md shadow-xl p-4 space-y-3"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 8 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-              style={{ transform: cardTransform }}
-              className="pointer-events-auto w-60 rounded-2xl border border-border bg-card/85 backdrop-blur-md shadow-xl p-3 space-y-2"
-            >
               {details.image_url && (
                 <div className="relative h-24 w-full overflow-hidden rounded-xl">
                   <img src={details.image_url} alt="" className="h-full w-full object-cover" />
@@ -397,8 +382,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
               >
                 View details
               </button>
-            </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
