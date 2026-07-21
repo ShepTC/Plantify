@@ -16,9 +16,9 @@ const TW = 28, TH = 14, HW = TW / 2, HH = TH / 2, RAISE = 8;
 const MAX_COLS = 4;
 
 const COL = {
-  peach: '#efa680', night: '#12302e',
-  grassA: '#7ab24a', grassB: '#6da33d', dirt: '#c7a267', dirt2: '#b89158',
-  wood: '#8a5730', woodDk: '#5e3720', woodMed: '#744727', woodHi: '#a9743f',
+  peach: '#f5f0e2', night: '#171309',
+  grassA: '#7cb24c', grassB: '#6fa642', dirt: '#d2b583', dirt2: '#c2a371',
+  wood: '#8a5a36', woodDk: '#5e3720', woodMed: '#744727', woodHi: '#a9743f',
   soil: '#7a5230', soilDk: '#5a3b22',
   gDk: '#2e6f39', gMd: '#3f8f4a', gLt: '#5fb355', gLt2: '#84cf5c',
   gold: '#e0b34a', goldLt: '#eac24e', goldDk: '#c8983a',
@@ -253,7 +253,7 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
 
     beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs)).forEach(drawBed);
 
-    if (night) R(0, 0, W, H, '#0a1428', 0.42);
+    if (night) R(0, 0, W, H, '#0c0a06', 0.45);
   }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX]);
 
   useEffect(() => { draw(); }, [draw]);
