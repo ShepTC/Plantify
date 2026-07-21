@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Droplets, Clock } from 'lucide-react';
 
 /**
  * PixelGarden — isometric pixel-art view of the user's garden.
@@ -308,83 +306,16 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
     selRef.current = newSel;
     setSelIdx(newSel);
     draw();
-  };
-
-  const selBed = selIdx >= 0 ? bedsRef.current.find((b) => b.i === selIdx) : null;
-  const selUp = selBed ? selBed.up : null;
-  const details = selUp && plantDataMap ? (plantDataMap[selUp.plant_id] || {}) : {};
-
-  const pretty = (s) => (s ? String(s).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : '');
-  const statusStyles = {
-    planned: 'bg-blue-500/15 text-blue-600 dark:text-blue-300',
-    planted: 'bg-green-500/15 text-green-600 dark:text-green-300',
-    harvested: 'bg-amber-500/15 text-amber-600 dark:text-amber-300',
+    if (onOpenDetails) onOpenDetails(hit ? hit.up : null);
   };
 
   return (
-    <div className="relative">
-      <canvas
-        ref={canvasRef}
-        width={Math.round(W * zoom)}
-        height={Math.round(H * zoom)}
-        onClick={handleClick}
-        style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated', cursor: 'pointer' }}
-      />
-
-      <AnimatePresence>
-        {selBed && selUp && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-            className="mx-auto mt-3 w-full max-w-sm rounded-2xl border border-border bg-card/85 backdrop-blur-md shadow-xl p-4 space-y-3"
-          >
-              {details.image_url && (
-                <div className="relative h-24 w-full overflow-hidden rounded-xl">
-                  <img src={details.image_url} alt="" className="h-full w-full object-cover" />
-                </div>
-              )}
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-foreground">{selUp.plant_name}</p>
-                  {details.common_name && details.common_name !== selUp.plant_name && (
-                    <p className="truncate text-xs text-muted-foreground">{details.common_name}</p>
-                  )}
-                </div>
-                <button
-                  onClick={() => setSelIdx(-1)}
-                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${statusStyles[selUp.status] || 'bg-muted text-muted-foreground'}`}>
-                {selUp.status}
-              </span>
-
-              <div className="space-y-1 text-xs text-muted-foreground">
-                {details.days_to_maturity ? (
-                  <div className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {details.days_to_maturity} days to harvest</div>
-                ) : null}
-                {details.sun_requirements ? (
-                  <div className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5" /> {pretty(details.sun_requirements)}</div>
-                ) : null}
-                {details.water_needs ? (
-                  <div className="flex items-center gap-1.5"><Droplets className="h-3.5 w-3.5" /> {pretty(details.water_needs)} water</div>
-                ) : null}
-              </div>
-
-              <button
-                onClick={() => onOpenDetails && onOpenDetails(selUp)}
-                className="w-full rounded-lg bg-primary py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                View details
-              </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <canvas
+      ref={canvasRef}
+      width={Math.round(W * zoom)}
+      height={Math.round(H * zoom)}
+      onClick={handleClick}
+      style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated', cursor: 'pointer' }}
+    />
   );
-}
+  }

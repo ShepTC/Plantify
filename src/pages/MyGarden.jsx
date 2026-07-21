@@ -21,7 +21,7 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
 import PixelGarden from "../components/garden/PixelGarden";
-import PlantDetailView from "../components/library/PlantDetailView";
+import PlantDetailBody from "../components/library/PlantDetailBody";
 
 export default function MyGarden() {
   const [myPlants, setMyPlants] = useState([]);
@@ -152,7 +152,7 @@ export default function MyGarden() {
   };
 
   const handlePlantClick = (userPlant) => {
-    if (!userPlant) return;
+    if (!userPlant) { setSelectedPlant(null); return; }
     const plantDetails = plantDataMap[userPlant.plant_id];
     if (plantDetails) {
       setSelectedPlant(plantDetails);
@@ -235,6 +235,20 @@ export default function MyGarden() {
               <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background via-background/60 to-transparent" />
             </div>
 
+            {selectedPlant && (
+              <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+                <PlantDetailBody
+                  plant={selectedPlant}
+                  userZone={user?.growing_zone}
+                  onOpenChange={(isOpen) => { if (!isOpen) setSelectedPlant(null); }}
+                  onAddPlant={() => {}}
+                  isAdded={userPlantIds.has(selectedPlant.id)}
+                  userPlantData={selectedUserPlantData}
+                  animated={false}
+                />
+              </div>
+            )}
+
             {/* Growing Plants */}
             <GardenSection
             title="Currently Growing"
@@ -303,19 +317,6 @@ export default function MyGarden() {
         </DialogContent>
       </Dialog>
 
-      <PlantDetailView
-        plant={selectedPlant}
-        userZone={user?.growing_zone}
-        open={!!selectedPlant}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setSelectedPlant(null);
-          }
-        }}
-        onAddPlant={() => {}}
-        isAdded={selectedPlant ? userPlantIds.has(selectedPlant.id) : false}
-        userPlantData={selectedUserPlantData}
-      />
     </div>);
 
 }
