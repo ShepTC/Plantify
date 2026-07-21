@@ -152,6 +152,7 @@ export default function MyGarden() {
   };
 
   const handlePlantClick = (userPlant) => {
+    if (!userPlant) return;
     const plantDetails = plantDataMap[userPlant.plant_id];
     if (plantDetails) {
       setSelectedPlant(plantDetails);
