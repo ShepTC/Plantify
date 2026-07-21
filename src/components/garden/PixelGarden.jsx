@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Sun, Droplets, Clock } from 'lucide-react';
 
 /**
  * PixelGarden — isometric pixel-art view of the user's garden.
@@ -13,6 +15,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
  */
 
 const TW = 28, TH = 14, HW = TW / 2, HH = TH / 2, RAISE = 8;
+const LIFT_AMT = 14;
 const MAX_COLS = 4;
 
 const COL = {
@@ -45,10 +48,15 @@ const spriteFor = (name = '') => {
   return 'bush';
 };
 
-export default function PixelGarden({ userPlants = [], night = false, onSelectBed }) {
+export default function PixelGarden({ userPlants = [], night = false, plantDataMap, onOpenDetails }) {
   const canvasRef = useRef(null);
   const bedsRef = useRef([]);
   const selRef = useRef(-1);
+  const liftRef = useRef(0);
+  const rafRef = useRef(0);
+  const [selIdx, setSelIdx] = useState(-1);
+
+  useEffect(() => { selRef.current = selIdx; }, [selIdx]);
 
   // ── layout: grid auto-sizes to the number of plants ──
   const n = Math.max(userPlants.length, 1);
@@ -210,24 +218,28 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
     bedsRef.current = beds;
 
     const drawBed = (bed) => {
-      const cx = bed.x, cyTop = bed.y;
-      const selected = selRef.current === bed.i;
-      ell(cx, cyTop + RAISE + 3, TW - 2, TH - 3, '#1e1408', 0.14);
-      isoBox(cx, cyTop, TW, RAISE, selected ? COL.heat : COL.wood, COL.woodDk, COL.woodMed);
+      const isSel = selRef.current === bed.i;
+      const lift = isSel ? liftRef.current : 0;
+      const cx = bed.x;
+      const groundY = bed.y;
+      const cyTop = bed.y - lift;
+      ell(cx, groundY + RAISE + 3, TW - 2, TH - 3, '#1e1408', Math.min(0.3, 0.14 + lift * 0.012));
+      isoBox(cx, cyTop, TW, RAISE, isSel ? COL.heat : COL.wood, COL.woodDk, COL.woodMed);
       dia(cx, cyTop, TW - 4, TH - 2, COL.soil);
-      for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surf(bed, 0.12, v), surf(bed, 0.88, v), COL.soilDk); }
+      const surfL = (u, v) => { const p = iso(bed.cs + u * 2, bed.rs + v * 2); return { x: p.x, y: p.y - RAISE - lift }; };
+      for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surfL(0.12, v), surfL(0.88, v), COL.soilDk); }
 
       if (bed.up.status === 'planned') {
         for (let k = 1; k <= 3; k++) {
-          const v = k / 4, a = surf(bed, 0.14, v), b = surf(bed, 0.86, v);
+          const v = k / 4, a = surfL(0.14, v), b = surfL(0.86, v);
           for (let t = 0; t <= 6; t++)
             R(Math.round(a.x + (b.x - a.x) * t / 6), Math.round(a.y + (b.y - a.y) * t / 6), 1, 1, '#3a2413');
         }
-        [[.3, .4], [.6, .55], [.4, .7]].forEach((p) => { const pt = surf(bed, p[0], p[1]); P.sprout(pt.x, pt.y); });
+        [[.3, .4], [.6, .55], [.4, .7]].forEach((p) => { const pt = surfL(p[0], p[1]); P.sprout(pt.x, pt.y); });
       } else {
         const pts = (TALL[bed.sprite] ? POS3 : POS5).slice().sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
         pts.forEach((p, k) => {
-          const pt = surf(bed, p[0], p[1]);
+          const pt = surfL(p[0], p[1]);
           if (bed.sprite === 'tulip') P.tulip(pt.x, pt.y, TULIPS[k % 4]);
           else (P[bed.sprite] || P.bush)(pt.x, pt.y);
         });
@@ -256,12 +268,31 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
     tree(iso(2, -1).x, iso(2, -1).y + 6);
     tree(iso(-1, 3).x, iso(-1, 3).y + 6);
 
-    beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs)).forEach(drawBed);
+    beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || (a.i === selRef.current ? 1 : 0) - (b.i === selRef.current ? 1 : 0)).forEach(drawBed);
 
     if (night) R(0, 0, W, H, '#0c0a06', 0.45);
   }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom]);
 
   useEffect(() => { draw(); }, [draw]);
+
+  // Smoothly lift the selected bed (and lower it when deselected).
+  useEffect(() => {
+    const target = selIdx >= 0 ? LIFT_AMT : 0;
+    const step = () => {
+      const cur = liftRef.current;
+      const diff = target - cur;
+      if (Math.abs(diff) < 0.25) {
+        liftRef.current = target;
+        draw();
+        return;
+      }
+      liftRef.current = cur + diff * 0.22;
+      draw();
+      rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [selIdx, draw]);
 
   const handleClick = (e) => {
     const cv = canvasRef.current;
@@ -273,18 +304,103 @@ export default function PixelGarden({ userPlants = [], night = false, onSelectBe
       .slice()
       .sort((a, b) => (b.cs + b.rs) - (a.cs + a.rs))
       .find((b) => Math.abs(lx - b.x) / TW + Math.abs(ly - b.y) / TH <= 1.05);
-    selRef.current = hit ? hit.i : -1;
+    const newSel = hit ? hit.i : -1;
+    selRef.current = newSel;
+    setSelIdx(newSel);
     draw();
-    if (onSelectBed) onSelectBed(hit ? hit.up : null);
+  };
+
+  const selBed = selIdx >= 0 ? bedsRef.current.find((b) => b.i === selIdx) : null;
+  const selUp = selBed ? selBed.up : null;
+  const details = selUp && plantDataMap ? (plantDataMap[selUp.plant_id] || {}) : {};
+
+  const leftPct = selBed ? (selBed.x / W) * 100 : 0;
+  const topPct = selBed ? (selBed.y / H) * 100 : 0;
+  const placeLeft = leftPct > 58;
+  const placeBelow = topPct < 34;
+  const cardTransform = placeBelow
+    ? 'translate(-50%, 14px)'
+    : placeLeft
+      ? 'translate(calc(-100% - 10px), -50%)'
+      : 'translate(10px, -50%)';
+
+  const pretty = (s) => (s ? String(s).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) : '');
+  const statusStyles = {
+    planned: 'bg-blue-500/15 text-blue-600 dark:text-blue-300',
+    planted: 'bg-green-500/15 text-green-600 dark:text-green-300',
+    harvested: 'bg-amber-500/15 text-amber-600 dark:text-amber-300',
   };
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={Math.round(W * zoom)}
-      height={Math.round(H * zoom)}
-      onClick={handleClick}
-      style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated', cursor: 'pointer' }}
-    />
+    <div className="relative">
+      <canvas
+        ref={canvasRef}
+        width={Math.round(W * zoom)}
+        height={Math.round(H * zoom)}
+        onClick={handleClick}
+        style={{ width: '100%', height: 'auto', display: 'block', imageRendering: 'pixelated', cursor: 'pointer' }}
+      />
+
+      <AnimatePresence>
+        {selBed && selUp && (
+          <div
+            className="pointer-events-none absolute z-20"
+            style={{ left: `${leftPct}%`, top: `${topPct}%` }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 8 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              style={{ transform: cardTransform }}
+              className="pointer-events-auto w-60 rounded-2xl border border-border bg-card/85 backdrop-blur-md shadow-xl p-3 space-y-2"
+            >
+              {details.image_url && (
+                <div className="relative h-24 w-full overflow-hidden rounded-xl">
+                  <img src={details.image_url} alt="" className="h-full w-full object-cover" />
+                </div>
+              )}
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-foreground">{selUp.plant_name}</p>
+                  {details.common_name && details.common_name !== selUp.plant_name && (
+                    <p className="truncate text-xs text-muted-foreground">{details.common_name}</p>
+                  )}
+                </div>
+                <button
+                  onClick={() => setSelIdx(-1)}
+                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${statusStyles[selUp.status] || 'bg-muted text-muted-foreground'}`}>
+                {selUp.status}
+              </span>
+
+              <div className="space-y-1 text-xs text-muted-foreground">
+                {details.days_to_maturity ? (
+                  <div className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> {details.days_to_maturity} days to harvest</div>
+                ) : null}
+                {details.sun_requirements ? (
+                  <div className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5" /> {pretty(details.sun_requirements)}</div>
+                ) : null}
+                {details.water_needs ? (
+                  <div className="flex items-center gap-1.5"><Droplets className="h-3.5 w-3.5" /> {pretty(details.water_needs)} water</div>
+                ) : null}
+              </div>
+
+              <button
+                onClick={() => onOpenDetails && onOpenDetails(selUp)}
+                className="w-full rounded-lg bg-primary py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                View details
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

@@ -225,7 +225,8 @@ export default function MyGarden() {
               <PixelGarden
                 userPlants={myPlants}
                 night={isNight}
-                onSelectBed={handlePlantClick}
+                plantDataMap={plantDataMap}
+                onOpenDetails={handlePlantClick}
               />
               {/* Edge fades blend the art into the page background */}
               <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background via-background/60 to-transparent" />
