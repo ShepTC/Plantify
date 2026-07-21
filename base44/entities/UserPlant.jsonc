@@ -1,0 +1,55 @@
+{
+  "name": "UserPlant",
+  "type": "object",
+  "properties": {
+    "plant_id": {
+      "type": "string",
+      "description": "Reference to Plant entity"
+    },
+    "plant_name": {
+      "type": "string",
+      "description": "Name of the plant for quick reference"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "planted",
+        "harvested"
+      ],
+      "default": "planned",
+      "description": "Current status of this plant in user's garden"
+    },
+    "planned_planting_week": {
+      "type": "number",
+      "description": "Week number when user plans to plant (1-52)"
+    },
+    "actual_planting_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the plant was actually planted"
+    },
+    "harvest_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the plant was harvested"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Personal notes about this plant"
+    },
+    "remind_me": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to show reminders for this plant"
+    },
+    "google_event_id": {
+      "type": "string",
+      "description": "Google Calendar event ID for syncing"
+    }
+  },
+  "required": [
+    "plant_id",
+    "plant_name"
+  ]
+}

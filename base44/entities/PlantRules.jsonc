@@ -1,0 +1,66 @@
+{
+  "name": "PlantRules",
+  "type": "object",
+  "properties": {
+    "rule_key": {
+      "type": "string",
+      "description": "Short identifier like vegetables:leafy_cool"
+    },
+    "priority": {
+      "type": "number",
+      "description": "Higher numbers take precedence over lower ones"
+    },
+    "match_category": {
+      "type": "string",
+      "description": "Plant category to match (e.g. vegetables, herbs, flowers)"
+    },
+    "match_group": {
+      "type": "string",
+      "description": "Plant group to match (e.g. leafy_cool, root, fruiting_warm)"
+    },
+    "match_plant_type": {
+      "type": "string",
+      "description": "Plant type to match (e.g. annual, perennial, biennial)"
+    },
+    "match_name_contains": {
+      "type": "string",
+      "description": "Keyword or phrase that should appear in the plant name"
+    },
+    "min_zone": {
+      "type": "string",
+      "description": "Minimum USDA zone this rule applies to (e.g. '3a')"
+    },
+    "max_zone": {
+      "type": "string",
+      "description": "Maximum USDA zone this rule applies to (e.g. '10b')"
+    },
+    "spring_basis": {
+      "type": "string",
+      "description": "Spring planting basis (before_last_frost or after_last_frost)"
+    },
+    "spring_start_offset": {
+      "type": "number",
+      "description": "Number of weeks relative to the spring basis"
+    },
+    "spring_end_offset": {
+      "type": "number",
+      "description": "Number of weeks relative to the spring basis"
+    },
+    "fall_basis": {
+      "type": "string",
+      "description": "Fall planting basis (usually before_first_frost)"
+    },
+    "fall_start_offset": {
+      "type": "number",
+      "description": "Number of weeks relative to the fall basis"
+    },
+    "fall_end_offset": {
+      "type": "number",
+      "description": "Number of weeks relative to the fall basis"
+    }
+  },
+  "required": [
+    "rule_key",
+    "priority"
+  ]
+}

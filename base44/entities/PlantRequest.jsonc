@@ -1,0 +1,27 @@
+{
+  "name": "PlantRequest",
+  "type": "object",
+  "properties": {
+    "plant_name": {
+      "type": "string",
+      "description": "Name of the requested plant"
+    },
+    "details": {
+      "type": "string",
+      "description": "Additional details about the plant"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "added",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Status of the request"
+    }
+  },
+  "required": [
+    "plant_name"
+  ]
+}

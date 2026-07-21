@@ -20,6 +20,7 @@ import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
+import PixelGarden from "../components/garden/PixelGarden";
 import PlantDetailView from "../components/library/PlantDetailView";
 
 export default function MyGarden() {
@@ -35,6 +36,30 @@ export default function MyGarden() {
 
   // State for plant detail view
   const [selectedPlant, setSelectedPlant] = useState(null);
+
+  // Track active theme for pixel-garden night rendering
+  const [isNight, setIsNight] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return document.documentElement.classList.contains('dark') ||
+      localStorage.getItem('user-theme') === 'dark';
+  });
+
+  useEffect(() => {
+    const sync = () => {
+      setIsNight(
+        document.documentElement.classList.contains('dark') ||
+        localStorage.getItem('user-theme') === 'dark'
+      );
+    };
+    sync();
+    window.addEventListener('theme-updated', sync);
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => {
+      window.removeEventListener('theme-updated', sync);
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     loadMyGarden();
@@ -181,6 +206,15 @@ export default function MyGarden() {
         <div className="space-y-6">
             {/* Stats Overview */}
             <GardenStats plants={myPlants} />
+
+            {/* Pixel Garden Visual */}
+            <div className="rounded-2xl overflow-hidden border border-border shadow-sm bg-card">
+              <PixelGarden
+                userPlants={myPlants}
+                night={isNight}
+                onSelectBed={handlePlantClick}
+              />
+            </div>
 
             {/* Growing Plants */}
             <GardenSection

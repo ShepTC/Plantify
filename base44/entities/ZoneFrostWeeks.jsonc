@@ -1,0 +1,25 @@
+{
+  "name": "ZoneFrostWeeks",
+  "type": "object",
+  "properties": {
+    "zone": {
+      "type": "string",
+      "description": "USDA hardiness zone (e.g., '3a', '7b', '11b')"
+    },
+    "last_frost_week": {
+      "type": "number",
+      "description": "Week number (1-52) of the last spring frost"
+    },
+    "first_frost_week": {
+      "type": "number",
+      "description": "Week number (1-52) of the first fall frost"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about frost timing for this zone"
+    }
+  },
+  "required": [
+    "zone"
+  ]
+}

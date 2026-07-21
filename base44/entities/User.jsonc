@@ -1,0 +1,110 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "is_premium": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicates if the user has an active Plantify Pro subscription."
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "URL to the user's profile picture"
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        }
+      }
+    },
+    "growing_zone": {
+      "type": "string",
+      "description": "Auto-detected USDA Hardiness Zone based on location"
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "default": "light",
+      "description": "User's preferred theme"
+    },
+    "color_palette": {
+      "type": "string",
+      "enum": [
+        "default",
+        "pastel",
+        "ocean",
+        "sunset"
+      ],
+      "default": "default",
+      "description": "User's preferred color palette"
+    },
+    "temperature_unit": {
+      "type": "string",
+      "enum": [
+        "celsius",
+        "fahrenheit"
+      ],
+      "default": "celsius",
+      "description": "Preferred temperature unit for weather display"
+    },
+    "garden_size": {
+      "type": "string",
+      "enum": [
+        "container",
+        "small",
+        "medium",
+        "large",
+        "farm"
+      ]
+    },
+    "experience_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "favorite_plants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of favorite plant names for personalized recommendations"
+    },
+    "garden_goals": {
+      "type": "string"
+    },
+    "last_goal_review_year": {
+      "type": "number",
+      "description": "Year when user was last prompted for seasonal goal review"
+    },
+    "last_goal_review_season": {
+      "type": "string",
+      "enum": [
+        "summer",
+        "fall"
+      ],
+      "description": "Last season when user was prompted for goal review"
+    }
+  },
+  "required": []
+}
