@@ -36,6 +36,7 @@ export default function MyGarden() {
 
   // State for plant detail view
   const [selectedPlant, setSelectedPlant] = useState(null);
+  const [selectedUserPlant, setSelectedUserPlant] = useState(null);
 
   // Track active theme for pixel-garden night rendering
   const [isNight, setIsNight] = useState(() => {
@@ -152,11 +153,17 @@ export default function MyGarden() {
   };
 
   const handlePlantClick = (userPlant) => {
-    if (!userPlant) { setSelectedPlant(null); return; }
-    const plantDetails = plantDataMap[userPlant.plant_id];
-    if (plantDetails) {
-      setSelectedPlant(plantDetails);
-    }
+    if (!userPlant) { setSelectedPlant(null); setSelectedUserPlant(null); return; }
+    const byName = (userPlant.plant_name || '').toLowerCase();
+    const plantDetails =
+      plantDataMap[userPlant.plant_id] ||
+      Object.values(plantDataMap).find((p) =>
+        (p.name && p.name.toLowerCase() === byName) ||
+        (p.common_name && p.common_name.toLowerCase() === byName)
+      ) ||
+      { name: userPlant.plant_name };
+    setSelectedUserPlant(userPlant);
+    setSelectedPlant(plantDetails);
   };
 
   const selectedUserPlantData = selectedPlant 
@@ -240,10 +247,10 @@ export default function MyGarden() {
                 <PlantDetailBody
                   plant={selectedPlant}
                   userZone={user?.growing_zone}
-                  onOpenChange={(isOpen) => { if (!isOpen) setSelectedPlant(null); }}
+                  onOpenChange={(isOpen) => { if (!isOpen) { setSelectedPlant(null); setSelectedUserPlant(null); } }}
                   onAddPlant={() => {}}
-                  isAdded={userPlantIds.has(selectedPlant.id)}
-                  userPlantData={selectedUserPlantData}
+                  isAdded={!!selectedUserPlant}
+                  userPlantData={selectedUserPlant}
                   animated={false}
                 />
               </div>
