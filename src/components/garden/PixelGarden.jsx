@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { getGrowthStage } from '@/utils/growthStage';
 
 /**
  * PixelGarden — isometric pixel-art view of the user's garden.
@@ -189,6 +190,21 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       sprout(x, base) {
         R(x, base - 5, 1, 5, COL.gMd); R(x - 2, base - 6, 2, 2, COL.gLt); R(x + 1, base - 7, 2, 2, COL.gLt2);
       },
+      stubble(x, base) {
+        for (let i = -3; i <= 3; i += 2) { R(x + i, base - 2, 1, 2, COL.goldDk); R(x + i, base - 3, 1, 1, COL.gMd); }
+      },
+    };
+    // Draw a crop sprite at a given growth stage. Young plants are drawn
+    // shorter via vertical scaling; harvested beds show cut stubble.
+    const drawSpriteAt = (name, x, base, stage, extra) => {
+      if (stage === 'sprout') { P.sprout(x, base); return; }
+      if (stage === 'harvested') { P.stubble(x, base); return; }
+      let vs = 1;
+      if (stage === 'young') vs = 0.55;
+      if (vs !== 1) { ctx.save(); ctx.translate(0, base); ctx.scale(1, vs); ctx.translate(0, -base); }
+      if (name === 'tulip') P.tulip(x, base, extra);
+      else (P[name] || P.bush)(x, base);
+      if (vs !== 1) ctx.restore();
     };
     const TULIPS = ['#e2472f', '#e8557f', '#eac24e', '#8a5bb0'];
     const TALL = { sunflower: 1, corn: 1, wheat: 1 };
@@ -211,7 +227,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       const gx = i % cols, gy = Math.floor(i / cols);
       const cs = 1 + gx * 3, rs = 1 + gy * 3;
       const c = iso(cs + 1, rs + 1);
-      return { up, i, cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name) };
+      return { up, i, cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap) };
     });
     bedsRef.current = beds;
 
@@ -227,19 +243,22 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       const surfL = (u, v) => { const p = iso(bed.cs + u * 2, bed.rs + v * 2); return { x: p.x, y: p.y - RAISE - lift }; };
       for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surfL(0.12, v), surfL(0.88, v), COL.soilDk); }
 
-      if (bed.up.status === 'planned') {
+      const stage = bed.stage;
+      if (stage === 'seed') {
         for (let k = 1; k <= 3; k++) {
           const v = k / 4, a = surfL(0.14, v), b = surfL(0.86, v);
           for (let t = 0; t <= 6; t++)
             R(Math.round(a.x + (b.x - a.x) * t / 6), Math.round(a.y + (b.y - a.y) * t / 6), 1, 1, '#3a2413');
         }
         [[.3, .4], [.6, .55], [.4, .7]].forEach((p) => { const pt = surfL(p[0], p[1]); P.sprout(pt.x, pt.y); });
+      } else if (stage === 'harvested') {
+        const pts = (TALL[bed.sprite] ? POS3 : POS5).slice().sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+        pts.forEach((p) => { const pt = surfL(p[0], p[1]); P.stubble(pt.x, pt.y); });
       } else {
         const pts = (TALL[bed.sprite] ? POS3 : POS5).slice().sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
         pts.forEach((p, k) => {
           const pt = surfL(p[0], p[1]);
-          if (bed.sprite === 'tulip') P.tulip(pt.x, pt.y, TULIPS[k % 4]);
-          else (P[bed.sprite] || P.bush)(pt.x, pt.y);
+          drawSpriteAt(bed.sprite, pt.x, pt.y, stage, TULIPS[k % 4]);
         });
       }
     };
@@ -269,7 +288,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
     beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || ((liftsRef.current[a.i] || 0) - (liftsRef.current[b.i] || 0))).forEach(drawBed);
 
     if (night) R(0, 0, W, H, '#0c0a06', 0.45);
-  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom]);
+  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom, plantDataMap]);
 
   useEffect(() => { draw(); }, [draw]);
 
