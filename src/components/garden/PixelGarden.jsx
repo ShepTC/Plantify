@@ -64,10 +64,10 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
   const NYT = rows * 3 + 1;
   // Zoom in when there are fewer plants so the garden always fills its space.
   const zoom = Math.max(1, Math.min(2.2, 12 / (cols * rows)));
-  const W = (NXT + NYT) * HW + 80;
-  const H = 96 + (NXT + NYT) * HH + 60;
+  const W = (NXT + NYT) * HW + 48;
+  const H = 52 + (NXT + NYT) * HH + 28;
   const ORIGX = Math.round(W / 2 - ((NXT - NYT) * HW) / 2);
-  const ORIGY = 92;
+  const ORIGY = 50;
 
   const draw = useCallback(() => {
     const cv = canvasRef.current;
