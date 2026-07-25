@@ -50,7 +50,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
   const canvasRef = useRef(null);
   const bedsRef = useRef([]);
   const selRef = useRef(-1);
-  const liftRef = useRef(0);
+  const liftsRef = useRef({});
   const rafRef = useRef(0);
   const [selIdx, setSelIdx] = useState(-1);
 
@@ -217,7 +217,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
 
     const drawBed = (bed) => {
       const isSel = selRef.current === bed.i;
-      const lift = isSel ? liftRef.current : 0;
+      const lift = liftsRef.current[bed.i] || 0;
       const cx = bed.x;
       const groundY = bed.y;
       const cyTop = bed.y - lift;
@@ -266,27 +266,34 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
     tree(iso(2, -1).x, iso(2, -1).y + 6);
     tree(iso(-1, 3).x, iso(-1, 3).y + 6);
 
-    beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || (a.i === selRef.current ? 1 : 0) - (b.i === selRef.current ? 1 : 0)).forEach(drawBed);
+    beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || ((liftsRef.current[a.i] || 0) - (liftsRef.current[b.i] || 0))).forEach(drawBed);
 
     if (night) R(0, 0, W, H, '#0c0a06', 0.45);
   }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom]);
 
   useEffect(() => { draw(); }, [draw]);
 
-  // Smoothly lift the selected bed (and lower it when deselected).
+  // Smoothly lift the selected bed and lower the previous one when switching.
   useEffect(() => {
-    const target = selIdx >= 0 ? LIFT_AMT : 0;
     const step = () => {
-      const cur = liftRef.current;
-      const diff = target - cur;
-      if (Math.abs(diff) < 0.25) {
-        liftRef.current = target;
-        draw();
-        return;
-      }
-      liftRef.current = cur + diff * 0.22;
+      const lifts = liftsRef.current;
+      const keys = Object.keys(lifts);
+      if (selIdx >= 0) keys.push(String(selIdx));
+      let done = true;
+      new Set(keys).forEach((k) => {
+        const i = Number(k);
+        const target = i === selIdx ? LIFT_AMT : 0;
+        const cur = lifts[i] || 0;
+        const diff = target - cur;
+        if (Math.abs(diff) < 0.25) {
+          if (target === 0) delete lifts[i]; else lifts[i] = target;
+        } else {
+          lifts[i] = cur + diff * 0.22;
+          done = false;
+        }
+      });
       draw();
-      rafRef.current = requestAnimationFrame(step);
+      if (!done) rafRef.current = requestAnimationFrame(step);
     };
     rafRef.current = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafRef.current);
