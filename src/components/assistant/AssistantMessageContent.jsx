@@ -12,7 +12,7 @@ export default function AssistantMessageContent({ content }) {
       {parts.map((part, i) => {
         if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
           return (
-            <span key={i} className="text-secondary font-semibold">
+            <span key={i} className="text-primary font-semibold">
               {part.slice(2, -2)}
             </span>
           );
