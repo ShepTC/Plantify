@@ -344,26 +344,32 @@ export default function CalendarPage() {
       const plantData = plantMap[userPlant.plant_id];
       if (!plantData) return;
 
-      // Helper: parse MM-DD into a Date, handling year-crossing windows
-      const parseMMDD = (mmdd, referenceYear) => {
-        if (!mmdd) return null;
-        return new Date(`${referenceYear}-${mmdd}`);
+      // Helper: expand a start/end week pair into an array of week numbers (handles year-crossing)
+      const expandWeeks = (startWeek, endWeek) => {
+        if (startWeek == null || endWeek == null) return [];
+        if (startWeek <= endWeek) {
+          return Array.from({ length: endWeek - startWeek + 1 }, (_, i) => startWeek + i);
+        }
+        // Wrap-around (e.g. fall window crossing into next January)
+        return [...Array(53 - startWeek + endWeek).keys()].map(i => {
+          const w = startWeek + i;
+          return w > 52 ? w - 52 : w;
+        });
       };
 
-      // Direct Sow events (MM-DD based)
+      // Direct Sow events (week-number based — spring + fall windows)
       if (userPlant.status === 'planned' && plantData.direct_sow_zones) {
         const dsZone = findZone(plantData.direct_sow_zones, userZone);
-        if (dsZone?.from) {
-          let fromDate = parseMMDD(dsZone.from, currentYear);
-          let toDate = dsZone.to ? parseMMDD(dsZone.to, currentYear) : fromDate;
-          if (fromDate && !isNaN(fromDate.getTime())) {
-            // Handle year-crossing: if to < from, to is in the next year
-            if (toDate < fromDate) toDate = parseMMDD(dsZone.to, currentYear + 1);
-            const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
-            const endWeek = getWeek(toDate, { weekStartsOn: 0 });
-            const weekRange = toDate < fromDate
-              ? [...Array(53 - startWeek + endWeek).keys()].map(i => (startWeek + i > 52 ? startWeek + i - 52 : startWeek + i))
-              : Array.from({ length: endWeek - startWeek + 1 }, (_, i) => startWeek + i);
+        if (dsZone) {
+          const windows = [];
+          if (dsZone.spring_start_week != null && dsZone.spring_end_week != null) {
+            windows.push({ start: dsZone.spring_start_week, end: dsZone.spring_end_week, label: 'Spring' });
+          }
+          if (dsZone.fall_start_week != null && dsZone.fall_end_week != null) {
+            windows.push({ start: dsZone.fall_start_week, end: dsZone.fall_end_week, label: 'Fall' });
+          }
+          windows.forEach(({ start, end, label }) => {
+            const weekRange = expandWeeks(start, end);
             weekRange.forEach(week => {
               const weekKey = `${currentYear}-${week}`;
               if (!plantings[weekKey]) plantings[weekKey] = [];
@@ -373,50 +379,45 @@ export default function CalendarPage() {
                   category: 'direct_sow',
                   userPlantId: userPlant.id,
                   plantData,
-                  season: 'Direct Sow',
-                  optimalWeeks: `${dsZone.from} – ${dsZone.to || dsZone.from}`,
+                  season: `Direct Sow (${label})`,
+                  optimalWeeks: `${label} Weeks ${start}–${end}`,
                   eventType: 'planting'
                 });
               }
             });
-          }
+          });
         }
       }
 
-      // Transplant events (MM-DD based) — use only transplant_from/transplant_to for outdoor dates, never fall back to indoor sow dates
-      if (userPlant.status === 'planned' && plantData.transplant_zones) {
-        const txZone = findZone(plantData.transplant_zones, userZone);
+      // Transplant outdoor events (week-number based — spring + fall windows)
+      if (userPlant.status === 'planned' && plantData.transplant_outdoor_zones) {
+        const txZone = findZone(plantData.transplant_outdoor_zones, userZone);
         if (txZone) {
-          const fromMMDD = txZone.transplant_from || txZone.from;
-          const toMMDD = txZone.transplant_to || txZone.to;
-          if (fromMMDD) {
-            let fromDate = parseMMDD(fromMMDD, currentYear);
-            let toDate = toMMDD ? parseMMDD(toMMDD, currentYear) : fromDate;
-            if (fromDate && !isNaN(fromDate.getTime())) {
-              // Handle year-crossing
-              if (toDate < fromDate) toDate = parseMMDD(toMMDD, currentYear + 1);
-              const startWeek = getWeek(fromDate, { weekStartsOn: 0 });
-              const endWeek = getWeek(toDate, { weekStartsOn: 0 });
-              const weekRange = toDate < fromDate
-                ? [...Array(53 - startWeek + endWeek).keys()].map(i => (startWeek + i > 52 ? startWeek + i - 52 : startWeek + i))
-                : Array.from({ length: endWeek - startWeek + 1 }, (_, i) => startWeek + i);
-              weekRange.forEach(week => {
-                const weekKey = `${currentYear}-${week}`;
-                if (!plantings[weekKey]) plantings[weekKey] = [];
-                if (!plantings[weekKey].some(p => p.userPlantId === userPlant.id && p.category === 'transplant')) {
-                  plantings[weekKey].push({
-                    name: plantData.name,
-                    category: 'transplant',
-                    userPlantId: userPlant.id,
-                    plantData,
-                    season: 'Transplant',
-                    optimalWeeks: `${fromMMDD} – ${toMMDD || fromMMDD}`,
-                    eventType: 'planting'
-                  });
-                }
-              });
-            }
+          const windows = [];
+          if (txZone.spring_start_week != null && txZone.spring_end_week != null) {
+            windows.push({ start: txZone.spring_start_week, end: txZone.spring_end_week, label: 'Spring' });
           }
+          if (txZone.fall_start_week != null && txZone.fall_end_week != null) {
+            windows.push({ start: txZone.fall_start_week, end: txZone.fall_end_week, label: 'Fall' });
+          }
+          windows.forEach(({ start, end, label }) => {
+            const weekRange = expandWeeks(start, end);
+            weekRange.forEach(week => {
+              const weekKey = `${currentYear}-${week}`;
+              if (!plantings[weekKey]) plantings[weekKey] = [];
+              if (!plantings[weekKey].some(p => p.userPlantId === userPlant.id && p.category === 'transplant')) {
+                plantings[weekKey].push({
+                  name: plantData.name,
+                  category: 'transplant',
+                  userPlantId: userPlant.id,
+                  plantData,
+                  season: `Transplant (${label})`,
+                  optimalWeeks: `${label} Weeks ${start}–${end}`,
+                  eventType: 'planting'
+                });
+              }
+            });
+          });
         }
       }
 
@@ -851,7 +852,7 @@ export default function CalendarPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-foreground mb-1">{planting.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{formatOptimalWeeks(planting.optimalWeeks)}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{planting.optimalWeeks}</p>
                         <div className="flex flex-wrap gap-2">
                           <Badge variant="outline" className="text-xs">
                             <Clock className="w-3 h-3 mr-1" />
