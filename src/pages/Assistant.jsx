@@ -24,6 +24,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import PlantCard from '../components/library/PlantCard';
 import MiniPlantCard from '../components/assistant/MiniPlantCard';
+import AssistantMessageContent from '../components/assistant/AssistantMessageContent';
 import PlantDetailView from '../components/library/PlantDetailView';
 import LoginPrompt from '../components/auth/LoginPrompt';
 import {
@@ -414,7 +415,7 @@ export default function Assistant() {
 
       }
 
-      const fullPrompt = `${context}\n${prompt}\n\nYou're a knowledgeable, friendly gardening expert having a natural conversation. Be warm, personal, and genuinely helpful—not robotic or formulaic. Speak like you're texting a friend who happens to know a lot about plants. Keep responses concise (2-4 sentences typically) unless more detail is specifically requested. Vary your phrasing and personality—don't sound copy-paste. If they greet you, be casual back. If they ask about non-gardening topics, acknowledge it naturally and gently redirect. Share practical, actionable advice based on their specific context (zone, location, experience level). ${contextPlant ? 'Since this conversation is focused on a specific plant, do NOT include any suggested_plants in your response - keep the suggested_plants array empty.' : 'When you mention specific plants in your response, include them in the \'suggested_plants\' array so users can explore them further.'}`;
+      const fullPrompt = `${context}\n${prompt}\n\nYou're a knowledgeable, friendly gardening expert having a natural conversation. Be warm, personal, and genuinely helpful—not robotic or formulaic. Speak like you're texting a friend who happens to know a lot about plants. Keep responses concise (2-4 sentences typically) unless more detail is specifically requested. Vary your phrasing and personality—don't sound copy-paste. If they greet you, be casual back. If they ask about non-gardening topics, acknowledge it naturally and gently redirect. Share practical, actionable advice based on their specific context (zone, location, experience level). IMPORTANT: Wrap the most important keywords, plant names, numbers, and key advice terms in your response with **double asterisks** (e.g. **tomatoes**, **6-8 hours of sun**, **well-draining soil**) so they get visually highlighted. Bold only 2-5 key terms per response — do not overdo it. ${contextPlant ? 'Since this conversation is focused on a specific plant, do NOT include any suggested_plants in your response - keep the suggested_plants array empty.' : 'When you mention specific plants in your response, include them in the \'suggested_plants\' array so users can explore them further.'}`;
 
       const llmParams = {
         prompt: fullPrompt,
@@ -683,9 +684,10 @@ export default function Assistant() {
                       {message.imageUrl &&
                         <img src={message.imageUrl} alt="User upload" className="rounded-xl mb-2 max-h-48 w-full object-cover" />
                       }
-                      <p className="whitespace-pre-wrap leading-relaxed">
-                        {message.content}
-                      </p>
+                      {message.type === 'assistant' ?
+                        <AssistantMessageContent content={message.content} /> :
+                        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                      }
                     </div>
                     {message.type === 'user' && (
                       <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden bg-primary shadow-sm">
@@ -969,9 +971,10 @@ export default function Assistant() {
                       className="rounded-xl mb-2 max-h-64 w-full object-cover" />
 
                     }
-                      <p className="whitespace-pre-wrap leading-relaxed">
-                        {message.content}
-                      </p>
+                      {message.type === 'assistant' ?
+                        <AssistantMessageContent content={message.content} /> :
+                        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                      }
                     </div>
                     {message.type === 'user' &&
                   <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary flex-shrink-0 overflow-hidden shadow-sm">
