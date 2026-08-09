@@ -26,14 +26,13 @@ import CategoryCard from "../components/library/CategoryCard";
 import PlantingWeatherCard from "../components/alerts/PlantingWeatherCard";
 import { motion, AnimatePresence } from "framer-motion";
 
-const isDateInMMDDRange = (currentDate, fromMMDD, toMMDD) => {
-  if (!fromMMDD || !toMMDD) return false;
-  const year = currentDate.getFullYear();
-  const from = new Date(`${year}-${fromMMDD}`);
-  const to = new Date(`${year}-${toMMDD}`);
-  if (isNaN(from.getTime()) || isNaN(to.getTime())) return false;
-  if (from > to) return currentDate >= from || currentDate <= to;
-  return currentDate >= from && currentDate <= to;
+const isWeekInWindow = (currentWeek, startWeek, endWeek) => {
+  if (startWeek == null || endWeek == null) return false;
+  if (startWeek <= endWeek) {
+    return currentWeek >= startWeek && currentWeek <= endWeek;
+  }
+  // Wrap-around (e.g. fall window that crosses year-end)
+  return currentWeek >= startWeek || currentWeek <= endWeek;
 };
 
 const categoryData = {
@@ -122,18 +121,23 @@ export default function PlantingAlerts() {
   const [plantsByCategoryToday, setPlantsByCategoryToday] = useState({});
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const isPlantableToday = useCallback((plant, userZone, today) => {
-    // Check direct sow window
+  const isPlantableToday = useCallback((plant, userZone, currentWeekNum) => {
+    // Check direct sow window (spring and fall)
     if (plant.direct_sow_zones) {
       const dsZone = findZone(plant.direct_sow_zones, userZone);
-      if (dsZone && isDateInMMDDRange(today, dsZone.from, dsZone.to)) return true;
+      if (dsZone) {
+        if (isWeekInWindow(currentWeekNum, dsZone.spring_start_week, dsZone.spring_end_week)) return true;
+        if (isWeekInWindow(currentWeekNum, dsZone.fall_start_week, dsZone.fall_end_week)) return true;
+      }
     }
 
     // Check transplant outdoor window only — never fall back to indoor sow dates
-    if (plant.transplant_zones) {
-      const txZone = findZone(plant.transplant_zones, userZone);
-      if (txZone && txZone.transplant_from && txZone.transplant_to &&
-          isDateInMMDDRange(today, txZone.transplant_from, txZone.transplant_to)) return true;
+    if (plant.transplant_outdoor_zones) {
+      const txZone = findZone(plant.transplant_outdoor_zones, userZone);
+      if (txZone) {
+        if (isWeekInWindow(currentWeekNum, txZone.spring_start_week, txZone.spring_end_week)) return true;
+        if (isWeekInWindow(currentWeekNum, txZone.fall_start_week, txZone.fall_end_week)) return true;
+      }
     }
 
     return false;
@@ -162,6 +166,9 @@ export default function PlantingAlerts() {
         Plant.list(),
         UserPlant.filter({ created_by: currentUser.email })
       ]);
+
+      // Pass the week number into isPlantableToday
+      const weekNum = weekNumber;
 
       setUserPlants(userPlantsData);
       const userPlantIds = new Set(userPlantsData.map((p) => p.plant_id));
@@ -193,7 +200,7 @@ export default function PlantingAlerts() {
         allPlants.forEach(candidatePlant => {
           // Skip plants already in garden or not plantable today
           if (userPlantIds.has(candidatePlant.id)) return;
-          if (!isPlantableToday(candidatePlant, currentUser.growing_zone, now)) return;
+          if (!isPlantableToday(candidatePlant, currentUser.growing_zone, weekNum)) return;
 
           const candidateCommonName = (candidatePlant.common_name || candidatePlant.name).toLowerCase();
           
@@ -246,7 +253,7 @@ export default function PlantingAlerts() {
           allPlants.forEach(plant => {
             if (alreadyRecommendedIds.has(plant.id)) return;
             if (userPlantIds.has(plant.id)) return;
-            if (!isPlantableToday(plant, currentUser.growing_zone, now)) return;
+            if (!isPlantableToday(plant, currentUser.growing_zone, weekNum)) return;
             
             const plantCommonName = (plant.common_name || plant.name).toLowerCase();
             if (favoriteCommonNames.includes(plantCommonName)) return;
@@ -302,29 +309,36 @@ export default function PlantingAlerts() {
         // Skip plants already in recommendations or already added by user
         if (recommendationIds.has(plant.id) || userPlantIds.has(plant.id)) return;
 
-        // --- Direct Sow check ---
+        // --- Direct Sow check (spring + fall windows) ---
         if (plant.direct_sow_zones) {
           const dsZone = findZone(plant.direct_sow_zones, userZone);
-          if (dsZone && isDateInMMDDRange(today, dsZone.from, dsZone.to)) {
-            const plantWithMethod = { ...plant, plantingMethod: 'direct_sow', methodLabel: 'Direct Sow' };
-            plantsForToday.push(plantWithMethod);
-            if (categoryPlantsToday.direct_sow.length < 4) categoryPlantsToday.direct_sow.push(plantWithMethod);
-            if (categoryPlantsToday[plant.category] && categoryPlantsToday[plant.category].length < 4) {
-              categoryPlantsToday[plant.category].push(plantWithMethod);
+          if (dsZone) {
+            const inSpring = isWeekInWindow(weekNumber, dsZone.spring_start_week, dsZone.spring_end_week);
+            const inFall = isWeekInWindow(weekNumber, dsZone.fall_start_week, dsZone.fall_end_week);
+            if (inSpring || inFall) {
+              const plantWithMethod = { ...plant, plantingMethod: 'direct_sow', methodLabel: 'Direct Sow', season: inFall ? 'Fall' : 'Spring' };
+              plantsForToday.push(plantWithMethod);
+              if (categoryPlantsToday.direct_sow.length < 4) categoryPlantsToday.direct_sow.push(plantWithMethod);
+              if (categoryPlantsToday[plant.category] && categoryPlantsToday[plant.category].length < 4) {
+                categoryPlantsToday[plant.category].push(plantWithMethod);
+              }
             }
           }
         }
 
-        // --- Transplant outdoor check only — never fall back to indoor sow dates ---
-        if (plant.transplant_zones) {
-          const txZone = findZone(plant.transplant_zones, userZone);
-          if (txZone && txZone.transplant_from && txZone.transplant_to &&
-              isDateInMMDDRange(today, txZone.transplant_from, txZone.transplant_to)) {
-            const plantWithMethod = { ...plant, plantingMethod: 'transplant', methodLabel: 'Transplant' };
-            plantsForToday.push(plantWithMethod);
-            if (categoryPlantsToday.transplant.length < 4) categoryPlantsToday.transplant.push(plantWithMethod);
-            if (categoryPlantsToday[plant.category] && categoryPlantsToday[plant.category].length < 4) {
-              categoryPlantsToday[plant.category].push(plantWithMethod);
+        // --- Transplant outdoor check (spring + fall windows) ---
+        if (plant.transplant_outdoor_zones) {
+          const txZone = findZone(plant.transplant_outdoor_zones, userZone);
+          if (txZone) {
+            const inSpring = isWeekInWindow(weekNumber, txZone.spring_start_week, txZone.spring_end_week);
+            const inFall = isWeekInWindow(weekNumber, txZone.fall_start_week, txZone.fall_end_week);
+            if (inSpring || inFall) {
+              const plantWithMethod = { ...plant, plantingMethod: 'transplant', methodLabel: 'Transplant', season: inFall ? 'Fall' : 'Spring' };
+              plantsForToday.push(plantWithMethod);
+              if (categoryPlantsToday.transplant.length < 4) categoryPlantsToday.transplant.push(plantWithMethod);
+              if (categoryPlantsToday[plant.category] && categoryPlantsToday[plant.category].length < 4) {
+                categoryPlantsToday[plant.category].push(plantWithMethod);
+              }
             }
           }
         }
