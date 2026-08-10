@@ -364,7 +364,7 @@ export default function MyGarden() {
           </div>
           <AlertDialogFooter className="flex-row justify-end gap-2 mt-4 sm:justify-end">
             <AlertDialogCancel className="rounded-xl h-9 text-xs px-4 mt-2">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90 mx-1">
               Remove
             </AlertDialogAction>
           </AlertDialogFooter>
