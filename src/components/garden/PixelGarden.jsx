@@ -239,55 +239,28 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       const cx = bed.x;
       const groundY = bed.y;
       const cyTop = bed.y - lift;
+      // indoor: purple grow-light glow radiating outward (behind frame)
+      if (bed.isIndoor) {
+        const pulse = 0.7 + 0.3 * Math.sin(performance.now() / 500);
+        ell(cx, groundY + RAISE + 2, TW + 16, TH + 7, '#8a5bb0', 0.20 * pulse);
+        ell(cx, groundY + RAISE + 2, TW + 10, TH + 5, '#b189d6', 0.16 * pulse);
+        ell(cx, groundY + RAISE + 2, TW + 5, TH + 3, '#c9a8e8', 0.13 * pulse);
+      }
       ell(cx, groundY + RAISE + 3, TW - 2, TH - 3, '#1e1408', Math.min(0.3, 0.14 + lift * 0.012));
-      isoBox(cx, cyTop, TW, RAISE, isSel ? COL.heat : COL.wood, COL.woodDk, COL.woodMed);
+      // indoor: white shiny frame; outdoor: wood frame
+      const frTop = bed.isIndoor ? '#f4ecd2' : (isSel ? COL.heat : COL.wood);
+      const frLeft = bed.isIndoor ? '#d4ccb2' : COL.woodDk;
+      const frRight = bed.isIndoor ? '#e8e0c8' : COL.woodMed;
+      isoBox(cx, cyTop, TW, RAISE, frTop, frLeft, frRight);
+      if (bed.isIndoor) {
+        // shiny white highlight along top-left edge of frame
+        const fhh = Math.round(TW / 2);
+        ln({ x: cx - TW, y: cyTop }, { x: cx, y: cyTop - fhh }, '#ffffff');
+        ln({ x: cx, y: cyTop - fhh }, { x: cx + TW, y: cyTop }, '#ffffff');
+      }
       dia(cx, cyTop, TW - 4, TH - 2, COL.soil);
       const surfL = (u, v) => { const p = iso(bed.cs + u * 2, bed.rs + v * 2); return { x: p.x, y: p.y - RAISE - lift }; };
       for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surfL(0.12, v), surfL(0.88, v), COL.soilDk); }
-
-      // indoor seedling table — table + tray of seedlings + hanging grow light
-      if (bed.isIndoor) {
-        const tc = surfL(0.5, 0.5);
-        const tx = tc.x | 0, ty = tc.y | 0;
-
-        // suspension wires from above
-        R(tx - 4, ty - 30, 1, 8, '#9a9a9a');
-        R(tx + 3, ty - 30, 1, 8, '#9a9a9a');
-
-        // grow light fixture
-        R(tx - 7, ty - 23, 14, 2, '#4a4a4a'); // housing
-        R(tx - 7, ty - 21, 14, 1, '#2a2a2a'); // underside
-        R(tx - 6, ty - 21, 12, 1, '#ffd86b', 0.95); // glowing tube
-
-        // warm grow-light glow cone bathing the table
-        for (let dy = 0; dy < 11; dy++) {
-          const w = 6 + Math.round(dy * 0.55);
-          R(tx - w, ty - 20 + dy, 2 * w + 1, 1, '#ffd86b', 0.22 - dy * 0.013);
-        }
-
-        // table top
-        R(tx - 10, ty - 12, 20, 3, COL.wood);
-        R(tx - 10, ty - 12, 20, 1, COL.woodHi); // top highlight
-        R(tx - 10, ty - 10, 20, 1, COL.woodDk); // underside shadow
-        // table legs
-        R(tx - 9, ty - 9, 1, 9, COL.woodDk);
-        R(tx + 8, ty - 9, 1, 9, COL.woodDk);
-
-        // seedling tray on table
-        const tw = 14, th = 4;
-        R(tx - tw / 2 - 1, ty - 13, tw + 2, th + 2, COL.woodMed); // rim
-        R(tx - tw / 2, ty - 12, tw, th, '#2e1c10'); // interior
-        R(tx - tw / 2, ty - 12, tw, 1, '#4a2e18'); // top edge
-        for (let cc = 0; cc < 3; cc++)
-          R(tx - tw / 2 + 2 + cc * 4, ty - 10, 1, 1, '#5a3b22'); // cell marks
-
-        // sprouts in tray
-        P.sprout(tx - 4, ty - 12);
-        P.sprout(tx, ty - 12);
-        P.sprout(tx + 4, ty - 12);
-
-        return;
-      }
 
       const stage = bed.stage;
       if (stage === 'seed') {
@@ -306,6 +279,24 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
           const pt = surfL(p[0], p[1]);
           drawSpriteAt(bed.sprite, pt.x, pt.y, stage, TULIPS[k % 4]);
         });
+      }
+
+      // indoor: bouncing sprout icon + purple halo above the bed
+      if (bed.isIndoor) {
+        const now = performance.now();
+        const pulse = 0.6 + 0.4 * Math.sin(now / 450);
+        for (let dy = 0; dy < 18; dy++) {
+          const w = (TW - 8) - dy * 0.5;
+          if (w <= 0) break;
+          R(cx - w, cyTop - 6 - dy, 2 * w, 1, '#b189d6', 0.12 * pulse - dy * 0.004);
+        }
+        const bounce = Math.abs(Math.sin(now / 320)) * 7;
+        const ix = cx;
+        const iy = cyTop - 30 - bounce;
+        R(ix - 1, iy + 7, 2, 7, COL.gMd);
+        ell(ix - 4, iy + 6, 3, 2, COL.gLt);
+        ell(ix + 3, iy + 4, 3, 2, COL.gLt2);
+        ell(ix, iy + 1, 2, 2, COL.gDk);
       }
     };
 
@@ -358,6 +349,7 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
         }
       });
       draw();
+      if (bedsRef.current.some(b => b.isIndoor)) done = false;
       if (!done) rafRef.current = requestAnimationFrame(step);
     };
     rafRef.current = requestAnimationFrame(step);
