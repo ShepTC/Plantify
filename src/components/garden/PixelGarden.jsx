@@ -245,18 +245,47 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       const surfL = (u, v) => { const p = iso(bed.cs + u * 2, bed.rs + v * 2); return { x: p.x, y: p.y - RAISE - lift }; };
       for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surfL(0.12, v), surfL(0.88, v), COL.soilDk); }
 
-      // indoor seedling tray — sits on the soil, distinguishes transplant-starts
+      // indoor seedling table — table + tray of seedlings + hanging grow light
       if (bed.isIndoor) {
         const tc = surfL(0.5, 0.5);
-        const tw = 16, th = 8;
-        R(tc.x - tw / 2 - 1, tc.y - th / 2 - 1, tw + 2, th + 2, COL.wood);
-        R(tc.x - tw / 2, tc.y - th / 2, tw, th, '#2e1c10');
-        R(tc.x - tw / 2, tc.y - th / 2, tw, 1, COL.woodHi);
-        R(tc.x - tw / 2, tc.y + th / 2 - 1, tw, 1, COL.woodDk);
-        for (let rr = 0; rr < 2; rr++) for (let cc = 0; cc < 4; cc++)
-          R(tc.x - tw / 2 + 3 + cc * 4, tc.y - th / 2 + 3 + rr * 3, 1, 1, '#5a3b22');
-        P.sprout(tc.x - 3, tc.y - 1);
-        P.sprout(tc.x + 2, tc.y);
+        const tx = tc.x | 0, ty = tc.y | 0;
+
+        // suspension wires from above
+        R(tx - 4, ty - 30, 1, 8, '#9a9a9a');
+        R(tx + 3, ty - 30, 1, 8, '#9a9a9a');
+
+        // grow light fixture
+        R(tx - 7, ty - 23, 14, 2, '#4a4a4a'); // housing
+        R(tx - 7, ty - 21, 14, 1, '#2a2a2a'); // underside
+        R(tx - 6, ty - 21, 12, 1, '#ffd86b', 0.95); // glowing tube
+
+        // warm grow-light glow cone bathing the table
+        for (let dy = 0; dy < 11; dy++) {
+          const w = 6 + Math.round(dy * 0.55);
+          R(tx - w, ty - 20 + dy, 2 * w + 1, 1, '#ffd86b', 0.22 - dy * 0.013);
+        }
+
+        // table top
+        R(tx - 10, ty - 12, 20, 3, COL.wood);
+        R(tx - 10, ty - 12, 20, 1, COL.woodHi); // top highlight
+        R(tx - 10, ty - 10, 20, 1, COL.woodDk); // underside shadow
+        // table legs
+        R(tx - 9, ty - 9, 1, 9, COL.woodDk);
+        R(tx + 8, ty - 9, 1, 9, COL.woodDk);
+
+        // seedling tray on table
+        const tw = 14, th = 4;
+        R(tx - tw / 2 - 1, ty - 13, tw + 2, th + 2, COL.woodMed); // rim
+        R(tx - tw / 2, ty - 12, tw, th, '#2e1c10'); // interior
+        R(tx - tw / 2, ty - 12, tw, 1, '#4a2e18'); // top edge
+        for (let cc = 0; cc < 3; cc++)
+          R(tx - tw / 2 + 2 + cc * 4, ty - 10, 1, 1, '#5a3b22'); // cell marks
+
+        // sprouts in tray
+        P.sprout(tx - 4, ty - 12);
+        P.sprout(tx, ty - 12);
+        P.sprout(tx + 4, ty - 12);
+
         return;
       }
 
