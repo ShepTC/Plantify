@@ -53,7 +53,7 @@ export default function MyGarden() {
   const [isNight, setIsNight] = useState(() => {
     if (typeof window === 'undefined') return false;
     return document.documentElement.classList.contains('dark') ||
-      localStorage.getItem('user-theme') === 'dark';
+    localStorage.getItem('user-theme') === 'dark';
   });
 
   useEffect(() => {
@@ -176,22 +176,22 @@ export default function MyGarden() {
   };
 
   const handlePlantClick = (userPlant) => {
-    if (!userPlant) { setSelectedPlant(null); setSelectedUserPlant(null); return; }
+    if (!userPlant) {setSelectedPlant(null);setSelectedUserPlant(null);return;}
     const byName = (userPlant.plant_name || '').toLowerCase();
     const plantDetails =
-      plantDataMap[userPlant.plant_id] ||
-      Object.values(plantDataMap).find((p) =>
-        (p.name && p.name.toLowerCase() === byName) ||
-        (p.common_name && p.common_name.toLowerCase() === byName)
-      ) ||
-      { name: userPlant.plant_name };
+    plantDataMap[userPlant.plant_id] ||
+    Object.values(plantDataMap).find((p) =>
+    p.name && p.name.toLowerCase() === byName ||
+    p.common_name && p.common_name.toLowerCase() === byName
+    ) ||
+    { name: userPlant.plant_name };
     setSelectedUserPlant(userPlant);
     setSelectedPlant(plantDetails);
   };
 
-  const selectedUserPlantData = selectedPlant 
-    ? myPlants.find(up => up.plant_id === selectedPlant.id)
-    : null;
+  const selectedUserPlantData = selectedPlant ?
+  myPlants.find((up) => up.plant_id === selectedPlant.id) :
+  null;
 
   const userPlantIds = new Set(myPlants.map((p) => p.plant_id));
 
@@ -240,24 +240,24 @@ export default function MyGarden() {
 
             {/* Pixel Garden Visual */}
             <div
-              className="relative overflow-hidden rounded-2xl"
-              style={{
-                background:
-                  'linear-gradient(135deg,' +
-                  'hsl(var(--background)) 0%,' +
-                  'hsl(var(--primary) / 0.10) 18%,' +
-                  'hsl(var(--secondary) / 0.12) 38%,' +
-                  'hsl(var(--accent) / 0.10) 58%,' +
-                  'hsl(var(--secondary) / 0.08) 78%,' +
-                  'hsl(var(--background)) 100%)',
-              }}
-            >
+            className="relative overflow-hidden rounded-2xl"
+            style={{
+              background:
+              'linear-gradient(135deg,' +
+              'hsl(var(--background)) 0%,' +
+              'hsl(var(--primary) / 0.10) 18%,' +
+              'hsl(var(--secondary) / 0.12) 38%,' +
+              'hsl(var(--accent) / 0.10) 58%,' +
+              'hsl(var(--secondary) / 0.08) 78%,' +
+              'hsl(var(--background)) 100%)'
+            }}>
+            
               <PixelGarden
-                userPlants={myPlants}
-                night={isNight}
-                plantDataMap={plantDataMap}
-                onOpenDetails={handlePlantClick}
-              />
+              userPlants={myPlants}
+              night={isNight}
+              plantDataMap={plantDataMap}
+              onOpenDetails={handlePlantClick} />
+            
               {/* Edge fades blend the art into the page background */}
               <div className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-background via-background/60 to-transparent" />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
@@ -265,19 +265,19 @@ export default function MyGarden() {
               <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background via-background/60 to-transparent" />
             </div>
 
-            {selectedPlant && (
-              <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+            {selectedPlant &&
+          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
                 <PlantDetailBody
-                  plant={selectedPlant}
-                  userZone={user?.growing_zone}
-                  onOpenChange={(isOpen) => { if (!isOpen) { setSelectedPlant(null); setSelectedUserPlant(null); } }}
-                  onAddPlant={() => {}}
-                  isAdded={!!selectedUserPlant}
-                  userPlantData={selectedUserPlant}
-                  animated={false}
-                />
+              plant={selectedPlant}
+              userZone={user?.growing_zone}
+              onOpenChange={(isOpen) => {if (!isOpen) {setSelectedPlant(null);setSelectedUserPlant(null);}}}
+              onAddPlant={() => {}}
+              isAdded={!!selectedUserPlant}
+              userPlantData={selectedUserPlant}
+              animated={false} />
+            
               </div>
-            )}
+          }
 
             {/* Growing Plants */}
             <GardenSection
@@ -347,8 +347,8 @@ export default function MyGarden() {
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={!!plantToDelete} onOpenChange={(open) => { if (!open) setPlantToDelete(null); }}>
-        <AlertDialogContent className="bg-card border-border rounded-[24px] sm:rounded-[24px] p-5 sm:max-w-[340px] shadow-xl gap-0">
+      <AlertDialog open={!!plantToDelete} onOpenChange={(open) => {if (!open) setPlantToDelete(null);}}>
+        <AlertDialogContent className="bg-card border-border sm:rounded-[24px] p-5 sm:max-w-[340px] shadow-xl gap-0 rounded-[28px] opacity-100 mx-1">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-9 h-9 rounded-2xl bg-destructive/10 flex items-center justify-center">
               <Trash2 className="w-4 h-4 text-destructive" />
