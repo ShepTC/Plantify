@@ -242,9 +242,9 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       // indoor: purple grow-light glow radiating outward (behind frame)
       if (bed.isIndoor) {
         const pulse = 0.7 + 0.3 * Math.sin(performance.now() / 500);
-        ell(cx, groundY + RAISE + 2, TW + 16, TH + 7, '#8a5bb0', 0.20 * pulse);
-        ell(cx, groundY + RAISE + 2, TW + 10, TH + 5, '#b189d6', 0.16 * pulse);
-        ell(cx, groundY + RAISE + 2, TW + 5, TH + 3, '#c9a8e8', 0.13 * pulse);
+        ell(cx, groundY + RAISE + 2, TW + 3, TH + 2, '#8a5bb0', 0.55 * pulse);
+        ell(cx, groundY + RAISE + 2, TW + 1, TH + 1, '#b189d6', 0.45 * pulse);
+        ell(cx, groundY + RAISE + 2, TW - 1, TH - 1, '#c9a8e8', 0.35 * pulse);
       }
       ell(cx, groundY + RAISE + 3, TW - 2, TH - 3, '#1e1408', Math.min(0.3, 0.14 + lift * 0.012));
       // indoor: white shiny frame; outdoor: wood frame
@@ -284,11 +284,11 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       // indoor: bouncing sprout icon + purple halo above the bed
       if (bed.isIndoor) {
         const now = performance.now();
-        const pulse = 0.6 + 0.4 * Math.sin(now / 450);
-        for (let dy = 0; dy < 18; dy++) {
-          const w = (TW - 8) - dy * 0.5;
+        const pulse = 0.7 + 0.3 * Math.sin(now / 450);
+        for (let dy = 0; dy < 10; dy++) {
+          const w = (TW - 10) - dy * 0.7;
           if (w <= 0) break;
-          R(cx - w, cyTop - 6 - dy, 2 * w, 1, '#b189d6', 0.12 * pulse - dy * 0.004);
+          R(cx - w, cyTop - 6 - dy, 2 * w, 1, '#b189d6', 0.28 * pulse - dy * 0.018);
         }
         const bounce = Math.abs(Math.sin(now / 320)) * 7;
         const ix = cx;
