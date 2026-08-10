@@ -4,7 +4,7 @@ import { UserPlant } from "@/entities/UserPlant";
 import { Plant } from "@/entities/Plant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlusCircle, Sprout, Leaf, Sun, Clock } from "lucide-react";
+import { PlusCircle, Sprout, Leaf, Sun, Clock, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { addDays, format } from "date-fns";
@@ -15,6 +15,16 @@ import {
   DialogTitle,
   DialogFooter } from
 "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction } from
+"@/components/ui/alert-dialog";
 import { Calendar } from "@/components/ui/calendar";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
@@ -31,6 +41,7 @@ export default function MyGarden() {
 
   // State for the date picker dialog
   const [isPlantedDialogOpen, setIsPlantedDialogOpen] = useState(false);
+  const [plantToDelete, setPlantToDelete] = useState(null);
   const [plantToUpdate, setPlantToUpdate] = useState(null);
   const [selectedPlantingDate, setSelectedPlantingDate] = useState(null);
 
@@ -133,6 +144,18 @@ export default function MyGarden() {
     } finally {
       // Always remove from local state to keep UI in sync
       setMyPlants((prevPlants) => prevPlants.filter((p) => p.id !== plantId));
+    }
+  };
+
+  const handleDeleteRequest = (plantId) => {
+    setPlantToDelete(plantId);
+  };
+
+  const confirmDelete = async () => {
+    const id = plantToDelete;
+    setPlantToDelete(null);
+    if (id) {
+      await deletePlant(id);
     }
   };
 
@@ -265,7 +288,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
+            onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
             userZone={user?.growing_zone} />
 
@@ -279,7 +302,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
+            onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
             userZone={user?.growing_zone} />
 
@@ -293,7 +316,7 @@ export default function MyGarden() {
             plantDataMap={plantDataMap}
             onStatusChange={updatePlantStatus}
             onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={deletePlant}
+            onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
             userZone={user?.growing_zone} />
 
@@ -323,6 +346,26 @@ export default function MyGarden() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!plantToDelete} onOpenChange={(open) => { if (!open) setPlantToDelete(null); }}>
+        <AlertDialogContent className="bg-background">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-destructive" />
+              Remove from garden?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the plant from your garden. You can add it again later from the Plant Library.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
     </div>);
 
