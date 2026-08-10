@@ -27,6 +27,7 @@ const COL = {
   red: '#e2472f', red2: '#bd3420', white: '#f4ecd2',
   purple: '#8a5bb0', lilac: '#b189d6', blue: '#4f7fc0', blueLt: '#79a3dd',
   brown: '#7a4a2b', orange: '#e08a3f', heat: '#ff5a2e',
+  glowA: '#9b59e0', glowB: '#c084fc', glowC: '#d8b4fe',
 };
 
 // crop name → sprite
@@ -57,8 +58,16 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
 
   useEffect(() => { selRef.current = selIdx; }, [selIdx]);
 
-  // ── layout: grid auto-sizes to the number of plants ──
-  const n = Math.max(userPlants.length, 1);
+  // ── split: indoor seedlings (transplant-bound, planned) vs outdoor beds ──
+  const indoorPlants = userPlants.filter((up) => {
+    if (up.status !== 'planned') return false;
+    const pd = plantDataMap?.[up.plant_id];
+    return pd && Array.isArray(pd.transplant_outdoor_zones) && pd.transplant_outdoor_zones.length > 0;
+  });
+  const outdoorPlants = userPlants.filter((up) => !indoorPlants.includes(up));
+
+  // ── layout: grid auto-sizes to the number of outdoor plants ──
+  const n = Math.max(outdoorPlants.length, 1);
   const cols = Math.min(MAX_COLS, Math.max(1, Math.ceil(Math.sqrt(n))));
   const rows = Math.ceil(n / cols);
   const NXT = cols * 3 + 1;
@@ -66,9 +75,10 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
   // Zoom in when there are fewer plants so the garden always fills its space.
   const zoom = Math.max(1, Math.min(2.2, 12 / (cols * rows)));
   const W = (NXT + NYT) * HW + 48;
-  const H = 52 + (NXT + NYT) * HH + 28;
+  const INDOOR_RESERVE = indoorPlants.length > 0 ? 88 : 0;
+  const H = 52 + (NXT + NYT) * HH + 28 + INDOOR_RESERVE;
   const ORIGX = Math.round(W / 2 - ((NXT - NYT) * HW) / 2);
-  const ORIGY = 50;
+  const ORIGY = 50 + INDOOR_RESERVE;
 
   const draw = useCallback(() => {
     const cv = canvasRef.current;
@@ -222,14 +232,31 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       [[-6, -24], [5, -27], [-2, -31]].forEach((f) => R(x + f[0], base + f[1], 2, 2, COL.red));
     };
 
-    // ── beds from real UserPlant records ──
-    const beds = userPlants.slice(0, cols * rows).map((up, i) => {
+    // ── outdoor beds from real UserPlant records ──
+    const outdoorBeds = outdoorPlants.slice(0, cols * rows).map((up, i) => {
       const gx = i % cols, gy = Math.floor(i / cols);
       const cs = 1 + gx * 3, rs = 1 + gy * 3;
       const c = iso(cs + 1, rs + 1);
-      return { up, i, cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap) };
+      return { up, i, shape: 'iso', cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap) };
     });
-    bedsRef.current = beds;
+
+    // ── indoor shelf beds (seedling trays under grow light) ──
+    const POT_W = 18, POT_H = 13, POT_GAP = 8, INDOOR_MARGIN = 24;
+    const shelfW = W - INDOOR_MARGIN * 2;
+    const totalPotsW = indoorPlants.length * POT_W + Math.max(0, indoorPlants.length - 1) * POT_GAP;
+    const potsStartX = INDOOR_MARGIN + Math.max(0, (shelfW - totalPotsW) / 2);
+    const SHELF_Y = INDOOR_RESERVE - 18;
+    const POT_BASE_Y = SHELF_Y;
+    const indoorBeds = indoorPlants.map((up, k) => {
+      const px = potsStartX + k * (POT_W + POT_GAP) + POT_W / 2;
+      return {
+        up, i: outdoorBeds.length + k, shape: 'rect', cs: 999, rs: 0,
+        x: px, y: POT_BASE_Y - POT_H / 2, w: POT_W / 2 + 2, h: POT_H / 2 + 6,
+        potX: px, potBaseY: POT_BASE_Y, potW: POT_W, potH: POT_H,
+        sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap),
+      };
+    });
+    bedsRef.current = [...outdoorBeds, ...indoorBeds];
 
     const drawBed = (bed) => {
       const isSel = selRef.current === bed.i;
@@ -263,6 +290,51 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       }
     };
 
+    // ── indoor grow-light shelf ──
+    const drawIndoorShelf = (shelfBeds) => {
+      if (shelfBeds.length === 0) return;
+      const margin = INDOOR_MARGIN;
+      const sw = W - margin * 2;
+      const glowY = 14;
+      // soft bloom behind glow bar
+      ell(margin + sw / 2, glowY + 4, sw / 2 + 6, 12, 'rgba(155,89,224,0.22)');
+      // grow light bar — layered rows simulating gradient
+      R(margin, glowY, sw, 2, COL.glowC);
+      R(margin, glowY + 2, sw, 2, COL.glowB);
+      R(margin, glowY + 4, sw, 1, COL.glowA);
+      // downward light cast
+      for (let dy = 1; dy <= 10; dy++) {
+        const a = 0.10 * (1 - dy / 10);
+        R(margin, glowY + 6 + dy, sw, 1, 'rgba(192,132,252,' + a.toFixed(3) + ')');
+      }
+      // wooden shelf surface
+      const sy = SHELF_Y;
+      R(margin, sy, sw, 8, COL.wood);
+      R(margin, sy, sw, 2, COL.woodHi);
+      R(margin, sy + 6, sw, 2, COL.woodDk);
+      R(margin, sy + 8, 3, 5, COL.woodDk);
+      R(margin + sw - 3, sy + 8, 3, 5, COL.woodDk);
+      // divider between indoor and outdoor
+      R(margin, INDOOR_RESERVE - 2, sw, 1, 'rgba(122,82,43,0.25)');
+      // pots/trays — one per seedling
+      shelfBeds.forEach((bed) => {
+        const lift = liftsRef.current[bed.i] || 0;
+        const isSel = selRef.current === bed.i;
+        const px = bed.potX;
+        const baseY = bed.potBaseY - lift;
+        R(px - bed.potW / 2, baseY - bed.potH, bed.potW, bed.potH, isSel ? COL.woodHi : COL.soil);
+        R(px - bed.potW / 2, baseY - bed.potH, bed.potW, 2, COL.soilDk);
+        R(px - bed.potW / 2, baseY - 2, bed.potW, 2, COL.soilDk);
+        R(px - bed.potW / 2 + 2, baseY - bed.potH + 2, bed.potW - 4, 3, '#4a2e1a');
+        const stage = bed.stage;
+        if (stage === 'seed') {
+          R(px - 1, baseY - bed.potH + 3, 2, 1, '#3a2413');
+        } else {
+          P.sprout(px, baseY - bed.potH + 2);
+        }
+      });
+    };
+
     // ── scene ──
     ctx.clearRect(0, 0, W, H);
     R(0, 0, W, H, night ? COL.night : COL.peach);
@@ -285,10 +357,11 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
     tree(iso(2, -1).x, iso(2, -1).y + 6);
     tree(iso(-1, 3).x, iso(-1, 3).y + 6);
 
-    beds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || ((liftsRef.current[a.i] || 0) - (liftsRef.current[b.i] || 0))).forEach(drawBed);
+    outdoorBeds.slice().sort((a, b) => (a.cs + a.rs) - (b.cs + b.rs) || ((liftsRef.current[a.i] || 0) - (liftsRef.current[b.i] || 0))).forEach(drawBed);
 
     if (night) R(0, 0, W, H, '#0c0a06', 0.45);
-  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom, plantDataMap]);
+    drawIndoorShelf(indoorBeds);
+  }, [userPlants, night, cols, rows, NXT, NYT, W, H, ORIGX, zoom, plantDataMap, indoorPlants, outdoorPlants, INDOOR_RESERVE]);
 
   useEffect(() => { draw(); }, [draw]);
 
@@ -327,7 +400,10 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
     const hit = bedsRef.current
       .slice()
       .sort((a, b) => (b.cs + b.rs) - (a.cs + a.rs))
-      .find((b) => Math.abs(lx - b.x) / TW + Math.abs(ly - b.y) / TH <= 1.05);
+      .find((b) => {
+        if (b.shape === 'rect') return Math.abs(lx - b.x) <= b.w && Math.abs(ly - b.y) <= b.h;
+        return Math.abs(lx - b.x) / TW + Math.abs(ly - b.y) / TH <= 1.05;
+      });
     const newSel = hit ? hit.i : -1;
     selRef.current = newSel;
     setSelIdx(newSel);
