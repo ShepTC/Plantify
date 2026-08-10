@@ -227,7 +227,9 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       const gx = i % cols, gy = Math.floor(i / cols);
       const cs = 1 + gx * 3, rs = 1 + gy * 3;
       const c = iso(cs + 1, rs + 1);
-      return { up, i, cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap) };
+      const pd = plantDataMap?.[up.plant_id];
+      const isIndoor = up.status === 'planned' && pd && Array.isArray(pd.transplant_outdoor_zones) && pd.transplant_outdoor_zones.length > 0;
+      return { up, i, cs, rs, x: c.x, y: c.y - RAISE, sprite: spriteFor(up.plant_name), stage: getGrowthStage(up, plantDataMap), isIndoor };
     });
     bedsRef.current = beds;
 
@@ -242,6 +244,21 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
       dia(cx, cyTop, TW - 4, TH - 2, COL.soil);
       const surfL = (u, v) => { const p = iso(bed.cs + u * 2, bed.rs + v * 2); return { x: p.x, y: p.y - RAISE - lift }; };
       for (let k = 1; k <= 3; k++) { const v = k / 4; ln(surfL(0.12, v), surfL(0.88, v), COL.soilDk); }
+
+      // indoor seedling tray — sits on the soil, distinguishes transplant-starts
+      if (bed.isIndoor) {
+        const tc = surfL(0.5, 0.5);
+        const tw = 16, th = 8;
+        R(tc.x - tw / 2 - 1, tc.y - th / 2 - 1, tw + 2, th + 2, COL.wood);
+        R(tc.x - tw / 2, tc.y - th / 2, tw, th, '#2e1c10');
+        R(tc.x - tw / 2, tc.y - th / 2, tw, 1, COL.woodHi);
+        R(tc.x - tw / 2, tc.y + th / 2 - 1, tw, 1, COL.woodDk);
+        for (let rr = 0; rr < 2; rr++) for (let cc = 0; cc < 4; cc++)
+          R(tc.x - tw / 2 + 3 + cc * 4, tc.y - th / 2 + 3 + rr * 3, 1, 1, '#5a3b22');
+        P.sprout(tc.x - 3, tc.y - 1);
+        P.sprout(tc.x + 2, tc.y);
+        return;
+      }
 
       const stage = bed.stage;
       if (stage === 'seed') {
