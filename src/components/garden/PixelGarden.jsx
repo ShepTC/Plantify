@@ -281,22 +281,24 @@ export default function PixelGarden({ userPlants = [], night = false, plantDataM
         });
       }
 
-      // indoor: bouncing sprout icon + purple halo above the bed
+      // indoor: bouncing blue badge above the bed (matches calendar transplant window color)
       if (bed.isIndoor) {
         const now = performance.now();
-        const pulse = 0.7 + 0.3 * Math.sin(now / 450);
-        for (let dy = 0; dy < 10; dy++) {
-          const w = (TW - 10) - dy * 0.7;
-          if (w <= 0) break;
-          R(cx - w, cyTop - 6 - dy, 2 * w, 1, '#b189d6', 0.28 * pulse - dy * 0.018);
-        }
         const bounce = Math.abs(Math.sin(now / 320)) * 7;
-        const ix = cx;
-        const iy = cyTop - 30 - bounce;
-        R(ix - 1, iy + 7, 2, 7, COL.gMd);
-        ell(ix - 4, iy + 6, 3, 2, COL.gLt);
-        ell(ix + 3, iy + 4, 3, 2, COL.gLt2);
-        ell(ix, iy + 1, 2, 2, COL.gDk);
+        const bx = cx;
+        const by = cyTop - 28 - bounce;
+        // badge body (rounded rect)
+        const bw = 12, bh = 9;
+        R(bx - bw / 2, by, bw, bh, '#3b82f6');
+        // rounded corners
+        R(bx - bw / 2 + 1, by - 1, bw - 2, 1, '#3b82f6');
+        R(bx - bw / 2 + 1, by + bh, bw - 2, 1, '#3b82f6');
+        // top highlight
+        R(bx - bw / 2 + 2, by + 1, bw - 4, 1, '#60a5fa');
+        // shine dot
+        R(bx - 3, by + 2, 2, 2, '#93c5fd');
+        // small stem connecting to bed
+        R(bx, by + bh, 1, 6 - bounce, '#3b82f6');
       }
     };
 
