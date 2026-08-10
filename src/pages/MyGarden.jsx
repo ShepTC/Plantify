@@ -348,7 +348,7 @@ export default function MyGarden() {
       </Dialog>
 
       <AlertDialog open={!!plantToDelete} onOpenChange={(open) => {if (!open) setPlantToDelete(null);}}>
-        <AlertDialogContent className="bg-card border-border sm:rounded-[24px] sm:max-w-[340px] shadow-xl gap-0 rounded-[28px] opacity-100 mx-1 px-5 py-5">
+        <AlertDialogContent className="bg-card border-border sm:rounded-[24px] sm:max-w-[340px] shadow-xl gap-0 rounded-[28px] opacity-100 px-5 py-5">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-9 h-9 rounded-2xl bg-destructive/10 flex items-center justify-center">
               <Trash2 className="w-4 h-4 text-destructive" />
@@ -363,7 +363,7 @@ export default function MyGarden() {
             </div>
           </div>
           <AlertDialogFooter className="flex-row justify-end gap-2 mt-4 sm:justify-end">
-            <AlertDialogCancel className="rounded-xl h-9 px-4 text-xs">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-xl h-9 text-xs px-4 mt-2">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Remove
             </AlertDialogAction>
