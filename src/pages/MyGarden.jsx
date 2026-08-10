@@ -348,19 +348,23 @@ export default function MyGarden() {
       </Dialog>
 
       <AlertDialog open={!!plantToDelete} onOpenChange={(open) => { if (!open) setPlantToDelete(null); }}>
-        <AlertDialogContent className="bg-background">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <Trash2 className="w-5 h-5 text-destructive" />
-              Remove from garden?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This will remove the plant from your garden. You can add it again later from the Plant Library.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+        <AlertDialogContent className="bg-card border-border rounded-[24px] sm:rounded-[24px] p-5 sm:max-w-[340px] shadow-xl gap-0">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-9 h-9 rounded-2xl bg-destructive/10 flex items-center justify-center">
+              <Trash2 className="w-4 h-4 text-destructive" />
+            </div>
+            <div className="flex-1 min-w-0 pt-0.5">
+              <AlertDialogTitle className="text-base font-semibold text-foreground leading-tight">
+                Remove from garden?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                This will remove the plant from your garden. You can add it again later from the Plant Library.
+              </AlertDialogDescription>
+            </div>
+          </div>
+          <AlertDialogFooter className="flex-row justify-end gap-2 mt-4 sm:justify-end">
+            <AlertDialogCancel className="rounded-xl h-9 px-4 text-xs">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Remove
             </AlertDialogAction>
           </AlertDialogFooter>
