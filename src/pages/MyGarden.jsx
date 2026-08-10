@@ -348,23 +348,23 @@ export default function MyGarden() {
       </Dialog>
 
       <AlertDialog open={!!plantToDelete} onOpenChange={(open) => {if (!open) setPlantToDelete(null);}}>
-        <AlertDialogContent className="bg-card border-border sm:rounded-[24px] sm:max-w-[340px] shadow-xl gap-0 rounded-[28px] opacity-100 px-5 py-5">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-9 h-9 rounded-2xl bg-destructive/10 flex items-center justify-center">
-              <Trash2 className="w-4 h-4 text-destructive" />
+        <AlertDialogContent className="bg-card border-border sm:rounded-[28px] rounded-[28px] sm:max-w-[400px] shadow-2xl gap-0 p-6 sm:p-7">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-destructive/10 flex items-center justify-center">
+              <Trash2 className="w-5 h-5 text-destructive" />
             </div>
-            <div className="flex-1 min-w-0 pt-0.5">
-              <AlertDialogTitle className="text-base font-semibold text-foreground leading-tight">
+            <div className="flex-1 min-w-0 pt-1">
+              <AlertDialogTitle className="text-lg font-semibold text-foreground leading-tight">
                 Remove from garden?
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              <AlertDialogDescription className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
                 This will remove the plant from your garden. You can add it again later from the Plant Library.
               </AlertDialogDescription>
             </div>
           </div>
-          <AlertDialogFooter className="flex-row justify-end gap-2 mt-4 sm:justify-end">
-            <AlertDialogCancel className="rounded-xl h-9 text-xs px-4 mt-2">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-9 px-4 text-xs bg-destructive text-destructive-foreground hover:bg-destructive/90 mx-1">
+          <AlertDialogFooter className="flex-row justify-end gap-2.5 mt-6 sm:justify-end">
+            <AlertDialogCancel className="rounded-xl h-10 text-sm px-5 mt-0">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="rounded-xl h-10 px-5 text-sm bg-destructive text-destructive-foreground hover:bg-destructive/90 mx-0">
               Remove
             </AlertDialogAction>
           </AlertDialogFooter>
