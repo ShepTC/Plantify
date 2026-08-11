@@ -76,6 +76,13 @@ export default function PlantDetailBody({
           {plant.botanical_name}
         </P>
 
+        {Array.isArray(plant.transplant_outdoor_zones) && plant.transplant_outdoor_zones.length > 0 && (
+          <div className="mt-2 inline-flex items-center gap-1.5 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-md shadow-sm">
+            <Sprout className="w-3 h-3" />
+            Transplant
+          </div>
+        )}
+
         <Button
           onClick={() => onOpenChange(false)}
           className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white px-3 py-1 h-auto rounded-md shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-xs font-semibold"
