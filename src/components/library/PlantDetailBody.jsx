@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { findZone } from "@/utils/zoneUtils";
 import { motion } from 'framer-motion';
+import HardeningOffTimeline from "./HardeningOffTimeline";
 
 const categoryColors = {
   vegetables: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700",
@@ -165,6 +166,9 @@ export default function PlantDetailBody({
               <DetailItem icon={<Clock className="w-4 h-4" />} label="Maturity" value={`${plant.days_to_maturity} days`} />
             </div>
           </div>
+
+          {/* Seedling hardening-off timeline (only for indoor-start/transplant crops) */}
+          {userZone && <HardeningOffTimeline plant={plant} userZone={userZone} />}
 
           {/* Planting Info for Zone */}
           {userZone && (transplantInfo || directSowInfo || legacyZoneInfo) && (

@@ -14,6 +14,9 @@ import LoginPrompt from "../components/auth/LoginPrompt";
 import PlantDetailView from "../components/library/PlantDetailView";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingSpinner from "../components/common/LoadingSpinner";
+import { Reminder } from "@/entities/Reminder";
+import { getHardeningOffWindow } from "@/utils/hardeningOff";
+import { format } from "date-fns";
 
 const PLANTS_PER_PAGE = 24;
 
@@ -225,6 +228,22 @@ export default function PlantLibrary() {
         status: 'planned'
       });
       setUserPlants((prev) => [...prev, newUserPlant]);
+
+      // For transplanted crops, schedule a hardening-off reminder 10 days
+      // before the transplant-out date for the user's zone.
+      const ho = getHardeningOffWindow(plant, user?.growing_zone);
+      if (ho) {
+        try {
+          await Reminder.create({
+            title: `Harden off your ${plant.name}`,
+            description: `Time to start hardening off your ${plant.name} - set seedlings outside in a sheltered spot for a few hours a day, increasing exposure over the next week before planting out on ${ho.transplantDateStr}.`,
+            due_date: format(ho.start, 'yyyy-MM-dd'),
+            type: 'general'
+          });
+        } catch (reminderError) {
+          console.error("Error creating hardening-off reminder:", reminderError);
+        }
+      }
     } catch (error) {
       console.error("Error adding plant to garden:", error);
     }
