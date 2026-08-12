@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { motion } from "framer-motion";
+import TransplantCountdown from "./TransplantCountdown";
 
 const statusConfig = {
   planned: { icon: Clock, color: "bg-blue-500", textColor: "text-blue-600 dark:text-blue-400", label: "Planned" },
@@ -32,16 +33,6 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
   };
 
   const daysUntilHarvest = getDaysUntilHarvest();
-
-  // Get planting windows for user's zone
-  const getPlantingWindows = () => {
-    if (!userZone || !plantDetails?.planting_zones) return null;
-    return plantDetails.planting_zones.find(
-      (z) => z.zone === userZone || z.zone === userZone.substring(0, userZone.length - 1)
-    );
-  };
-
-  const plantingWindows = getPlantingWindows();
 
   return (
     <motion.div
@@ -89,18 +80,9 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
             {plant.plant_name}
           </h3>
 
-          {/* Planting Window Info - Show for planned plants */}
-          {plant.status === 'planned' && plantingWindows && (
-            <div className="mb-3 text-[10px] md:text-xs">
-              <p className="text-muted-foreground">
-                <span className="font-medium text-foreground">Spring:</span> Weeks {plantingWindows.spring_start_week}-{plantingWindows.spring_end_week}
-              </p>
-              {plantingWindows.fall_start_week && (
-                <p className="text-muted-foreground">
-                  <span className="font-medium text-foreground">Fall:</span> Weeks {plantingWindows.fall_start_week}-{plantingWindows.fall_end_week}
-                </p>
-              )}
-            </div>
+          {/* Transplant countdown - active for planned indoor-start crops */}
+          {plant.status === 'planned' && (
+            <TransplantCountdown plant={plantDetails} userZone={userZone} />
           )}
 
           {/* Plant Info */}
