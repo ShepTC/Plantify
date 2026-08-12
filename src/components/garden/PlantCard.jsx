@@ -24,17 +24,19 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
   const Icon = config.icon;
 
   // Determine the next-step action label for planned plants
-  const getActionLabel = () => {
+  const actionLabel = (() => {
     if (plant.status !== 'planned') return null;
-    const hardeningWindow = getHardeningOffWindow(plantDetails, userZone);
-    if (hardeningWindow) {
-      const daysUntilHardening = differenceInDays(hardeningWindow.start, new Date());
-      if (daysUntilHardening <= 0) return 'transplant';
+    try {
+      const hardeningWindow = getHardeningOffWindow(plantDetails, userZone);
+      if (hardeningWindow) {
+        const daysUntilHardening = differenceInDays(hardeningWindow.start, new Date());
+        if (daysUntilHardening <= 0) return 'transplant';
+      }
+    } catch (e) {
+      // If hardening-off calc fails, still show seed_start
     }
     return 'seed_start';
-  };
-
-  const actionLabel = getActionLabel();
+  })();
 
   // Calculate days until harvest
   const getDaysUntilHarvest = () => {
