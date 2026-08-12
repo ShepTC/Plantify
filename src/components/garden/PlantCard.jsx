@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { motion } from "framer-motion";
-import TransplantCountdown from "./TransplantCountdown";
 
 const statusConfig = {
   planned: { icon: Clock, color: "bg-blue-500", textColor: "text-blue-600 dark:text-blue-400", label: "Planned" },
@@ -79,11 +78,6 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
           <h3 className="font-semibold text-sm md:text-base text-foreground line-clamp-1 mb-2">
             {plant.plant_name}
           </h3>
-
-          {/* Transplant countdown - active for planned indoor-start crops */}
-          {plant.status === 'planned' && (
-            <TransplantCountdown plant={plantDetails} userZone={userZone} />
-          )}
 
           {/* Plant Info */}
           <div className="flex flex-wrap gap-1.5 mb-3">

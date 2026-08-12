@@ -28,7 +28,7 @@ export default function TransplantCountdown({ plant, userZone }) {
   // Transplant day reached or passed
   if (daysUntilTransplant <= 0) {
     return (
-      <div className="mb-3 rounded-lg border border-primary/30 bg-primary/10 p-2.5">
+      <div className="rounded-lg border border-primary/30 bg-primary/10 px-3 py-2">
         <div className="flex items-center gap-1.5">
           <Sprout className="w-3.5 h-3.5 text-primary" />
           <p className="text-[11px] md:text-xs font-semibold text-primary">
@@ -45,7 +45,7 @@ export default function TransplantCountdown({ plant, userZone }) {
   // Hardening-off window is active (between start and transplant date)
   if (daysUntilHardening <= 0 && daysUntilTransplant > 0) {
     return (
-      <div className="mb-3 rounded-lg border border-blue-500/30 bg-blue-500/10 p-2.5">
+      <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 px-3 py-2">
         <div className="flex items-center gap-1.5">
           <Wind className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
           <p className="text-[11px] md:text-xs font-semibold text-blue-600 dark:text-blue-400">
@@ -61,7 +61,7 @@ export default function TransplantCountdown({ plant, userZone }) {
 
   // Waiting period before hardening-off begins
   return (
-    <div className="mb-3 rounded-lg border border-border bg-muted/40 p-2.5">
+    <div className="rounded-lg border border-border bg-muted/40 px-3 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Sprout className="w-3.5 h-3.5 text-primary" />

@@ -1,6 +1,7 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
 import PlantCard from "./PlantCard";
+import TransplantCountdown from "./TransplantCountdown";
 
 export default function GardenSection({ 
   title, 
@@ -26,16 +27,20 @@ export default function GardenSection({
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
         <AnimatePresence mode="popLayout">
           {plants.map((plant) => (
-            <PlantCard
-              key={plant.id}
-              plant={plant}
-              plantDetails={plantDataMap[plant.plant_id]}
-              onStatusChange={onStatusChange}
-              onOpenPlantedDialog={onOpenPlantedDialog}
-              onDelete={onDelete}
-              onClick={() => onPlantClick?.(plant)}
-              userZone={userZone}
-            />
+            <div key={plant.id} className="flex flex-col gap-2">
+              <PlantCard
+                plant={plant}
+                plantDetails={plantDataMap[plant.plant_id]}
+                onStatusChange={onStatusChange}
+                onOpenPlantedDialog={onOpenPlantedDialog}
+                onDelete={onDelete}
+                onClick={() => onPlantClick?.(plant)}
+                userZone={userZone}
+              />
+              {plant.status === 'planned' && (
+                <TransplantCountdown plant={plantDataMap[plant.plant_id]} userZone={userZone} />
+              )}
+            </div>
           ))}
         </AnimatePresence>
       </div>
