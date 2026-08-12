@@ -62,7 +62,7 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
         onClick={onClick}
       >
         {/* Plant Image or Gradient */}
-        <div className="relative h-24 md:h-32 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+        <div className="relative h-16 md:h-20 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
           {plantDetails?.image_url ? (
             <img 
               src={plantDetails.image_url} 
@@ -71,59 +71,58 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Sprout className="w-10 h-10 text-primary/40" />
+              <Sprout className="w-7 h-7 text-primary/40" />
             </div>
           )}
           
           {/* Status Badge */}
-          <Badge className={`absolute top-2 left-2 ${config.color} text-white text-[10px] md:text-xs`}>
-            <Icon className="w-3 h-3 mr-1" />
+          <Badge className={`absolute top-1 left-1 ${config.color} text-white text-[9px] md:text-[10px] px-1.5 py-0.5`}>
+            <Icon className="w-2.5 h-2.5 mr-0.5" />
             {config.label}
           </Badge>
 
           {/* Days until harvest badge */}
           {daysUntilHarvest && (
-            <Badge className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] md:text-xs">
-              <Calendar className="w-3 h-3 mr-1" />
+            <Badge className="absolute top-1 right-1 bg-amber-500 text-white text-[9px] md:text-[10px] px-1.5 py-0.5">
+              <Calendar className="w-2.5 h-2.5 mr-0.5" />
               {daysUntilHarvest}
             </Badge>
           )}
         </div>
 
-        <CardContent className="p-3 md:p-4">
-          <h3 className="font-semibold text-sm md:text-base text-foreground line-clamp-1 mb-2">
+        <CardContent className="p-2 md:p-2.5">
+          <h3 className="font-semibold text-xs md:text-sm text-foreground line-clamp-1 mb-1">
             {plant.plant_name}
           </h3>
 
-          {/* Plant Info */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          {/* Plant Info + Harvest Date */}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-2">
             {plantDetails?.water_needs && (
-              <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1">
-                <Droplets className="w-3 h-3" />
+              <span className="text-[9px] md:text-[10px] text-muted-foreground flex items-center gap-0.5">
+                <Droplets className="w-2.5 h-2.5" />
                 {plantDetails.water_needs}
               </span>
             )}
             {plantDetails?.sun_requirements && (
-              <span className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-1">
-                <Sun className="w-3 h-3" />
+              <span className="text-[9px] md:text-[10px] text-muted-foreground flex items-center gap-0.5">
+                <Sun className="w-2.5 h-2.5" />
                 {plantDetails.sun_requirements.replace("_", " ")}
+              </span>
+            )}
+            {plant.harvest_date && plant.status !== 'harvested' && (
+              <span className="text-[9px] md:text-[10px] text-muted-foreground flex items-center gap-0.5">
+                <Calendar className="w-2.5 h-2.5" />
+                {format(new Date(plant.harvest_date), 'MMM d')}
               </span>
             )}
           </div>
 
-          {/* Harvest Date */}
-          {plant.harvest_date && plant.status !== 'harvested' && (
-            <p className="text-[10px] md:text-xs text-muted-foreground mb-3">
-              Est. harvest: <span className="font-medium text-foreground">{format(new Date(plant.harvest_date), 'MMM d, yyyy')}</span>
-            </p>
-          )}
-
           {/* Actions */}
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1 text-xs h-8">
-                  Status <ChevronDown className="w-3 h-3 ml-1" />
+                <Button variant="outline" size="sm" className="flex-1 text-[10px] md:text-xs h-7 px-2">
+                  Status <ChevronDown className="w-3 h-3 ml-0.5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -155,9 +154,9 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
               variant="ghost"
               size="sm"
               onClick={() => onDelete(plant.id)}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 h-7 w-7 p-0"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
             </Button>
           </div>
         </CardContent>

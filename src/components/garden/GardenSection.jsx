@@ -24,7 +24,7 @@ export default function GardenSection({
         <h2 className="text-lg font-semibold text-foreground">{title}</h2>
         <span className="text-sm text-muted-foreground">({plants.length})</span>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
         <AnimatePresence mode="popLayout">
           {plants.map((plant) => (
             <div key={plant.id} className="flex flex-col gap-2">
