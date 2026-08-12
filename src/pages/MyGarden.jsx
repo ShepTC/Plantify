@@ -8,6 +8,7 @@ import { PlusCircle, Sprout, Leaf, Sun, Clock, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { addDays, format } from "date-fns";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +35,7 @@ import PixelGarden from "../components/garden/PixelGarden";
 import PlantDetailBody from "../components/library/PlantDetailBody";
 
 export default function MyGarden() {
+  const { toast } = useToast();
   const [myPlants, setMyPlants] = useState([]);
   const [plantDataMap, setPlantDataMap] = useState({}); // To store full plant data
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +46,7 @@ export default function MyGarden() {
   const [plantToDelete, setPlantToDelete] = useState(null);
   const [plantToUpdate, setPlantToUpdate] = useState(null);
   const [selectedPlantingDate, setSelectedPlantingDate] = useState(null);
+  const [pendingActionLabel, setPendingActionLabel] = useState(null);
 
   // State for plant detail view
   const [selectedPlant, setSelectedPlant] = useState(null);
@@ -159,8 +162,9 @@ export default function MyGarden() {
     }
   };
 
-  const handleOpenPlantedDialog = (plant) => {
+  const handleOpenPlantedDialog = (plant, actionLabel = null) => {
     setPlantToUpdate(plant);
+    setPendingActionLabel(actionLabel);
     // Use existing plant date if available, otherwise default to today
     const initialDate = plant.actual_planting_date ? new Date(plant.actual_planting_date) : new Date();
     setSelectedPlantingDate(initialDate);
@@ -170,9 +174,15 @@ export default function MyGarden() {
   const handleConfirmPlantedDate = () => {
     if (plantToUpdate && selectedPlantingDate) {
       updatePlantStatus(plantToUpdate.id, 'planted', selectedPlantingDate);
+      if (pendingActionLabel === 'transplant') {
+        toast({ title: "Transplanted! 🌿", description: `${plantToUpdate.plant_name} has been added to your garden.` });
+      } else if (pendingActionLabel === 'seed_start') {
+        toast({ title: "Seeds started! 🌱", description: `${plantToUpdate.plant_name} has been added to your garden.` });
+      }
     }
     setIsPlantedDialogOpen(false);
     setPlantToUpdate(null);
+    setPendingActionLabel(null);
   };
 
   const handlePlantClick = (userPlant) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Sprout, Clock, Sun, Trash2, ChevronDown, Droplets, Calendar } from "lucide-react";
+import { Sprout, Clock, Sun, Trash2, ChevronDown, Droplets, Calendar, Leaf } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { motion } from "framer-motion";
+import { getHardeningOffWindow } from "@/utils/hardeningOff";
 
 const statusConfig = {
   planned: { icon: Clock, color: "bg-blue-500", textColor: "text-blue-600 dark:text-blue-400", label: "Planned" },
@@ -21,6 +22,19 @@ const statusConfig = {
 export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenPlantedDialog, onDelete, onClick, userZone }) {
   const config = statusConfig[plant.status] || statusConfig.planned;
   const Icon = config.icon;
+
+  // Determine the next-step action label for planned plants
+  const getActionLabel = () => {
+    if (plant.status !== 'planned') return null;
+    const hardeningWindow = getHardeningOffWindow(plantDetails, userZone);
+    if (hardeningWindow) {
+      const daysUntilHardening = differenceInDays(hardeningWindow.start, new Date());
+      if (daysUntilHardening <= 0) return 'transplant';
+    }
+    return 'seed_start';
+  };
+
+  const actionLabel = getActionLabel();
 
   // Calculate days until harvest
   const getDaysUntilHarvest = () => {
@@ -111,6 +125,19 @@ export default function PlantCard({ plant, plantDetails, onStatusChange, onOpenP
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                {actionLabel && (
+                  <DropdownMenuItem
+                    onClick={() => onOpenPlantedDialog(plant, actionLabel)}
+                    className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold rounded-md mb-1 shadow-md hover:from-purple-600 hover:via-pink-600 hover:to-orange-500 focus:from-purple-600 focus:via-pink-600 focus:to-orange-500"
+                  >
+                    {actionLabel === 'transplant' ? (
+                      <Leaf className="w-4 h-4 mr-2 text-white" />
+                    ) : (
+                      <Sprout className="w-4 h-4 mr-2 text-white" />
+                    )}
+                    {actionLabel === 'transplant' ? 'Transplant' : 'Seed Start'}
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => onStatusChange(plant.id, 'planned')}>
                   <Clock className="w-4 h-4 mr-2 text-blue-500" /> Planned
                 </DropdownMenuItem>
