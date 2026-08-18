@@ -4,7 +4,7 @@ import { UserPlant } from "@/entities/UserPlant";
 import { Plant } from "@/entities/Plant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlusCircle, Sprout, Leaf, Sun, Clock, Trash2 } from "lucide-react";
+import { PlusCircle, Leaf, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import { addDays, format } from "date-fns";
@@ -30,8 +30,7 @@ import { Calendar } from "@/components/ui/calendar";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import GardenStats from "../components/garden/GardenStats";
-import GardenSection from "../components/garden/GardenSection";
-import PixelGarden from "../components/garden/PixelGarden";
+import GardenPlotGrid from "../components/garden/GardenPlotGrid";
 import PlantDetailBody from "../components/library/PlantDetailBody";
 
 export default function MyGarden() {
@@ -51,30 +50,6 @@ export default function MyGarden() {
   // State for plant detail view
   const [selectedPlant, setSelectedPlant] = useState(null);
   const [selectedUserPlant, setSelectedUserPlant] = useState(null);
-
-  // Track active theme for pixel-garden night rendering
-  const [isNight, setIsNight] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return document.documentElement.classList.contains('dark') ||
-    localStorage.getItem('user-theme') === 'dark';
-  });
-
-  useEffect(() => {
-    const sync = () => {
-      setIsNight(
-        document.documentElement.classList.contains('dark') ||
-        localStorage.getItem('user-theme') === 'dark'
-      );
-    };
-    sync();
-    window.addEventListener('theme-updated', sync);
-    const observer = new MutationObserver(sync);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => {
-      window.removeEventListener('theme-updated', sync);
-      observer.disconnect();
-    };
-  }, []);
 
   useEffect(() => {
     loadMyGarden();
@@ -185,6 +160,15 @@ export default function MyGarden() {
     setPendingActionLabel(null);
   };
 
+  const handlePlotAction = (plant, actionLabel) => {
+    if (plant.status === "planned") {
+      handleOpenPlantedDialog(plant, actionLabel);
+    } else if (plant.status === "planted") {
+      updatePlantStatus(plant.id, "harvested");
+      toast({ title: "Harvested! 🌾", description: `${plant.plant_name} marked as harvested.` });
+    }
+  };
+
   const handlePlantClick = (userPlant) => {
     if (!userPlant) {setSelectedPlant(null);setSelectedUserPlant(null);return;}
     const byName = (userPlant.plant_name || '').toLowerCase();
@@ -252,32 +236,15 @@ export default function MyGarden() {
             {/* Stats Overview */}
             <GardenStats plants={myPlants} />
 
-            {/* Pixel Garden Visual */}
-            <div
-            className="relative overflow-hidden rounded-2xl"
-            style={{
-              background:
-              'linear-gradient(135deg,' +
-              'hsl(var(--background)) 0%,' +
-              'hsl(var(--primary) / 0.10) 18%,' +
-              'hsl(var(--secondary) / 0.12) 38%,' +
-              'hsl(var(--accent) / 0.10) 58%,' +
-              'hsl(var(--secondary) / 0.08) 78%,' +
-              'hsl(var(--background)) 100%)'
-            }}>
-            
-              <PixelGarden
-              userPlants={myPlants}
-              night={isNight}
+            {/* Plot Grid — unified 8-bit garden with inline actions */}
+            <GardenPlotGrid
+              plants={myPlants}
               plantDataMap={plantDataMap}
-              onOpenDetails={handlePlantClick} />
-            
-              {/* Edge fades blend the art into the page background */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background via-background/60 to-transparent" />
-            </div>
+              onAction={handlePlotAction}
+              onDelete={handleDeleteRequest}
+              onPlantClick={handlePlantClick}
+              userZone={user?.growing_zone}
+            />
 
             {selectedPlant &&
           <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
@@ -292,48 +259,6 @@ export default function MyGarden() {
             
               </div>
           }
-
-            {/* Growing Plants */}
-            <GardenSection
-            title="Currently Growing"
-            icon={Sprout}
-            color="text-green-500"
-            plants={myPlants.filter((p) => p.status === 'planted')}
-            plantDataMap={plantDataMap}
-            onStatusChange={updatePlantStatus}
-            onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={handleDeleteRequest}
-            onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
-
-
-            {/* Planned Plants */}
-            <GardenSection
-            title="Planned"
-            icon={Clock}
-            color="text-blue-500"
-            plants={myPlants.filter((p) => p.status === 'planned')}
-            plantDataMap={plantDataMap}
-            onStatusChange={updatePlantStatus}
-            onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={handleDeleteRequest}
-            onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
-
-
-            {/* Harvested Plants */}
-            <GardenSection
-            title="Harvested"
-            icon={Sun}
-            color="text-amber-500"
-            plants={myPlants.filter((p) => p.status === 'harvested')}
-            plantDataMap={plantDataMap}
-            onStatusChange={updatePlantStatus}
-            onOpenPlantedDialog={handleOpenPlantedDialog}
-            onDelete={handleDeleteRequest}
-            onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
-
           </div>
         }
       </div>
