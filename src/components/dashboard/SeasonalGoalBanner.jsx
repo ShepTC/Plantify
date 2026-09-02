@@ -143,14 +143,16 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
         className="mb-6 overflow-hidden">
 
           <Card className="relative backdrop-blur-xl border border-border/60 shadow-lg rounded-3xl overflow-hidden bg-gradient-to-br from-amber-50/80 via-card/90 to-orange-50/60 dark:from-amber-950/40 dark:via-card/90 dark:to-orange-950/30">
-            <CardContent className="p-4 md:p-6 relative z-10 bg-transparent">
-              <div className="flex items-start justify-between gap-3 md:gap-4">
-                <div className="flex-1 min-w-0">
+            <CardContent className="p-5 md:p-8 relative z-10 bg-transparent text-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex-1 min-w-0 w-full flex flex-col items-center">
                   {step === "initial" &&
                 <div className="space-y-3 md:space-y-4">
-                      <div className="flex items-start gap-2">
-                        <Leaf className="hidden md:block w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
-                        <h3 className="text-foreground text-base md:text-lg font-semibold leading-tight">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-amber-100/80 dark:bg-amber-900/30 border border-amber-300/50 dark:border-amber-700/40 flex items-center justify-center">
+                          <Leaf className="w-5 h-5 md:w-6 md:h-6 text-amber-600 dark:text-amber-400" />
+                        </div>
+                        <h3 className="text-foreground text-base md:text-lg font-semibold leading-tight max-w-md">
                           Now that the {seasonName} season's almost over, did you
                           complete your garden goals?
                         </h3>
@@ -167,7 +169,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                         </div>
                   }
 
-                      <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                      <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center w-full sm:w-auto">
                         <Button
                       onClick={handleYes}
                       className="bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-500 text-white flex-1 sm:flex-none rounded-xl">
@@ -274,7 +276,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                 variant="ghost"
                 size="icon"
                 onClick={closeBanner}
-                className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/30 flex-shrink-0 rounded-xl">
+                className="absolute top-3 right-3 text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/30 flex-shrink-0 rounded-xl">
 
                   <X className="w-4 h-4" />
                 </Button>
