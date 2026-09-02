@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { Reminder } from "@/entities/Reminder";
@@ -143,26 +142,26 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="mb-6 overflow-hidden">
 
-          <Card className="relative bg-white/60 backdrop-blur-xl border border-white/30 shadow-lg rounded-2xl overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/60 before:to-transparent before:opacity-60 before:pointer-events-none">
-            <CardContent className="bg-slate-200 p-4 md:p-6 relative z-10">
+          <Card className="relative backdrop-blur-xl border border-border/60 shadow-lg rounded-3xl overflow-hidden bg-gradient-to-br from-amber-50/80 via-card/90 to-orange-50/60 dark:from-amber-950/40 dark:via-card/90 dark:to-orange-950/30">
+            <CardContent className="p-4 md:p-6 relative z-10 bg-transparent">
               <div className="flex items-start justify-between gap-3 md:gap-4">
                 <div className="flex-1 min-w-0">
                   {step === "initial" &&
                 <div className="space-y-3 md:space-y-4">
                       <div className="flex items-start gap-2">
-                        <Leaf className="hidden md:block w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <h3 className="text-amber-800 text-base md:text-lg font-semibold leading-tight">
+                        <Leaf className="hidden md:block w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                        <h3 className="text-foreground text-base md:text-lg font-semibold leading-tight">
                           Now that the {seasonName} season's almost over, did you
                           complete your garden goals?
                         </h3>
                       </div>
 
                       {user.garden_goals &&
-                  <div className="bg-white/60 rounded-lg p-3 border border-amber-200">
-                          <p className="text-amber-900 font-medium text-sm md:text-base">
-                            Your Goal:
+                  <div className="bg-muted/40 rounded-xl p-3 border border-amber-300/50 dark:border-amber-700/40">
+                          <p className="text-muted-foreground font-medium text-xs md:text-sm uppercase tracking-wide">
+                            Your Goal
                           </p>
-                          <p className="text-amber-800 italic text-sm md:text-base">
+                          <p className="text-foreground italic text-sm md:text-base mt-0.5">
                             "{user.garden_goals}"
                           </p>
                         </div>
@@ -171,7 +170,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                       <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
                         <Button
                       onClick={handleYes}
-                      className="bg-green-600 hover:bg-green-700 text-white flex-1 sm:flex-none">
+                      className="bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-500 text-white flex-1 sm:flex-none rounded-xl">
 
                           <CheckCircle className="w-4 h-4 mr-2" />
                           Yes
@@ -179,7 +178,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                         <Button
                       onClick={handleNo}
                       variant="outline"
-                      className="bg-background text-amber-600 border border-amber-300 hover:bg-amber-100 flex-1 sm:flex-none">
+                      className="bg-background/60 text-amber-700 dark:text-amber-400 border-amber-300/60 dark:border-amber-700/50 hover:bg-amber-100/60 dark:hover:bg-amber-900/30 flex-1 sm:flex-none rounded-xl">
 
                           <CalendarIcon className="w-4 h-4 mr-2" />
                           No, remind me later
@@ -191,8 +190,8 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                   {step === "success" &&
                 <div className="space-y-3 md:space-y-4">
                       <div className="flex items-start gap-2">
-                        <CheckCircle className="hidden md:block w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                        <h3 className="font-semibold text-green-800 text-base md:text-lg">
+                        <CheckCircle className="hidden md:block w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                        <h3 className="font-semibold text-foreground text-base md:text-lg">
                           That's great!
                         </h3>
                       </div>
@@ -200,7 +199,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                       <div className="space-y-3">
                         <Label
                       htmlFor="new-goals"
-                      className="text-amber-800 font-medium text-sm md:text-base">
+                      className="text-foreground font-medium text-sm md:text-base">
 
                           Update your garden goals for next season:
                         </Label>
@@ -208,14 +207,14 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                       id="new-goals"
                       value={newGoalText}
                       onChange={(e) => setNewGoalText(e.target.value)}
-                      placeholder="What do you want to achieve in your garden next year?" className="bg-white text-slate-900 px-3 py-2 text-base flex h-10 w-full rounded-md border ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-amber-200" />
+                      placeholder="What do you want to achieve in your garden next year?" className="bg-background/60 text-foreground px-3 py-2 text-base flex h-10 w-full rounded-xl border border-amber-300/50 dark:border-amber-700/40 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
 
 
                       </div>
 
                       <Button
                     onClick={handleUpdateGoals}
-                    className="bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto">
+                    className="bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500 text-white w-full sm:w-auto rounded-xl">
 
                         Update Goals
                       </Button>
@@ -225,18 +224,18 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                   {step === "reminder" &&
                 <div className="space-y-3 md:space-y-4">
                       <div className="flex items-start gap-2">
-                        <CalendarIcon className="hidden md:block w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <h3 className="font-semibold text-amber-800 text-base md:text-lg leading-tight">
+                        <CalendarIcon className="hidden md:block w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                        <h3 className="font-semibold text-foreground text-base md:text-lg leading-tight">
                           When would you like to be reminded about your garden
                           goals?
                         </h3>
                       </div>
 
-                      <div className="bg-white/60 rounded-lg p-3 border border-amber-200">
-                        <p className="text-amber-900 font-medium mb-2 text-sm md:text-base">
-                          Your Goal:
+                      <div className="bg-muted/40 rounded-xl p-3 border border-amber-300/50 dark:border-amber-700/40">
+                        <p className="text-muted-foreground font-medium mb-2 text-xs md:text-sm uppercase tracking-wide">
+                          Your Goal
                         </p>
-                        <p className="text-amber-800 italic text-sm md:text-base">
+                        <p className="text-foreground italic text-sm md:text-base">
                           "{user.garden_goals}"
                         </p>
                       </div>
@@ -246,21 +245,21 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                       mode="single"
                       selected={selectedReminderDate}
                       onSelect={setSelectedReminderDate}
-                      className="bg-white text-slate-950 p-3 rdp rounded-md border border-amber-200 scale-90 md:scale-100"
+                      className="bg-background text-foreground p-3 rdp rounded-xl border border-amber-300/50 dark:border-amber-700/40 scale-90 md:scale-100"
                       disabled={(date) => date < new Date()} />
 
                       </div>
 
                       {selectedReminderDate &&
                   <div className="text-center space-y-3">
-                          <Badge className="bg-amber-600 text-white text-xs md:text-sm">
+                          <Badge className="bg-amber-600 dark:bg-amber-600 text-white text-xs md:text-sm">
                             Reminder set for{" "}
                             {format(selectedReminderDate, "MMM d, yyyy")}
                           </Badge>
                           <div>
                             <Button
                         onClick={handleSetReminder}
-                        className="bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto">
+                        className="bg-amber-600 hover:bg-amber-700 dark:hover:bg-amber-500 text-white w-full sm:w-auto rounded-xl">
 
                               Set Reminder
                             </Button>
@@ -275,7 +274,7 @@ export default function SeasonalGoalBanner({ user, onUserUpdate }) {
                 variant="ghost"
                 size="icon"
                 onClick={closeBanner}
-                className="text-amber-600 hover:text-amber-800 hover:bg-amber-100 flex-shrink-0">
+                className="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 hover:bg-amber-100/60 dark:hover:bg-amber-900/30 flex-shrink-0 rounded-xl">
 
                   <X className="w-4 h-4" />
                 </Button>
