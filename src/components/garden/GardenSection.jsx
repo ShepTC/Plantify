@@ -2,26 +2,17 @@ import React from "react";
 import { AnimatePresence } from "framer-motion";
 import PlantTaskCard from "./PlantTaskCard";
 
-export default function GardenSection({
-  title,
-  icon: Icon,
-  plants,
-  plantDataMap,
-  color,
-  onStatusChange,
-  onOpenPlantedDialog,
-  onDelete,
-  onPlantClick,
-  userZone,
-}) {
+export default function GardenSection({ title, icon: Icon, plants, color, hint, ...cardProps }) {
   if (plants.length === 0) return null;
+  const { onPlantClick, plantDataMap, ...rest } = cardProps;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <Icon className={`w-5 h-5 ${color}`} />
-        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-        <span className="text-sm text-muted-foreground">({plants.length})</span>
+    <section className="space-y-3">
+      <div className="flex items-center gap-2 px-1">
+        <Icon className={`w-4 h-4 ${color}`} />
+        <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-foreground">{title}</h2>
+        <span className="text-xs text-muted-foreground">{plants.length}</span>
+        {hint && <span className="ml-auto text-[11px] text-muted-foreground">{hint}</span>}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <AnimatePresence mode="popLayout">
@@ -30,15 +21,12 @@ export default function GardenSection({
               key={plant.id}
               plant={plant}
               plantDetails={plantDataMap[plant.plant_id]}
-              onStatusChange={onStatusChange}
-              onOpenPlantedDialog={onOpenPlantedDialog}
-              onDelete={onDelete}
               onClick={() => onPlantClick?.(plant)}
-              userZone={userZone}
+              {...rest}
             />
           ))}
         </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }

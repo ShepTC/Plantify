@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Sprout, Wind, Sun, Leaf, Check, Trash2, Calendar } from "lucide-react";
 import { getPlantingTask } from "@/utils/plantingTask";
+import { getReminderTarget } from "@/utils/reminderTarget";
+import RemindButton from "./RemindButton";
 
 const accentStyles = {
   purple: {
@@ -60,6 +62,8 @@ export default function PlantTaskCard({
   onDelete,
   onClick,
   userZone,
+  isPremium,
+  onRemind,
 }) {
   const task = getPlantingTask(plant, plantDetails, userZone);
   if (!task) return null;
@@ -141,14 +145,22 @@ export default function PlantTaskCard({
             </div>
           )}
 
-          {/* action button */}
+          {/* action button + reminder */}
           {task.action ? (
-            <button
-              onClick={handleAction}
-              className={`w-full h-9 rounded-xl text-sm font-semibold text-white transition-all ${accent.bar} hover:opacity-90 active:scale-[0.98]`}
-            >
-              {task.actionLabel}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleAction}
+                className={`flex-1 h-9 rounded-xl text-sm font-semibold text-white transition-all ${accent.bar} hover:opacity-90 active:scale-[0.98]`}
+              >
+                {task.actionLabel}
+              </button>
+              <RemindButton
+                target={getReminderTarget(plant, plantDetails, userZone)}
+                reminderDate={plant.reminder_date}
+                isPremium={isPremium}
+                onRemind={() => onRemind?.(plant)}
+              />
+            </div>
           ) : (
             <div className={`w-full h-9 rounded-xl text-sm font-medium ${accent.soft} ${accent.text} flex items-center justify-center`}>
               <Check className="w-4 h-4 mr-1.5" />

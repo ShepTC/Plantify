@@ -1,217 +1,129 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { User } from "@/entities/User";
 import { UserPlant } from "@/entities/UserPlant";
 import { Plant } from "@/entities/Plant";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Sprout, Clock, Sun } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/components/utils";
+import { MapPin, ArrowRight } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
-import HomeHero from "../components/home/HomeHero";
-import ThisWeekCarousel from "../components/home/ThisWeekCarousel";
-import BrowsePanel from "../components/home/BrowsePanel";
-import { computePlantableToday } from "@/utils/plantingWindows";
-import { canAddPlant, getRemainingAdds, FREE_WEEKLY_ADD_LIMIT } from "@/utils/freemium";
+import PlantDetailView from "../components/library/PlantDetailView";
+import TodayHeader from "../components/today/TodayHeader";
+import HeroPick from "../components/today/HeroPick";
+import EmptyHero from "../components/today/EmptyHero";
+import AlsoGoodRow from "../components/today/AlsoGoodRow";
+import ComingUp from "../components/today/ComingUp";
+import ProTools from "../components/today/ProTools";
+import { computePlantableToday, computeComingUp, getCurrentWeek, weeksUntil } from "@/utils/plantingWindows";
 
-// Merged Home page: answers "what can I plant this week" immediately.
-const homeCategoryData = {
-  vegetables: { key: "vegetables", name: "Vegetables", icon: Sprout, color: "from-green-500 to-green-600" },
-  fruits: { key: "fruits", name: "Fruits", icon: Sprout, color: "from-red-500 to-red-600" },
-  herbs: { key: "herbs", name: "Herbs", icon: Sprout, color: "from-teal-500 to-teal-600" },
-  flowers: { key: "flowers", name: "Flowers", icon: Sprout, color: "from-pink-500 to-pink-600" },
-  grains: { key: "grains", name: "Grains", icon: Sprout, color: "from-yellow-500 to-yellow-600" },
-  direct_sow: { key: "direct_sow", name: "Direct Sow", icon: Sprout, color: "from-emerald-500 to-emerald-600" },
-  transplant: { key: "transplant", name: "Transplant", icon: Sprout, color: "from-blue-500 to-blue-600" },
-};
-
-// Categories used by the Browse tab (full library grouped by plant.category).
-const browseCategories = [
-  homeCategoryData.vegetables,
-  homeCategoryData.fruits,
-  homeCategoryData.herbs,
-  homeCategoryData.flowers,
-  homeCategoryData.grains,
-];
-
+// "Today" — answers one question: what should I plant right now?
 export default function Dashboard() {
+  const { toast } = useToast();
   const [user, setUser] = useState(null);
-  const [currentWeek, setCurrentWeek] = useState(1);
   const [userPlants, setUserPlants] = useState([]);
   const [allPlants, setAllPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [view, setView] = useState("week");
+  const [loadingId, setLoadingId] = useState(null);
+  const [openPlant, setOpenPlant] = useState(null);
+  const currentWeek = getCurrentWeek();
 
   useEffect(() => {
-    loadData();
+    const load = async () => {
+      try {
+        const currentUser = await User.me();
+        setUser(currentUser);
+        const [plants, allP] = await Promise.all([
+          UserPlant.filter({ created_by: currentUser.email }),
+          Plant.list(),
+        ]);
+        setUserPlants(plants);
+        setAllPlants(allP);
+      } catch (error) {
+        console.error("Error loading today:", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    load();
   }, []);
 
-  const loadData = async () => {
-    try {
-      const currentUser = await User.me();
-      setUser(currentUser);
-
-      const now = new Date();
-      const startOfYear = new Date(now.getFullYear(), 0, 1);
-      setCurrentWeek(
-        Math.ceil((now.getTime() - startOfYear.getTime()) / (7 * 24 * 60 * 60 * 1000))
-      );
-
-      const [plants, allP] = await Promise.all([
-        UserPlant.filter({ created_by: currentUser.email }),
-        Plant.list(),
-      ]);
-      setUserPlants(plants);
-      setAllPlants(allP);
-    } catch (error) {
-      console.error("Error loading home:", error);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const addPlant = async (plant) => {
-    if (!canAddPlant(user, userPlants)) return;
-    try {
-      const created = await UserPlant.create({
-        plant_id: plant.id,
-        plant_name: plant.name,
-        status: "planned",
-      });
-      setUserPlants((prev) => [...prev, created]);
-    } catch (error) {
-      console.error("Error adding plant:", error);
-    }
+    setLoadingId(plant.id);
+    const created = await UserPlant.create({ plant_id: plant.id, plant_name: plant.name, status: "planned" });
+    setUserPlants((prev) => [...prev, created]);
+    setLoadingId(null);
+    toast({ title: `${plant.name} added`, description: "Find it in your Garden with its next step." });
   };
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4 md:p-6">
-        <LoadingSpinner message="Loading your garden..." size="large" />
+      <div className="flex min-h-[70vh] items-center justify-center p-4">
+        <LoadingSpinner message="Checking what to plant..." size="large" />
       </div>
     );
   }
+  if (!user) return <LoginPrompt />;
 
-  if (!user) {
-    return <LoginPrompt />;
-  }
+  const zone = user.growing_zone;
+  const isPremium = !!user.is_premium;
+  const addedIds = new Set(userPlants.map((p) => p.plant_id));
 
-  const userZone = user?.growing_zone;
-  const userPlantIds = new Set(userPlants.map((p) => p.plant_id));
-  const { plantsForToday, plantsByCategory } = userZone
-    ? computePlantableToday(allPlants, userZone, currentWeek, userPlantIds)
-    : { plantsForToday: [], plantsByCategory: {} };
-
-  const isPremium = !!user?.is_premium;
-  const remaining = getRemainingAdds(user, userPlants);
-  const atLimit = !isPremium && remaining <= 0;
-
-  const plannedCount = userPlants.filter((p) => p.status === "planned").length;
-  const plantedCount = userPlants.filter((p) => p.status === "planted").length;
-  const harvestedCount = userPlants.filter((p) => p.status === "harvested").length;
+  // One entry per plant, most urgent (window closing soonest) first.
+  const seen = new Set();
+  const inSeason = zone
+    ? computePlantableToday(allPlants, zone, currentWeek).plantsForToday
+        .sort((a, b) => weeksUntil(a.windowEndWeek, currentWeek) - weeksUntil(b.windowEndWeek, currentWeek) || (b.image_url ? 1 : 0) - (a.image_url ? 1 : 0))
+        .filter((p) => (seen.has(p.id) ? false : seen.add(p.id)))
+    : [];
+  const hero = inSeason.find((p) => !addedIds.has(p.id)) || inSeason[0];
+  const others = inSeason.filter((p) => p !== hero);
+  const comingUp = zone ? computeComingUp(allPlants, zone, currentWeek) : [];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-3xl px-3 pt-3 pb-24 md:px-6 md:pt-6 md:pb-6">
-        <HomeHero
-          user={user}
-          currentWeek={currentWeek}
-          readyCount={plantsForToday.length}
-          remaining={remaining}
-          isPremium={isPremium}
-        />
+    <div className="relative min-h-screen bg-background">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-primary/10 via-secondary/5 to-transparent" />
+      <div className="relative mx-auto max-w-3xl space-y-5 px-4 pt-5 pb-28 md:px-6 md:pt-8 md:pb-10">
+        <TodayHeader user={user} currentWeek={currentWeek} />
 
-        {/* Location setup warning */}
-        {!user?.location && (
-          <div className="mt-3 flex items-start gap-2.5 rounded-2xl border border-orange-200 bg-orange-50/50 dark:border-orange-900/50 dark:bg-orange-950/20 p-3">
-            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-500" />
-            <div className="min-w-0 flex-1">
-              <p className="text-xs text-foreground"><span className="font-semibold">Set your location</span> for accurate USDA-zone planting recommendations.</p>
-              <Link to={createPageUrl("Profile")}>
-                <Button size="sm" className="mt-1.5 bg-orange-500 hover:bg-orange-600 text-xs h-7 px-2.5">
-                  Set Location
-                </Button>
-              </Link>
+        {!zone ? (
+          <Link to="/Profile" className="flex items-center gap-3 rounded-[28px] border border-secondary/40 bg-secondary/10 p-5">
+            <div className="w-11 h-11 rounded-2xl bg-secondary/20 flex items-center justify-center flex-shrink-0">
+              <MapPin className="w-5 h-5 text-secondary" />
             </div>
-          </div>
-        )}
-
-        {/* Stats ribbon — single card, three segments */}
-        <div className="mt-3 grid grid-cols-3 rounded-2xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden">
-          <StatSegment label="Planned" value={plannedCount} icon={<Clock className="w-3.5 h-3.5" />} />
-          <StatSegment label="Growing" value={plantedCount} icon={<Sprout className="w-3.5 h-3.5" />} divider />
-          <StatSegment label="Harvested" value={harvestedCount} icon={<Sun className="w-3.5 h-3.5" />} divider />
-        </div>
-
-        {/* No zone set */}
-        {!userZone ? (
-          <div className="mt-3 rounded-2xl border border-border bg-card p-6 text-center">
-            <Sprout className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-            <p className="text-sm text-muted-foreground mb-4">Set your location to see what you can plant this week.</p>
-            <Link to={createPageUrl("Profile")}>
-              <Button size="sm">Set Location</Button>
-            </Link>
-          </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-foreground">Set your location</p>
+              <p className="text-xs text-muted-foreground">We'll tell you exactly what to plant in your zone this week.</p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-secondary" />
+          </Link>
         ) : (
           <>
-            {/* Segmented control */}
-            <div className="mt-3 flex p-1 rounded-2xl bg-muted/60 border border-border">
-              <button
-                onClick={() => setView("week")}
-                className={`flex-1 rounded-xl text-sm py-2 font-semibold transition-all ${
-                  view === "week" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                This Week
-              </button>
-              <button
-                onClick={() => setView("browse")}
-                className={`flex-1 rounded-xl text-sm py-2 font-semibold transition-all ${
-                  view === "browse" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Browse
-              </button>
-            </div>
-
-            {view === "week" ? (
-              <ThisWeekCarousel
-                plants={plantsForToday}
-                onAdd={addPlant}
-                disabled={atLimit}
-                isPremium={isPremium}
-                remaining={remaining}
-                limit={FREE_WEEKLY_ADD_LIMIT}
-              />
+            {hero ? (
+              <HeroPick plant={hero} currentWeek={currentWeek} added={addedIds.has(hero.id)} loading={loadingId === hero.id} onAdd={addPlant} onOpen={() => setOpenPlant(hero)} />
             ) : (
-              <BrowsePanel
-                plants={allPlants}
-                categories={browseCategories}
-                excludeIds={userPlantIds}
-                onAdd={addPlant}
-                disabled={atLimit}
-                isPremium={isPremium}
-              />
+              <EmptyHero nextUp={comingUp[0]} />
             )}
+            <AlsoGoodRow plants={others} addedIds={addedIds} loadingId={loadingId} onAdd={addPlant} onOpen={setOpenPlant} />
+            <ComingUp items={comingUp} isPremium={isPremium} />
           </>
         )}
-      </div>
-    </div>
-  );
-}
 
-function StatSegment({ label, value, icon, divider }) {
-  return (
-    <div className={`p-2.5 md:p-3 flex items-center gap-2 ${divider ? "border-l border-border" : ""}`}>
-      <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-primary flex-shrink-0">
-        {icon}
+        <ProTools isPremium={isPremium} />
       </div>
-      <div className="min-w-0">
-        <p className="text-lg font-bold text-foreground leading-none">{value}</p>
-        <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
-      </div>
+
+      {openPlant && (
+        <PlantDetailView
+          plant={openPlant}
+          userZone={zone}
+          open={!!openPlant}
+          onOpenChange={(o) => !o && setOpenPlant(null)}
+          onAddPlant={addPlant}
+          isAdded={addedIds.has(openPlant.id)}
+          userPlantData={userPlants.find((p) => p.plant_id === openPlant.id)}
+          isPremium={isPremium}
+        />
+      )}
     </div>
   );
 }
