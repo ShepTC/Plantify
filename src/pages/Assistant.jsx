@@ -27,7 +27,6 @@ import MiniPlantCard from '../components/assistant/MiniPlantCard';
 import AssistantMessageContent from '../components/assistant/AssistantMessageContent';
 import PlantDetailView from '../components/library/PlantDetailView';
 import LoginPrompt from '../components/auth/LoginPrompt';
-import ProLocked from '@/components/premium/ProLocked';
 import {
   Sheet,
   SheetContent,
@@ -571,9 +570,6 @@ export default function Assistant() {
 
 
   if (!user) return <LoginPrompt />;
-  if (!user.is_premium) {
-    return <ProLocked title="Garden AI is a Pro tool" description="Ask anything about your plants, get step-by-step help and diagnose problems from a photo." />;
-  }
 
   const handleInputResize = (ref) => {
     if (!ref.current) return;

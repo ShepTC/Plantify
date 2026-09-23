@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -22,8 +23,8 @@ const premiumPerks = [
   },
   {
     icon: Zap,
-    title: "Reminders & Season Plan",
-    description: "Never miss a transplant or harvest day again.",
+    title: "Unlimited Everything",
+    description: "Full access with no limits on scans or questions.",
   },
 ];
 

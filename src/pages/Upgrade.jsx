@@ -6,9 +6,8 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
 const premiumPerks = [
-  { name: "Planting Reminders", description: "One tap on any plant and we'll remind you when to harden off, transplant, sow or harvest.", icon: Bell },
-  { name: "Full Season Plan", description: "See everything coming up in your zone for the weeks ahead, not just the next crop.", icon: Sprout },
-  { name: "Google Calendar Sync", description: "Send your whole garden schedule to Google Calendar automatically.", icon: Zap },
+  { name: "Unlimited Plants", description: "Add as many plants as you like every week — no weekly limits.", icon: Sprout },
+  { name: "Reminders & Calendar Sync", description: "Automatic hardening-off reminders and one-tap Google Calendar sync.", icon: Bell },
   { name: "AI Garden Helper", description: "Personalized advice and step-by-step guidance for any plant problem.", icon: Bot },
   { name: "Plant Health Scanner", description: "Identify pests, diseases, and nutrient deficiencies from a single photo.", icon: ShieldCheck },
   { name: "Unlimited Plant ID", description: "Discover the name and care details of any plant you find.", icon: Camera },
@@ -63,7 +62,7 @@ export default function UpgradePage() {
               Supercharge Your Garden
             </h2>
             <p className="text-lg text-muted-foreground mt-2">
-              Knowing what to plant is always free. Pro makes sure you never miss the moment.
+              Unlock unlimited plants, reminders, and AI-powered tools.
             </p>
           </motion.div>
 

@@ -36,19 +36,11 @@ import PremiumMenu from "./components/premium/PremiumMenu";
 import MobilePremiumUpsell from './components/premium/MobilePremiumUpsell';
 
 const navigationItems = [
-{ title: "Today", url: createPageUrl("Dashboard"), icon: Sun },
-{ title: "Garden", url: createPageUrl("MyGarden"), icon: Sprout },
-{ title: "Library", url: createPageUrl("PlantLibrary"), icon: BookOpen }];
-
-const pageTitles = {
-  Dashboard: "Today",
-  MyGarden: "Garden",
-  PlantLibrary: "Library",
-  Calendar: "Calendar",
-  Profile: "Settings",
-  HealthScanner: "Health Scanner",
-  RequestPlant: "Request a Plant"
-};
+{ title: "Home", url: createPageUrl("Dashboard"), icon: Home },
+{ title: "My Garden", url: createPageUrl("MyGarden"), icon: Sprout },
+{ title: "Plant Library", url: createPageUrl("PlantLibrary"), icon: BookOpen },
+{ title: "Calendar", url: createPageUrl("Calendar"), icon: Calendar },
+{ title: "Profile", url: createPageUrl("Profile"), icon: Settings }];
 
 
 export default function Layout({ children, currentPageName }) {
@@ -465,6 +457,24 @@ export default function Layout({ children, currentPageName }) {
 
             }
 
+            <SidebarGroup className="mt-6">
+              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
+                This Week
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="px-3 py-2 space-y-3">
+                  <div className="bg-muted rounded-lg p-3">
+                    <div className="flex items-center gap-2 text-sm mb-1">
+                      <Sun className="w-4 h-4 text-secondary" />
+                      <span className="font-medium text-foreground">Week {currentWeek}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Check your dashboard for planting recommendations
+                    </p>
+                  </div>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
           </SidebarContent>
 
           <SidebarFooter className="border-t border-border p-4 bg-muted/50">
@@ -484,12 +494,6 @@ export default function Layout({ children, currentPageName }) {
                   "Location not set"}
                 </p>
               </div>
-              <Link
-                to={createPageUrl("Profile")}
-                aria-label="Settings"
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${location.pathname === createPageUrl("Profile") ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-primary"}`}>
-                <Settings className="w-5 h-5" />
-              </Link>
             </div>
           </SidebarFooter>
         </Sidebar>
@@ -506,10 +510,8 @@ export default function Layout({ children, currentPageName }) {
                   className="w-9 h-9 object-contain" />
 
                 </div>
-                <h1 className="text-xl font-bold">{pageTitles[currentPageName] || currentPageName}</h1>
+                <h1 className="text-xl font-bold">{currentPageName}</h1>
               </div>
-
-              <div className="flex items-center gap-2">
 
               {/* Premium Badge / Upgrade Button - Mobile */}
               {user && (
@@ -536,13 +538,6 @@ export default function Layout({ children, currentPageName }) {
                                                     </Link>)
 
             }
-              <Link
-                to={createPageUrl("Profile")}
-                aria-label="Settings"
-                className={`w-9 h-9 rounded-full flex items-center justify-center border border-border transition-colors ${location.pathname === createPageUrl("Profile") ? "bg-primary text-primary-foreground" : "bg-card/60 text-muted-foreground hover:text-primary"}`}>
-                <Settings className="w-4 h-4" />
-              </Link>
-              </div>
             </header>
           }
 

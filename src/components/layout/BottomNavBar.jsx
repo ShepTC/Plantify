@@ -3,24 +3,23 @@ import { Link } from 'react-router-dom';
 
 export default function BottomNavBar({ navigationItems, location }) {
   return (
-    <nav className="bottom-nav-bar fixed bottom-0 left-0 right-0 z-50 block md:hidden px-4 pb-3 pt-2">
-      <div className="mx-auto flex max-w-sm items-center gap-1 rounded-[26px] border border-border/60 bg-card/75 p-1.5 shadow-xl shadow-black/5 [backdrop-filter:blur(18px)_saturate(180%)]">
+    <nav className="bottom-nav-bar bg-transparent my-2 p-2 block md:hidden fixed bottom-0 left-0 right-0 z-50">
+      <div className="bg-white/70 dark:bg-black/60 [backdrop-filter:blur(16px)_saturate(180%)] border border-white/50 dark:border-white/15 rounded-2xl shadow-lg flex justify-around items-center h-16 max-w-md mx-auto">
         {navigationItems.map((item) => {
           const isActive = location.pathname === item.url;
           return (
             <Link
               key={item.title}
               to={item.url}
-              className={`flex h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px] text-[10px] font-semibold transition-all duration-200 ${
-                isActive ? 'bg-primary/12 text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {React.createElement(item.icon, { className: 'w-5 h-5' })}
-              {item.title}
-            </Link>
-          );
+              className={`flex items-center justify-center w-full h-full rounded-lg transition-colors duration-200 ${
+              isActive ? 'text-primary' : 'text-gray-600 dark:text-white hover:text-primary'}`
+              }>
+
+              {React.createElement(item.icon, { className: "w-7 h-7" })}
+            </Link>);
+
         })}
       </div>
-    </nav>
-  );
+    </nav>);
+
 }

@@ -29,18 +29,13 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
-import GardenHeader from "../components/garden/GardenHeader";
-import { Reminder } from "@/entities/Reminder";
-import { useNavigate } from "react-router-dom";
-import { getReminderTarget } from "@/utils/reminderTarget";
+import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
 import PixelGarden from "../components/garden/PixelGarden";
 import PlantDetailBody from "../components/library/PlantDetailBody";
 
 export default function MyGarden() {
   const { toast } = useToast();
-  const navigate = useNavigate();
-  const [showPixel, setShowPixel] = useState(() => localStorage.getItem('garden-pixel-view') === '1');
   const [myPlants, setMyPlants] = useState([]);
   const [plantDataMap, setPlantDataMap] = useState({}); // To store full plant data
   const [isLoading, setIsLoading] = useState(true);
@@ -155,27 +150,6 @@ export default function MyGarden() {
     }
   };
 
-  const togglePixel = () => {
-    setShowPixel((v) => {
-      localStorage.setItem('garden-pixel-view', v ? '0' : '1');
-      return !v;
-    });
-  };
-
-  // Pro: create a Reminder for this plant's next milestone. Free: go to Upgrade.
-  const handleRemind = async (userPlant) => {
-    if (!user?.is_premium) {
-      navigate(createPageUrl("Upgrade"));
-      return;
-    }
-    const target = getReminderTarget(userPlant, plantDataMap[userPlant.plant_id], user?.growing_zone);
-    if (!target) return;
-    await Reminder.create({ title: target.title, description: target.description, due_date: target.date, type: 'general' });
-    await UserPlant.update(userPlant.id, { reminder_date: target.date });
-    setMyPlants((prev) => prev.map((p) => p.id === userPlant.id ? { ...p, reminder_date: target.date } : p));
-    toast({ title: "Reminder set", description: `${target.title} on ${format(new Date(target.date + "T00:00:00"), "MMM d")}.` });
-  };
-
   const handleDeleteRequest = (plantId) => {
     setPlantToDelete(plantId);
   };
@@ -244,10 +218,14 @@ export default function MyGarden() {
   }
 
   return (
-    <div className="relative min-h-screen bg-background px-4 pt-5 pb-28 md:px-6 md:pt-8 md:pb-10">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-60 bg-gradient-to-b from-primary/10 via-secondary/5 to-transparent" />
-      <div className="relative max-w-4xl mx-auto space-y-6">
-        <GardenHeader plants={myPlants} showPixel={showPixel} onTogglePixel={togglePixel} />
+    <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+        <div className="text-center space-y-3 md:space-y-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">My Garden</h1>
+            <p className="text-lg md:text-xl text-secondary font-medium">
+              Track and manage all the plants you're growing
+            </p>
+        </div>
 
         {myPlants.length === 0 ?
         <Card className="text-center py-16 md:py-20 bg-card border-border">
@@ -255,7 +233,7 @@ export default function MyGarden() {
               <Leaf className="w-12 h-12 md:w-16 md:h-16 mx-auto text-muted-foreground mb-4" />
               <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-2">Your garden is empty!</h2>
               <p className="text-muted-foreground mb-6 text-sm md:text-base">
-                Open Today to see what you can plant this week, or browse the Library.
+                Add some plants from the library to get started.
               </p>
               <Link
                 to={createPageUrl("PlantLibrary")}
@@ -271,8 +249,10 @@ export default function MyGarden() {
           </Card> :
 
         <div className="space-y-6">
-            {/* Pixel Garden Visual — opt-in fun view */}
-            {showPixel &&
+            {/* Stats Overview */}
+            <GardenStats plants={myPlants} />
+
+            {/* Pixel Garden Visual */}
             <div
             className="relative overflow-hidden rounded-2xl"
             style={{
@@ -298,7 +278,6 @@ export default function MyGarden() {
               <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background via-background/60 to-transparent" />
               <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background via-background/60 to-transparent" />
             </div>
-            }
 
             {selectedPlant &&
           <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
@@ -325,9 +304,7 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone}
-            isPremium={!!user?.is_premium}
-            onRemind={handleRemind} />
+            userZone={user?.growing_zone} />
 
 
             {/* Planned Plants */}
@@ -341,9 +318,7 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone}
-            isPremium={!!user?.is_premium}
-            onRemind={handleRemind} />
+            userZone={user?.growing_zone} />
 
 
             {/* Harvested Plants */}
@@ -357,9 +332,7 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone}
-            isPremium={!!user?.is_premium}
-            onRemind={handleRemind} />
+            userZone={user?.growing_zone} />
 
           </div>
         }

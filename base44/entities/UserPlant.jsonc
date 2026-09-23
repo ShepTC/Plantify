@@ -46,11 +46,6 @@
     "google_event_id": {
       "type": "string",
       "description": "Google Calendar event ID for syncing"
-    },
-    "reminder_date": {
-      "type": "string",
-      "format": "date",
-      "description": "Date of the Pro reminder the user set for this plant's next milestone"
     }
   },
   "required": [
