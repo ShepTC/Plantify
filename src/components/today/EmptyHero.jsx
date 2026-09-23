@@ -11,7 +11,7 @@ export default function EmptyHero({ nextUp }) {
         <div className="mx-auto w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
           <Leaf className="w-6 h-6 text-primary" />
         </div>
-        <h2 className="mt-3 text-lg font-bold text-foreground">Nothing to plant outdoors this week</h2>
+        <h2 className="mt-3 text-lg font-bold text-foreground">Nothing to plant this week</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {nextUp
             ? <>Next up: <span className="font-semibold text-primary">{nextUp.name}</span> in {nextUp.weeksAway} week{nextUp.weeksAway !== 1 ? "s" : ""}.</>

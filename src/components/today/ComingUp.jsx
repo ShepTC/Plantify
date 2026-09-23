@@ -8,7 +8,7 @@ function Row({ item, blurred }) {
   return (
     <div className={`flex items-center gap-3 py-2.5 ${blurred ? "blur-[3px] select-none" : ""}`}>
       <div className="w-11 flex-shrink-0 rounded-xl border border-border bg-background/60 py-1 text-center">
-        <p className="text-[9px] font-bold uppercase tracking-wider text-secondary">{format(item.startDate, "MMM")}</p>
+        <p className="text-[9px] font-bold uppercase tracking-wider text-primary">{format(item.startDate, "MMM")}</p>
         <p className="text-base font-bold leading-none text-foreground">{format(item.startDate, "d")}</p>
       </div>
       <div className="min-w-0 flex-1">

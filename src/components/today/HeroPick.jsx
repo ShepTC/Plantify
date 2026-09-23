@@ -32,7 +32,7 @@ export default function HeroPick({ plant, currentWeek, added, loading, onAdd, on
       <div className="p-4 md:p-6 flex flex-col">
         <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary">
           <MethodIcon className="w-3.5 h-3.5" />
-          {plant.methodLabel} outdoors · {plant.season}
+          {plant.plantingMethod === "indoor" ? "Start seeds indoors" : `${plant.methodLabel} outdoors`} · {plant.season}
         </div>
         <h2 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-tight">{plant.name}</h2>
         {plant.botanical_name && <p className="text-xs italic text-muted-foreground">{plant.botanical_name}</p>}

@@ -28,9 +28,24 @@ export const isWeekInWindow = (currentWeek, startWeek, endWeek) => {
   return currentWeek >= startWeek || currentWeek <= endWeek;
 };
 
-// All outdoor windows for a plant in a zone.
+// "Jul 8-Aug 12" → { start, end } week numbers (null when unparseable).
+const rangeToWeeks = (range) => {
+  const [a, b] = String(range).split('-').map((s) => s.trim());
+  if (!a || !b) return null;
+  const year = new Date().getFullYear();
+  const endStr = /^\d+$/.test(b) ? `${a.split(' ')[0]} ${b}` : b;
+  const d1 = new Date(`${a} ${year}`);
+  const d2 = new Date(`${endStr} ${year}`);
+  if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return null;
+  return { start: getCurrentWeek(d1), end: getCurrentWeek(d2) };
+};
+
+// All planting windows (indoor seed start + outdoor sow/transplant) for a plant in a zone.
 const getWindows = (plant, userZone) => {
   const out = [];
+  const si = findZone(plant.start_seeds_indoor, userZone);
+  const siWeeks = si?.date_range ? rangeToWeeks(si.date_range) : null;
+  if (siWeeks) out.push({ method: 'indoor', methodLabel: 'Start Indoors', season: siWeeks.start < 27 ? 'Spring' : 'Fall', ...siWeeks });
   const ds = findZone(plant.direct_sow_zones, userZone);
   const tx = findZone(plant.transplant_outdoor_zones, userZone);
   const push = (z, method, methodLabel) => {
@@ -73,7 +88,7 @@ export const computePlantableToday = (allPlants, userZone, currentWeek, excludeI
       if (plantsForToday.some((p) => p.id === plant.id && p.plantingMethod === w.method)) return;
       const p = { ...plant, plantingMethod: w.method, methodLabel: w.methodLabel, season: w.season, windowEndWeek: w.end };
       plantsForToday.push(p);
-      if (byCategory[w.method].length < 6) byCategory[w.method].push(p);
+      if (byCategory[w.method] && byCategory[w.method].length < 6) byCategory[w.method].push(p);
       if (byCategory[plant.category] && byCategory[plant.category].length < 6) byCategory[plant.category].push(p);
     });
   });
@@ -81,8 +96,8 @@ export const computePlantableToday = (allPlants, userZone, currentWeek, excludeI
   return { plantsForToday, plantsByCategory: byCategory };
 };
 
-// Plants whose next outdoor window opens within `horizon` weeks, soonest first.
-export const computeComingUp = (allPlants, userZone, currentWeek, horizon = 8) => {
+// Plants whose next window opens within `horizon` weeks, soonest first.
+export const computeComingUp = (allPlants, userZone, currentWeek, horizon = 51) => {
   const items = [];
   allPlants.forEach((plant) => {
     if (isPlantableToday(plant, userZone, currentWeek)) return;

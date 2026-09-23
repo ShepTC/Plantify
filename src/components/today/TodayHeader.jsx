@@ -10,12 +10,12 @@ export default function TodayHeader({ user, currentWeek }) {
   const zone = user?.growing_zone;
 
   return (
-    <header className="flex items-end justify-between gap-3">
+    <header className="flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
           {format(new Date(), "EEEE · MMM d")}
         </p>
-        <h1 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight text-foreground truncate">
+        <h1 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-tight">
           {greet}, {first}
         </h1>
       </div>
