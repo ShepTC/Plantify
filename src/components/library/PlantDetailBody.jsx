@@ -2,10 +2,12 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  X, Sprout, Sun, Droplets, Ruler, Plus, CheckCircle, Flower, Leaf, Clock, Thermometer
+  X, Sprout, Sun, Droplets, Ruler, Plus, CheckCircle, Flower, Leaf, Clock, Thermometer, Lock
 } from 'lucide-react';
 import { findZone } from "@/utils/zoneUtils";
 import { motion } from 'framer-motion';
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/components/utils";
 import HardeningOffTimeline from "./HardeningOffTimeline";
 
 const categoryColors = {
@@ -35,6 +37,8 @@ export default function PlantDetailBody({
   onAddPlant,
   isAdded,
   userPlantData,
+  canAdd = true,
+  isPremium = false,
   animated = true
 }) {
   if (!plant) return null;
@@ -231,25 +235,24 @@ export default function PlantDetailBody({
 
       {/* Footer Action */}
       <div className="p-2.5 border-t border-border flex-shrink-0 bg-card">
-        <Button
-          size="sm"
-          className="w-full text-xs"
-          onClick={handleAddClick}
-          disabled={isAdded}
-          variant={isAdded ? "secondary" : "default"}
-        >
-          {isAdded ? (
-            <>
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Added to Your Garden
-            </>
-          ) : (
-            <>
-              <Plus className="w-4 h-4 mr-2" />
-              Add to My Garden
-            </>
-          )}
-        </Button>
+        {isAdded ? (
+          <Button size="sm" className="w-full text-xs" disabled variant="secondary">
+            <CheckCircle className="w-4 h-4 mr-2" />
+            Added to Your Garden
+          </Button>
+        ) : !canAdd && !isPremium ? (
+          <Link to={createPageUrl("Upgrade")} className="block">
+            <Button size="sm" variant="outline" className="w-full text-xs">
+              <Lock className="w-4 h-4 mr-2" />
+              Upgrade to Add
+            </Button>
+          </Link>
+        ) : (
+          <Button size="sm" className="w-full text-xs" onClick={handleAddClick} variant="default">
+            <Plus className="w-4 h-4 mr-2" />
+            Add to My Garden
+          </Button>
+        )}
       </div>
     </>
   );

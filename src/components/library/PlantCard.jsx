@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sprout, Flower, Droplets, Sun, Plus, CheckCircle, Calendar, Leaf, Apple } from "lucide-react";
+import { Sprout, Flower, Droplets, Sun, Plus, CheckCircle, Calendar, Leaf, Apple, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 
@@ -30,7 +30,7 @@ const categoryBadgeColors = {
   herbs: "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900/50 dark:text-teal-300 dark:border-teal-700"
 };
 
-export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClick, isPremium }) {
+export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClick, isPremium, canAdd = true }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -168,25 +168,38 @@ export default function PlantCard({ plant, onAddPlant, isAdded, userZone, onClic
                 </Button>
               </Link>
             )}
-            <Button
-              size="sm"
-              className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4"
-              onClick={handleAddClick}
-              disabled={isAdded}
-              variant={isAdded ? "secondary" : "default"}>
-
-              {isAdded ?
-              <>
-                  <CheckCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-1" />
-                  <span className="hidden xs:inline sm:inline">Added</span>
-                  <span className="xs:hidden sm:hidden">✓</span>
-                </> :
-
-              <>
-                  <Plus className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
-                </>
-              }
-            </Button>
+            {isAdded ? (
+              <Button
+                size="sm"
+                className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4"
+                disabled
+                variant="secondary">
+                <CheckCircle className="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-1" />
+                <span className="hidden xs:inline sm:inline">Added</span>
+                <span className="xs:hidden sm:hidden">✓</span>
+              </Button>
+            ) : !canAdd && !isPremium ? (
+              <Link
+                to={createPageUrl("Upgrade")}
+                className="w-full"
+                onClick={(e) => e.stopPropagation()}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4">
+                  <Lock className="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-1" />
+                  Go Pro
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                size="sm"
+                className="w-full text-[10px] sm:text-sm h-6 sm:h-9 px-2 sm:px-4"
+                onClick={handleAddClick}
+                variant="default">
+                <Plus className="w-2.5 h-2.5 sm:w-4 sm:h-4" />
+              </Button>
+            )}
           </div>
         </CardFooter>
       </Card>

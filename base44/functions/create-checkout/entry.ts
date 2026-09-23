@@ -86,9 +86,16 @@ Deno.serve(async (req: Request) => {
     //   const product = (await base44.asServiceRole.entities.Product.filter({ id: productId }))[0];
     //   if (!product) return new Response(JSON.stringify({ error: "Unknown product" }), { status: 400 });
     //   const productName = product.name; const price = String(product.price); const currency = product.currency ?? "USD";
-    const productName = "Purchase"; // TODO: from your trusted product source
-    const price = "0.00";           // TODO: authoritative per-unit price (major units), resolved server-side
-    const currency = "USD";
+    const PLANS = {
+      "plantify-pro": { name: "Plantify Pro", price: "4.99", currency: "USD" },
+    };
+    const plan = PLANS[productId];
+    if (!plan) {
+      return new Response(JSON.stringify({ error: "Unknown product" }), { status: 400 });
+    }
+    const productName = plan.name;
+    const price = plan.price;
+    const currency = plan.currency;
     // For a SUBSCRIPTION set this to Wix's subscriptionInfo; leave null for a one-time payment.
     const subscriptionInfo = null;
     // Where Wix returns the buyer. Both MUST be real, PUBLICLY reachable routes in this app: the

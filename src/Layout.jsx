@@ -36,8 +36,7 @@ import PremiumMenu from "./components/premium/PremiumMenu";
 import MobilePremiumUpsell from './components/premium/MobilePremiumUpsell';
 
 const navigationItems = [
-{ title: "Dashboard", url: createPageUrl("Dashboard"), icon: Home },
-{ title: "Plant Today", url: createPageUrl("PlantingAlerts"), icon: Clock },
+{ title: "Home", url: createPageUrl("Dashboard"), icon: Home },
 { title: "My Garden", url: createPageUrl("MyGarden"), icon: Sprout },
 { title: "Plant Library", url: createPageUrl("PlantLibrary"), icon: BookOpen },
 { title: "Calendar", url: createPageUrl("Calendar"), icon: Calendar },

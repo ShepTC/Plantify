@@ -24,7 +24,8 @@ import {
   X,
   Cloud,
   ListChecks,
-  TrendingUp
+  TrendingUp,
+  Lock
 } from
 "lucide-react";
 import {
@@ -59,6 +60,8 @@ import {
 "@/components/ui/dialog";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import { findZone } from "@/utils/zoneUtils";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/components/utils";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { syncGoogleCalendar } from "@/functions/syncGoogleCalendar";
 import { useToast } from "@/components/ui/use-toast";
@@ -537,6 +540,15 @@ export default function CalendarPage() {
   };
 
   const handleSyncGoogleCalendar = async (silent = false) => {
+    if (!user?.is_premium) {
+      if (!silent) {
+        toast({
+          title: "Calendar sync is a Pro feature",
+          description: "Upgrade to Plantify Pro to sync your planting calendar to Google Calendar.",
+        });
+      }
+      return;
+    }
     setIsSyncing(true);
     try {
       const response = await syncGoogleCalendar({ action: 'sync' });
@@ -742,14 +754,23 @@ export default function CalendarPage() {
           className="flex-shrink-0">
           <ChevronRight className="w-4 h-4" />
         </Button>
-        {!justSynced && (
+        {!user?.is_premium ? (
+          <Link to={createPageUrl("Upgrade")} className="ml-auto md:ml-2 flex-shrink-0">
+            <Button
+              variant="outline"
+              className="border-2 border-primary/40 hover:border-primary transition-all">
+              <Lock className="w-4 h-4 mr-2 text-primary" />
+              <span>Sync &middot; Pro</span>
+            </Button>
+          </Link>
+        ) : !justSynced && (
           <Button
             variant="outline"
             onClick={handleSyncGoogleCalendar}
             disabled={isSyncing}
             className="ml-auto md:ml-2 flex-shrink-0 relative overflow-hidden group border-2 hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-red-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <img 
+            <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68941e9da4c1421699b441d7/fe6c37c78_google-logo-g-suite-google-9820d64d83b313b7a901dcc7f6052ee6.png"
               alt="Google"
               className={`w-4 h-4 mr-2 relative z-10 ${isSyncing ? 'animate-pulse' : ''}`}
