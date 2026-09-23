@@ -480,13 +480,9 @@ export default function Profile() {
 
             {/* Garden Goals */}
             <div id="garden-goals-section" className="space-y-2 scroll-mt-24">
-              <Label className="text-xs text-muted-foreground">Garden Goals</Label>
-              <Textarea
-                id="garden_goals"
-                placeholder="What do you hope to achieve with your garden this year?"
-                value={formData.garden_goals}
-                onChange={(e) => handleInputChange('garden_goals', e.target.value)}
-                className="h-20 text-sm resize-none rounded-xl" />
+              <Label className="text-xs text-muted-foreground">Seasonal Garden Goals · Pro</Label>
+              <p className="text-sm text-muted-foreground">{formData.garden_goals || 'Set a small growing goal and review it through the season.'}</p>
+              <Button asChild variant="outline" size="sm"><Link to={user?.is_premium ? '/MyGarden' : '/Upgrade'}>{user?.is_premium ? 'Manage goals in Garden' : 'Explore Plantify Pro'}</Link></Button>
             </div>
           </CardContent>
         </Card>

@@ -1,0 +1,8 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Sparkles, Camera, MessageCircle, Lock } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+export default function GardenToolsMenu({ isPremium, compact = false }) {
+  const [open, setOpen] = useState(false);
+  return <Popover open={open} onOpenChange={setOpen}><PopoverTrigger asChild><button aria-label="Garden tools" className={compact ? 'p-2 rounded-xl hover:bg-muted text-primary' : 'flex w-full items-center gap-3 rounded-xl p-3 text-sm hover:bg-muted text-muted-foreground'}><Sparkles className="w-5 h-5 text-primary" />{!compact && <>Garden tools<span className="ml-auto text-[10px] font-bold text-primary">PRO</span></>}</button></PopoverTrigger><PopoverContent align="end" className="w-64 rounded-2xl bg-card p-3"><p className="text-xs font-semibold text-primary px-2 mb-2">A helping hand · Pro</p>{[{ name:'Ask the garden assistant', path:'/Assistant', icon:MessageCircle },{ name:'Identify or diagnose a plant', path:'/HealthScanner', icon:Camera }].map(item => <Link key={item.path} to={isPremium ? item.path : '/Upgrade'} onClick={() => setOpen(false)} className="flex items-center gap-2 p-3 rounded-xl text-xs hover:bg-muted"><item.icon className="w-4 h-4 shrink-0" /><span>{item.name}</span>{!isPremium && <Lock className="w-3 h-3 ml-auto" />}</Link>)}</PopoverContent></Popover>;
+}

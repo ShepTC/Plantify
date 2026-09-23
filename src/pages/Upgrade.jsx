@@ -6,12 +6,12 @@ import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
 const premiumPerks = [
-  { name: "Unlimited Plants", description: "Add as many plants as you like every week — no weekly limits.", icon: Sprout },
-  { name: "Reminders & Calendar Sync", description: "Automatic hardening-off reminders and one-tap Google Calendar sync.", icon: Bell },
+  { name: "Your Full Season", description: "Look beyond this week with a full year of zone-specific planting windows.", icon: Sprout },
+  { name: "Reminders & Calendar Sync", description: "Set personal in-app planting reminders and sync your garden with Google Calendar.", icon: Bell },
   { name: "AI Garden Helper", description: "Personalized advice and step-by-step guidance for any plant problem.", icon: Bot },
   { name: "Plant Health Scanner", description: "Identify pests, diseases, and nutrient deficiencies from a single photo.", icon: ShieldCheck },
   { name: "Unlimited Plant ID", description: "Discover the name and care details of any plant you find.", icon: Camera },
-  { name: "Priority Access", description: "All current and future Plantify Pro features.", icon: Zap },
+  { name: "Seasonal Goals", description: "Set a growing goal and schedule a reminder to review your progress.", icon: Zap },
 ];
 
 export default function UpgradePage() {
@@ -59,10 +59,10 @@ export default function UpgradePage() {
               <Sparkles className="w-12 h-12" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-              Supercharge Your Garden
+              Grow more. Remember less.
             </h2>
             <p className="text-lg text-muted-foreground mt-2">
-              Unlock unlimited plants, reminders, and AI-powered tools.
+              Planting advice, the library, and unlimited garden additions are free. Pro adds planning, reminders, and AI-powered help.
             </p>
           </motion.div>
 

@@ -33,9 +33,20 @@ import GardenStats from "../components/garden/GardenStats";
 import GardenSection from "../components/garden/GardenSection";
 import PixelGarden from "../components/garden/PixelGarden";
 import PlantDetailBody from "../components/library/PlantDetailBody";
+import { useQueryClient } from '@tanstack/react-query';
+import PlantReminderDialog from '@/components/garden/PlantReminderDialog';
+import GardenReminders from '@/components/garden/GardenReminders';
+import SeasonGoalPanel from '@/components/garden/SeasonGoalPanel';
+import ProFeatureDialog from '@/components/freemium/ProFeatureDialog';
 
 export default function MyGarden() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [showPixel, setShowPixel] = useState(false);
+  const [reminderPlant, setReminderPlant] = useState(null);
+  const [proFeature, setProFeature] = useState('');
+  const [saving, setSaving] = useState(false);
+  const handleRemind = plant => user?.is_premium ? setReminderPlant(plant) : setProFeature('Planting reminders');
   const [myPlants, setMyPlants] = useState([]);
   const [plantDataMap, setPlantDataMap] = useState({}); // To store full plant data
   const [isLoading, setIsLoading] = useState(true);
@@ -87,8 +98,8 @@ export default function MyGarden() {
       setUser(currentUser);
 
       const [userPlants, allPlants] = await Promise.all([
-      UserPlant.filter({ created_by: currentUser.email }),
-      Plant.list()]
+      UserPlant.filter({ created_by_id: currentUser.id }, '-created_date', 2000),
+      Plant.list('name', 2000)]
       );
 
       const plantMap = {};
@@ -104,49 +115,41 @@ export default function MyGarden() {
     }
   };
 
-  const updatePlantStatus = async (plantId, newStatus, plantingDate) => {
+  const updatePlantStatus = async (plantId, newStatus, plantingDate, action) => {
+    if (saving) return false;
+    setSaving(true);
     try {
-      const userPlant = myPlants.find((p) => p.id === plantId);
-      if (!userPlant) return;
-
-      let updatePayload = { status: newStatus };
-
+      const userPlant = myPlants.find(p => p.id === plantId);
+      if (!userPlant) return false;
+      const details = plantDataMap[userPlant.plant_id] || Object.values(plantDataMap).find(p => p.name?.toLowerCase() === userPlant.plant_name?.toLowerCase());
+      const date = plantingDate || new Date();
+      const dateText = format(date, 'yyyy-MM-dd');
+      const update = { status: newStatus };
       if (newStatus === 'planted') {
-        const plantDetails = plantDataMap[userPlant.plant_id];
-        const actualPlantingDate = plantingDate || new Date(); // Use provided date
-        updatePayload.actual_planting_date = format(actualPlantingDate, 'yyyy-MM-dd');
-
-        if (plantDetails && plantDetails.days_to_maturity) {
-          const estimatedHarvestDate = addDays(actualPlantingDate, plantDetails.days_to_maturity);
-          updatePayload.harvest_date = format(estimatedHarvestDate, 'yyyy-MM-dd');
-        }
-      } else if (newStatus === 'planned') {
-        // Clear dates if moved back to planned
-        updatePayload.actual_planting_date = null;
-        updatePayload.harvest_date = null;
+        update.actual_planting_date = userPlant.actual_planting_date || dateText;
+        if (action === 'seed_start') { update.seed_started_date = dateText; update.planting_method = 'seed_start'; }
+        if (action === 'transplant') { update.transplant_date = dateText; update.planting_method = 'transplant'; }
+        if (action === 'direct_sow') update.planting_method = 'direct_sow';
+        if (details?.days_to_maturity && action !== 'seed_start') update.harvest_date = format(addDays(date, details.days_to_maturity), 'yyyy-MM-dd');
       }
-
-      await UserPlant.update(plantId, updatePayload);
-
-      // Manually update local state to reflect all changes immediately
-      setMyPlants((prevPlants) =>
-      prevPlants.map((p) => p.id === plantId ? { ...p, ...updatePayload } : p)
-      );
-
-    } catch (error) {
-      console.error("Error updating plant status:", error);
-    }
+      if (newStatus === 'harvested') update.harvest_date = dateText;
+      if (newStatus === 'planned') Object.assign(update, { actual_planting_date: null, harvest_date: null, seed_started_date: null, transplant_date: null });
+      await UserPlant.update(plantId, update);
+      setMyPlants(prev => prev.map(p => p.id === plantId ? { ...p, ...update } : p));
+      queryClient.invalidateQueries({ queryKey: ['plant-collection'] });
+      toast({ title: 'Garden updated', description: `${userPlant.plant_name} is up to date.` });
+      return true;
+    } catch (error) { toast({ title: 'Could not save your change', description: error.message, variant: 'destructive' }); return false; }
+    finally { setSaving(false); }
   };
 
   const deletePlant = async (plantId) => {
     try {
       await UserPlant.delete(plantId);
+      setMyPlants(prev => prev.filter(p => p.id !== plantId));
+      queryClient.invalidateQueries({ queryKey: ['plant-collection'] });
     } catch (error) {
-      console.error("Error deleting plant:", error);
-      // Plant may already be deleted on server, continue to remove from UI
-    } finally {
-      // Always remove from local state to keep UI in sync
-      setMyPlants((prevPlants) => prevPlants.filter((p) => p.id !== plantId));
+      toast({ title: 'Could not remove the plant', description: error.message, variant: 'destructive' });
     }
   };
 
@@ -171,18 +174,10 @@ export default function MyGarden() {
     setIsPlantedDialogOpen(true);
   };
 
-  const handleConfirmPlantedDate = () => {
-    if (plantToUpdate && selectedPlantingDate) {
-      updatePlantStatus(plantToUpdate.id, 'planted', selectedPlantingDate);
-      if (pendingActionLabel === 'transplant') {
-        toast({ title: "Transplanted! 🌿", description: `${plantToUpdate.plant_name} has been added to your garden.` });
-      } else if (pendingActionLabel === 'seed_start') {
-        toast({ title: "Seeds started! 🌱", description: `${plantToUpdate.plant_name} has been added to your garden.` });
-      }
-    }
-    setIsPlantedDialogOpen(false);
-    setPlantToUpdate(null);
-    setPendingActionLabel(null);
+  const handleConfirmPlantedDate = async () => {
+    if (!plantToUpdate || !selectedPlantingDate) return;
+    const saved = await updatePlantStatus(plantToUpdate.id, 'planted', selectedPlantingDate, pendingActionLabel);
+    if (saved) { setIsPlantedDialogOpen(false); setPlantToUpdate(null); setPendingActionLabel(null); }
   };
 
   const handlePlantClick = (userPlant) => {
@@ -219,13 +214,8 @@ export default function MyGarden() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 pb-20 md:pb-6">
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
-        <div className="text-center space-y-3 md:space-y-4">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">My Garden</h1>
-            <p className="text-lg md:text-xl text-secondary font-medium">
-              Track and manage all the plants you're growing
-            </p>
-        </div>
+      <div className="max-w-5xl mx-auto space-y-5">
+        <header className="flex justify-between gap-3 items-center"><div><p className="text-xs font-semibold uppercase tracking-widest text-primary">One little step at a time</p><h1 className="text-3xl font-semibold tracking-tight mt-1">My garden</h1><p className="text-sm text-muted-foreground mt-2">{myPlants.filter(p => p.status === 'planted').length} growing · {myPlants.filter(p => p.status === 'planned').length} planned · {myPlants.filter(p => p.status === 'harvested').length} harvested</p></div><Button asChild variant="outline" size="sm" className="rounded-xl"><Link to="/PlantLibrary"><PlusCircle className="w-4 h-4" />Add plants</Link></Button></header>
 
         {myPlants.length === 0 ?
         <Card className="text-center py-16 md:py-20 bg-card border-border">
@@ -249,35 +239,7 @@ export default function MyGarden() {
           </Card> :
 
         <div className="space-y-6">
-            {/* Stats Overview */}
-            <GardenStats plants={myPlants} />
-
-            {/* Pixel Garden Visual */}
-            <div
-            className="relative overflow-hidden rounded-2xl"
-            style={{
-              background:
-              'linear-gradient(135deg,' +
-              'hsl(var(--background)) 0%,' +
-              'hsl(var(--primary) / 0.10) 18%,' +
-              'hsl(var(--secondary) / 0.12) 38%,' +
-              'hsl(var(--accent) / 0.10) 58%,' +
-              'hsl(var(--secondary) / 0.08) 78%,' +
-              'hsl(var(--background)) 100%)'
-            }}>
-            
-              <PixelGarden
-              userPlants={myPlants}
-              night={isNight}
-              plantDataMap={plantDataMap}
-              onOpenDetails={handlePlantClick} />
-            
-              {/* Edge fades blend the art into the page background */}
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background via-background/60 to-transparent" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background via-background/60 to-transparent" />
-            </div>
+            {/* Task cards are the default view; the playful garden is opt-in below. */}
 
             {selectedPlant &&
           <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
@@ -304,7 +266,9 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
+            userZone={user?.growing_zone}
+            onRemind={handleRemind}
+            isPremium={user?.is_premium} />
 
 
             {/* Planned Plants */}
@@ -318,7 +282,9 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
+            userZone={user?.growing_zone}
+            onRemind={handleRemind}
+            isPremium={user?.is_premium} />
 
 
             {/* Harvested Plants */}
@@ -332,22 +298,29 @@ export default function MyGarden() {
             onOpenPlantedDialog={handleOpenPlantedDialog}
             onDelete={handleDeleteRequest}
             onPlantClick={handlePlantClick}
-            userZone={user?.growing_zone} />
+            userZone={user?.growing_zone}
+            onRemind={handleRemind}
+            isPremium={user?.is_premium} />
 
           </div>
         }
+        <div className="grid sm:grid-cols-2 gap-4">{user.is_premium && <GardenReminders user={user} />}<SeasonGoalPanel user={user} onUpdate={setUser} onUpgrade={setProFeature} onRemind={handleRemind} /></div>
+        {myPlants.length > 0 && <section className="rounded-2xl border border-border overflow-hidden"><button className="w-full p-4 text-left text-sm font-medium hover:bg-muted/30" aria-expanded={showPixel} onClick={() => setShowPixel(!showPixel)}>{showPixel ? 'Hide' : 'Show'} pixel garden · a little fun view</button>{showPixel && <PixelGarden userPlants={myPlants} night={isNight} plantDataMap={plantDataMap} onOpenDetails={handlePlantClick} />}</section>}
       </div>
+      <ProFeatureDialog feature={proFeature} onClose={() => setProFeature('')} />
+      {reminderPlant && <PlantReminderDialog plant={reminderPlant} isPremium={user.is_premium} onClose={() => setReminderPlant(null)} onSaved={() => { queryClient.invalidateQueries({ queryKey: ['garden-reminders'] }); toast({ title: 'Reminder saved', description: 'Find it in your Garden and Calendar.' }); }} />}
 
       <Dialog open={isPlantedDialogOpen} onOpenChange={setIsPlantedDialogOpen}>
         <DialogContent className="bg-background p-6 rounded-2xl fixed left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-[calc(100%-2rem)] sm:max-w-[400px]">
           <DialogHeader>
-            <DialogTitle>Select Planting Date</DialogTitle>
+            <DialogTitle>{pendingActionLabel === 'transplant' ? 'When did you transplant?' : pendingActionLabel === 'seed_start' ? 'When did you start seeds?' : 'When did you plant?'}</DialogTitle>
           </DialogHeader>
           <div className="flex justify-center py-4">
             <Calendar
               mode="single"
               selected={selectedPlantingDate}
               onSelect={setSelectedPlantingDate}
+              disabled={{ after: new Date(), ...(pendingActionLabel === 'transplant' && plantToUpdate?.seed_started_date ? { before: new Date(plantToUpdate.seed_started_date + 'T00:00:00') } : {}) }}
               className="rounded-md border"
               initialFocus />
 
@@ -356,13 +329,13 @@ export default function MyGarden() {
             <Button variant="outline" onClick={() => setIsPlantedDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleConfirmPlantedDate} className="bg-primary text-primary-foreground my-1 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10">Confirm Date</Button>
+            <Button disabled={saving || !selectedPlantingDate} onClick={handleConfirmPlantedDate} className="bg-primary text-primary-foreground my-1 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 h-10">Confirm Date</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <AlertDialog open={!!plantToDelete} onOpenChange={(open) => {if (!open) setPlantToDelete(null);}}>
-        <AlertDialogContent className="bg-card border-border sm:rounded-[28px] rounded-[28px] sm:max-w-[400px] shadow-2xl gap-0 p-6 sm:p-7 w-[calc(100%-32px)]">
+        <AlertDialogContent className="pointer-events-auto bg-card border-border sm:rounded-[28px] rounded-[28px] sm:max-w-[400px] shadow-2xl gap-0 p-6 sm:p-7 w-[calc(100%-32px)]">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-destructive/10 flex items-center justify-center">
               <Trash2 className="w-5 h-5 text-destructive" />

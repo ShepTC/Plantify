@@ -33,14 +33,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import BottomNavBar from "./components/layout/BottomNavBar";
 import PremiumBadge from "./components/premium/PremiumBadge";
 import PremiumMenu from "./components/premium/PremiumMenu";
-import MobilePremiumUpsell from './components/premium/MobilePremiumUpsell';
+import GardenToolsMenu from '@/components/layout/GardenToolsMenu';
 
 const navigationItems = [
-{ title: "Home", url: createPageUrl("Dashboard"), icon: Home },
-{ title: "My Garden", url: createPageUrl("MyGarden"), icon: Sprout },
-{ title: "Plant Library", url: createPageUrl("PlantLibrary"), icon: BookOpen },
-{ title: "Calendar", url: createPageUrl("Calendar"), icon: Calendar },
-{ title: "Profile", url: createPageUrl("Profile"), icon: Settings }];
+  { title: 'Today', url: '/', icon: Home },
+  { title: 'Garden', url: '/MyGarden', icon: Sprout },
+  { title: 'Library', url: '/PlantLibrary', icon: BookOpen },
+];
 
 
 export default function Layout({ children, currentPageName }) {
@@ -118,23 +117,7 @@ export default function Layout({ children, currentPageName }) {
     };
   }, [loadUserAndTheme]);
 
-  // New useEffect for the upsell modal logic
-  useEffect(() => {
-    const checkUpsell = async () => {
-      if (user && !user.is_premium) {
-        const lastShown = localStorage.getItem('lastPremiumUpsellShown');
-        const threeDaysAgo = new Date().getTime() - (3 * 24 * 60 * 60 * 1000);
-        
-        if (!lastShown || parseInt(lastShown) < threeDaysAgo) {
-          setTimeout(() => {
-            setIsUpsellModalOpen(true);
-          }, 3000);
-        }
-      }
-    };
-
-    checkUpsell();
-  }, [user]);
+  // Pro invitations appear only at relevant actions, never during planting.
 
   const toggleTheme = async () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -414,67 +397,11 @@ export default function Layout({ children, currentPageName }) {
               </SidebarGroupContent>
             </SidebarGroup>
 
-            {/* Premium / Upgrade Card - Desktop */}
-            {user && (
-            user.is_premium ?
-            <Popover>
-                  <PopoverTrigger asChild>
-                    <div className="px-3 py-2 mt-4 cursor-pointer">
-                      <div className="bg-gradient-to-r from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-700 hover:border-primary transition-colors">
-                        <PremiumBadge size="large" className="justify-center mb-2" />
-                        <p className="text-center text-xs text-muted-foreground">
-                          You have access to Plantify Pro features
-                        </p>
-                      </div>
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent
-                  side="right"
-                  align="start" className="bg-card text-popover-foreground px-6 py-6 z-50 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 w-[380px] rounded-xl shadow-xl border border-border">
-
-
-                    <PremiumMenu />
-                  </PopoverContent>
-                </Popover> :
-
-            <Link to={createPageUrl("Upgrade")} className="block px-3 py-2 mt-4">
-                  <div className="cursor-pointer">
-                    <div className="bg-gradient-to-r from-muted/50 to-muted-foreground/10 rounded-lg p-4 border border-border hover:border-primary transition-colors">
-                      <div className="flex justify-center items-center gap-2 mb-2">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-                          <Sparkles className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="font-bold text-base bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-                          Go Plantify Pro
-                        </span>
-                      </div>
-                      <p className="text-center text-xs text-muted-foreground">
-                        Unlock AI tools for your garden!
-                      </p>
-                    </div>
-                  </div>
-                </Link>)
-
-            }
-
-            <SidebarGroup className="mt-6">
-              <SidebarGroupLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2">
-                This Week
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <div className="px-3 py-2 space-y-3">
-                  <div className="bg-muted rounded-lg p-3">
-                    <div className="flex items-center gap-2 text-sm mb-1">
-                      <Sun className="w-4 h-4 text-secondary" />
-                      <span className="font-medium text-foreground">Week {currentWeek}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Check your dashboard for planting recommendations
-                    </p>
-                  </div>
-                </div>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            <div className="mt-auto pt-8 space-y-2">
+              <GardenToolsMenu isPremium={user?.is_premium} />
+              <Link to="/Profile" aria-label="Profile and settings" className="flex items-center gap-3 rounded-xl p-3 text-sm hover:bg-muted text-muted-foreground"><Settings className="w-4 h-4" />Profile & settings</Link>
+              {!user?.is_premium && <Link to="/Upgrade" className="block rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 p-4"><p className="font-semibold text-sm">Grow with a little help.</p><p className="mt-1 text-xs text-muted-foreground">Reminders, season plans & AI advice.</p><p className="mt-3 text-xs font-semibold text-primary">Explore Plantify Pro →</p></Link>}
+            </div>
           </SidebarContent>
 
           <SidebarFooter className="border-t border-border p-4 bg-muted/50">
@@ -498,7 +425,7 @@ export default function Layout({ children, currentPageName }) {
           </SidebarFooter>
         </Sidebar>
 
-        <main className="flex-1 flex flex-col min-h-0">
+        <main className="flex-1 flex flex-col min-h-0 min-w-0">
           {/* Mobile Header - Hidden on Assistant page */}
           {currentPageName !== "Assistant" &&
                           <header className="bg-card/80 px-4 py-2 backdrop-blur-sm border-b border-border md:hidden flex items-center justify-between flex-shrink-0 z-50">
@@ -510,34 +437,10 @@ export default function Layout({ children, currentPageName }) {
                   className="w-9 h-9 object-contain" />
 
                 </div>
-                <h1 className="text-xl font-bold">{currentPageName}</h1>
+                <span className="text-base font-semibold">{({ Dashboard: 'Today', MyGarden: 'Garden', PlantLibrary: 'Library' })[currentPageName] || currentPageName}</span>
               </div>
 
-              {/* Premium Badge / Upgrade Button - Mobile */}
-              {user && (
-            user.is_premium ?
-            <Popover>
-                                    <PopoverTrigger asChild>
-                                      <button className="focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-100 via-pink-100 to-orange-100 dark:from-purple-950/50 dark:via-pink-950/50 dark:to-purple-950/50 px-3 py-1.5 border border-purple-200 dark:border-purple-800">
-                                                                  <PremiumBadge size="small" showText={false} />
-                                                                  <span className="text-xs font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 dark:from-purple-400 dark:via-pink-400 dark:to-orange-400 bg-clip-text text-transparent">Pro</span>
-                                                                </button>
-                                    </PopoverTrigger>
-                    <PopoverContent className="p-3 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 bg-card text-popover-foreground mr-4 px-4 py-4 z-50 outline-none w-[80vw] max-w-xs rounded-xl shadow-xl border border-border relative overflow-hidden">
-                      <PremiumMenu />
-                    </PopoverContent>
-                  </Popover> :
-
-            <Link to={createPageUrl("Upgrade")}>
-                                                      <button className="focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-full flex items-center gap-2 bg-gradient-to-r from-purple-200 via-pink-200 to-orange-200 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20 px-3 py-1.5 border border-purple-300 dark:border-purple-700">
-                                                        <div className="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 shadow-md rounded-full">
-                                                          <Sparkles className="w-3 h-3 text-white" />
-                                                        </div>
-                                                        <span className="text-xs font-medium bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Go Pro</span>
-                                                      </button>
-                                                    </Link>)
-
-            }
+              <div className="flex gap-1 items-center"><GardenToolsMenu isPremium={user?.is_premium} compact /><Link to="/Profile" aria-label="Profile and settings" className="p-2 rounded-xl hover:bg-muted"><Settings className="w-5 h-5" /></Link></div>
             </header>
           }
 
@@ -550,11 +453,7 @@ export default function Layout({ children, currentPageName }) {
         }
       </div>
 
-      {/* Premium Upsell Modal */}
-      <MobilePremiumUpsell
-        open={isUpsellModalOpen}
-        onOpenChange={setIsUpsellModalOpen}
-        onDismiss={handleDismissUpsell} />
+
 
     </SidebarProvider>);
 

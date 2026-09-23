@@ -13,6 +13,8 @@ export default function GardenSection({
   onDelete,
   onPlantClick,
   userZone,
+  onRemind,
+  isPremium,
 }) {
   if (plants.length === 0) return null;
 
@@ -24,17 +26,19 @@ export default function GardenSection({
         <span className="text-sm text-muted-foreground">({plants.length})</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="sync">
           {plants.map((plant) => (
             <PlantTaskCard
               key={plant.id}
               plant={plant}
-              plantDetails={plantDataMap[plant.plant_id]}
+              plantDetails={plantDataMap[plant.plant_id] || Object.values(plantDataMap).find(p => p.name?.toLowerCase() === plant.plant_name?.toLowerCase())}
               onStatusChange={onStatusChange}
               onOpenPlantedDialog={onOpenPlantedDialog}
               onDelete={onDelete}
               onClick={() => onPlantClick?.(plant)}
               userZone={userZone}
+              onRemind={onRemind}
+              isPremium={isPremium}
             />
           ))}
         </AnimatePresence>

@@ -46,6 +46,22 @@
     "google_event_id": {
       "type": "string",
       "description": "Google Calendar event ID for syncing"
+    },
+    "seed_started_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "transplant_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "planting_method": {
+      "type": "string",
+      "enum": [
+        "seed_start",
+        "direct_sow",
+        "transplant"
+      ]
     }
   },
   "required": [

@@ -1,5 +1,5 @@
-// Freemium planting limits for Pantify.
-// Free users can add a limited number of plants per week; premium is unlimited.
+// Core planting is free. Pro gates reminders, season planning and AI tools.
+// Legacy count exports remain for older screens; additions are unlimited.
 
 export const FREE_WEEKLY_ADD_LIMIT = 3;
 
@@ -19,13 +19,7 @@ export const countAddsThisWeek = (userPlants = []) => {
 };
 
 // Infinity for premium, otherwise the remaining free adds this week (floored at 0).
-export const getRemainingAdds = (user, userPlants = []) => {
-  if (user?.is_premium) return Infinity;
-  return Math.max(0, FREE_WEEKLY_ADD_LIMIT - countAddsThisWeek(userPlants));
-};
+export const getRemainingAdds = () => Infinity;
 
 // Whether the user may add another plant right now.
-export const canAddPlant = (user, userPlants = []) => {
-  if (user?.is_premium) return true;
-  return countAddsThisWeek(userPlants) < FREE_WEEKLY_ADD_LIMIT;
-};
+export const canAddPlant = (user) => !!user;

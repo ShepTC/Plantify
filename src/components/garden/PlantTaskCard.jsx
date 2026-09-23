@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Sprout, Wind, Sun, Leaf, Check, Trash2, Calendar } from "lucide-react";
+import { Sprout, Wind, Sun, Leaf, Check, Trash2, Calendar, Bell, Lock } from "lucide-react";
 import { getPlantingTask } from "@/utils/plantingTask";
 
 const accentStyles = {
@@ -60,6 +60,8 @@ export default function PlantTaskCard({
   onDelete,
   onClick,
   userZone,
+  onRemind,
+  isPremium,
 }) {
   const task = getPlantingTask(plant, plantDetails, userZone);
   if (!task) return null;
@@ -145,7 +147,7 @@ export default function PlantTaskCard({
           {task.action ? (
             <button
               onClick={handleAction}
-              className={`w-full h-9 rounded-xl text-sm font-semibold text-white transition-all ${accent.bar} hover:opacity-90 active:scale-[0.98]`}
+              className="w-full h-9 rounded-xl text-sm font-semibold bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
             >
               {task.actionLabel}
             </button>
@@ -155,6 +157,7 @@ export default function PlantTaskCard({
               Done
             </div>
           )}
+          {plant.status !== 'harvested' && onRemind && <button onClick={e => { e.stopPropagation(); onRemind(plant); }} className="mt-2 w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-primary rounded-lg py-2"><Bell className="w-3.5 h-3.5" />Remind me{!isPremium && <Lock className="w-3 h-3" />}</button>}
         </div>
       </div>
     </motion.div>

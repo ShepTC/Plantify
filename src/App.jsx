@@ -5,19 +5,22 @@ import { queryClientInstance } from '@/lib/query-client'
 import VisualEditAgent from '@/lib/VisualEditAgent'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import ProRouteGate from '@/components/freemium/ProRouteGate';
 import PageNotFound from './lib/PageNotFound';
 import ThankYou from './pages/ThankYou';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
 const { Pages, Layout, mainPage } = pagesConfig;
-const mainPageKey = mainPage ?? Object.keys(Pages)[0];
+const mainPageKey = 'Dashboard';
 const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 
-const LayoutWrapper = ({ children, currentPageName }) => Layout ?
-  <Layout currentPageName={currentPageName}>{children}</Layout>
-  : <>{children}</>;
+const LayoutWrapper = ({ children, currentPageName }) => {
+  const feature = { Assistant: 'AI garden assistant', HealthScanner: 'Plant identification & health scanner' }[currentPageName];
+  const content = feature ? <ProRouteGate feature={feature}>{children}</ProRouteGate> : children;
+  return Layout ? <Layout currentPageName={currentPageName}>{content}</Layout> : content;
+};
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated, navigateToLogin } = useAuth();
@@ -50,7 +53,9 @@ const AuthenticatedApp = () => {
           <MainPage />
         </LayoutWrapper>
       } />
-      {Object.entries(Pages).map(([path, Page]) => (
+      <Route path="/Dashboard" element={<Navigate to="/" replace />} />
+      <Route path="/Home" element={<Navigate to="/" replace />} />
+      {Object.entries(Pages).filter(([path]) => !['Dashboard', 'Home'].includes(path)).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}

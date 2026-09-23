@@ -1,11 +1,13 @@
 import React from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import PlantDetailBody from "./PlantDetailBody";
 
-export default function PlantDetailView({ plant, userZone, open, onOpenChange, onAddPlant, isAdded, userPlantData, canAdd = true, isPremium = false }) {
+export default function PlantDetailView({ plant, userZone, open, onOpenChange, onAddPlant, isAdded, userPlantData, canAdd = true, isPremium = false, actionError = '' }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 max-w-md w-[95vw] max-h-[85vh] flex flex-col bg-card border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-2xl overflow-hidden">
+        <DialogTitle className="sr-only">{plant?.name || 'Plant details'}</DialogTitle>
+        <DialogDescription className="sr-only">Growing information and planting windows for your zone.</DialogDescription>
         <PlantDetailBody
           plant={plant}
           userZone={userZone}
@@ -14,6 +16,7 @@ export default function PlantDetailView({ plant, userZone, open, onOpenChange, o
           isAdded={isAdded}
           userPlantData={userPlantData}
           canAdd={canAdd}
+          actionError={actionError}
           isPremium={isPremium}
           animated
         />

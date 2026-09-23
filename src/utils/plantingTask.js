@@ -1,135 +1,21 @@
-import { getHardeningOffWindow, getStartSeedsIndoorStr } from './hardeningOff';
-import { differenceInDays, format } from 'date-fns';
+import { differenceInDays, format, parseISO, startOfDay } from 'date-fns';
+import { plantWindows, methodLabels, windowLabel } from '@/utils/plantingSchedule';
 
-/**
- * Compute the current planting "task" for a UserPlant.
- *
- * Returns an object describing what the user should do next, the relevant
- * date/countdown, and the action that marks the milestone complete.
- *
- *   label       — short task title (e.g. "Start Seeds Indoors")
- *   accent      — color key for the card (purple|blue|primary|emerald|green|amber)
- *   dateLabel   — prominent date/countdown string, or null
- *   reason      — secondary context line, or null
- *   action      — 'seed_start' | 'transplant' | 'harvest' | null
- *   actionLabel — button text for the action, or null
- */
 export const getPlantingTask = (userPlant, plantDetails, userZone) => {
-  if (!userPlant || !plantDetails) return null;
-
-  const status = userPlant.status;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // ── Harvested ──
-  if (status === 'harvested') {
-    return {
-      label: 'Harvested',
-      accent: 'amber',
-      dateLabel: userPlant.harvest_date ? format(new Date(userPlant.harvest_date), 'MMM d') : null,
-      reason: null,
-      action: null,
-      actionLabel: null,
-    };
+  if (!userPlant) return null;
+  const today = startOfDay(new Date());
+  const windows = plantDetails ? plantWindows(plantDetails, userZone).filter(w => w.end >= today) : [];
+  if (userPlant.status === 'harvested') return { label: 'Harvested', accent: 'amber', dateLabel: userPlant.harvest_date ? format(parseISO(userPlant.harvest_date),'MMM d') : null, action: null };
+  if (userPlant.seed_started_date && !userPlant.transplant_date && userPlant.status === 'planted') {
+    const next = windows.find(w => w.method === 'transplant');
+    return { label: 'Transplant outdoors', accent: 'blue', dateLabel: next ? windowLabel(next) : 'Check your local conditions', reason: 'Harden off seedlings gradually for 7–10 days first.', action: 'transplant', actionLabel: 'Mark transplanted' };
   }
-
-  // ── Growing ──
-  if (status === 'planted') {
-    const harvestDate = userPlant.harvest_date ? new Date(userPlant.harvest_date) : null;
-    const daysToHarvest = harvestDate ? differenceInDays(harvestDate, today) : null;
-    let dateLabel = null;
-    if (daysToHarvest !== null) {
-      if (daysToHarvest <= 0) dateLabel = 'Ready to harvest!';
-      else dateLabel = `${daysToHarvest}d to harvest`;
-    }
-    return {
-      label: 'Growing',
-      accent: 'green',
-      dateLabel,
-      reason: harvestDate ? `Est. harvest ${format(harvestDate, 'MMM d')}` : null,
-      action: 'harvest',
-      actionLabel: 'Mark Harvested',
-    };
+  if (userPlant.status === 'planted') {
+    const harvest = userPlant.harvest_date ? parseISO(userPlant.harvest_date) : null;
+    const days = harvest ? differenceInDays(harvest,today) : null;
+    return { label: 'Next: Harvest', accent: 'green', dateLabel: harvest ? `Est. ${format(harvest,'MMM d')}` : 'Watch for signs of maturity', reason: days === null ? null : days > 0 ? `About ${days} days to go` : 'Check if your crop is ready', action: 'harvest', actionLabel: 'Mark harvested' };
   }
-
-  // ── Planned ──
-  const isTransplantCrop =
-    Array.isArray(plantDetails.transplant_indoor) && plantDetails.transplant_indoor.length > 0;
-  const hasDirectSow =
-    Array.isArray(plantDetails.direct_sow_zones) && plantDetails.direct_sow_zones.length > 0;
-
-  if (isTransplantCrop) {
-    const ho = getHardeningOffWindow(plantDetails, userZone);
-    if (ho) {
-      const daysUntilHardening = differenceInDays(ho.start, today);
-      const daysUntilTransplant = differenceInDays(ho.transplantDate, today);
-
-      // Transplant day has arrived
-      if (daysUntilTransplant <= 0) {
-        return {
-          label: 'Transplant Outdoors',
-          accent: 'primary',
-          dateLabel: 'Today!',
-          reason: `Scheduled ${format(ho.transplantDate, 'MMM d')}`,
-          action: 'transplant',
-          actionLabel: 'Mark Transplanted',
-        };
-      }
-
-      // Hardening-off window is active
-      if (daysUntilHardening <= 0 && daysUntilTransplant > 0) {
-        return {
-          label: 'Harden Off',
-          accent: 'blue',
-          dateLabel: `${daysUntilTransplant}d until transplant`,
-          reason: `Move outdoors ${format(ho.transplantDate, 'MMM d')}`,
-          action: 'transplant',
-          actionLabel: 'Mark Transplanted',
-        };
-      }
-
-      // Waiting — seeds should be started / seedling growing
-      const seedStr = getStartSeedsIndoorStr(plantDetails, userZone);
-      return {
-        label: 'Start Seeds Indoors',
-        accent: 'purple',
-        dateLabel: seedStr || `${daysUntilHardening}d until harden off`,
-        reason: `Harden off ${format(ho.start, 'MMM d')}`,
-        action: 'seed_start',
-        actionLabel: 'Mark Seeds Started',
-      };
-    }
-
-    // Transplant crop but no zone-specific data
-    return {
-      label: 'Start Seeds Indoors',
-      accent: 'purple',
-      dateLabel: null,
-      reason: null,
-      action: 'seed_start',
-      actionLabel: 'Mark Seeds Started',
-    };
-  }
-
-  // Direct-sow crop
-  if (hasDirectSow) {
-    return {
-      label: 'Direct Sow Outdoors',
-      accent: 'emerald',
-      dateLabel: null,
-      reason: userZone ? `Zone ${userZone}` : null,
-      action: 'seed_start',
-      actionLabel: 'Mark Planted',
-    };
-  }
-
-  // Generic planned fallback
-  return {
-    label: 'Plant',
-    accent: 'purple',
-    dateLabel: null,
-    reason: null,
-    action: 'seed_start',
-    actionLabel: 'Mark Planted',
-  };
+  const next = windows.find(w => !userPlant.planting_method || w.method === userPlant.planting_method) || windows[0];
+  const method = next?.method || userPlant.planting_method || 'direct_sow';
+  return { label: methodLabels[method], accent: method === 'seed_start' ? 'purple' : 'primary', dateLabel: next ? windowLabel(next) : 'No zone-specific dates available', reason: next ? next.start <= today ? 'Your planting window is open' : 'Plan ahead · wait for this window' : 'See the growing guide before planting.', action: method, actionLabel: method === 'seed_start' ? 'Start seeds' : method === 'transplant' ? 'Mark transplanted' : 'Mark planted' };
 };

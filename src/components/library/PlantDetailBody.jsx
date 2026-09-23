@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import HardeningOffTimeline from "./HardeningOffTimeline";
+import PlantWindowDetails from '@/components/library/PlantWindowDetails';
 
 const categoryColors = {
   vegetables: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700",
@@ -39,7 +40,8 @@ export default function PlantDetailBody({
   userPlantData,
   canAdd = true,
   isPremium = false,
-  animated = true
+  animated = true,
+  actionError = ''
 }) {
   if (!plant) return null;
 
@@ -167,51 +169,14 @@ export default function PlantDetailBody({
               <DetailItem icon={<Droplets className="w-4 h-4" />} label="Water Needs" value={plant.water_needs} />
               <DetailItem icon={<Ruler className="w-4 h-4" />} label="Spacing" value={plant.spacing} />
               <DetailItem icon={<Ruler className="w-4 h-4 -rotate-90" />} label="Planting Depth" value={plant.planting_depth} />
-              <DetailItem icon={<Clock className="w-4 h-4" />} label="Maturity" value={`${plant.days_to_maturity} days`} />
+              <DetailItem icon={<Clock className="w-4 h-4" />} label="Maturity" value={plant.days_to_maturity ? `${plant.days_to_maturity} days` : 'Not recorded'} />
             </div>
           </div>
 
           {/* Seedling hardening-off timeline (only for indoor-start/transplant crops) */}
           {userZone && <HardeningOffTimeline plant={plant} userZone={userZone} />}
 
-          {/* Planting Info for Zone */}
-          {userZone && (transplantInfo || directSowInfo || legacyZoneInfo) && (
-            <div>
-              <h3 className="font-semibold text-sm mb-1.5 flex items-center gap-1.5">
-                <Thermometer className="w-3.5 h-3.5 text-primary" />Zone {userZone} Planting
-              </h3>
-              <div className="bg-muted/50 rounded-lg p-2.5 border border-border text-xs space-y-1.5">
-                <div>
-                  <span className="font-semibold text-foreground">Transplant (indoor sow): </span>
-                  {transplantInfo?.from
-                    ? <span>{formatDateRange(transplantInfo.from, transplantInfo.to)}</span>
-                    : <span className="text-muted-foreground italic">No data available</span>}
-                </div>
-                {transplantInfo?.transplant_from && (
-                  <div>
-                    <span className="font-semibold text-foreground">Transplant (outdoors): </span>
-                    <span>{formatDateRange(transplantInfo.transplant_from, transplantInfo.transplant_to)}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="font-semibold text-foreground">Direct Sow: </span>
-                  {directSowInfo?.from
-                    ? <span>{formatDateRange(directSowInfo.from, directSowInfo.to)}</span>
-                    : <span className="text-muted-foreground italic">No data available</span>}
-                </div>
-                {!transplantInfo && !directSowInfo && legacyZoneInfo && (
-                  <>
-                    {legacyZoneInfo.spring_start_week && (
-                      <p><span className="font-semibold text-foreground">Spring:</span> Weeks {legacyZoneInfo.spring_start_week}–{legacyZoneInfo.spring_end_week}</p>
-                    )}
-                    {legacyZoneInfo.fall_start_week && (
-                      <p><span className="font-semibold text-foreground">Fall:</span> Weeks {legacyZoneInfo.fall_start_week}–{legacyZoneInfo.fall_end_week}</p>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
+          <PlantWindowDetails plant={plant} zone={userZone} />
 
           {/* Growing Tips */}
           <div>
@@ -235,20 +200,14 @@ export default function PlantDetailBody({
 
       {/* Footer Action */}
       <div className="p-2.5 border-t border-border flex-shrink-0 bg-card">
+        {actionError && <p role="alert" className="text-xs text-destructive mb-2">{actionError}</p>}
         {isAdded ? (
           <Button size="sm" className="w-full text-xs" disabled variant="secondary">
             <CheckCircle className="w-4 h-4 mr-2" />
             Added to Your Garden
           </Button>
-        ) : !canAdd && !isPremium ? (
-          <Link to={createPageUrl("Upgrade")} className="block">
-            <Button size="sm" variant="outline" className="w-full text-xs">
-              <Lock className="w-4 h-4 mr-2" />
-              Upgrade to Add
-            </Button>
-          </Link>
         ) : (
-          <Button size="sm" className="w-full text-xs" onClick={handleAddClick} variant="default">
+          <Button size="sm" className="w-full text-xs" disabled={!canAdd} onClick={handleAddClick} variant="default">
             <Plus className="w-4 h-4 mr-2" />
             Add to My Garden
           </Button>
