@@ -4,29 +4,36 @@ import { UserPlant } from "@/entities/UserPlant";
 import { Plant } from "@/entities/Plant";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Sprout, Leaf, Clock, Sun } from "lucide-react";
+import { AlertCircle, Sprout, Clock, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/components/utils";
 import LoginPrompt from "../components/auth/LoginPrompt";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import HomeHero from "../components/home/HomeHero";
-import PlantableCropCard from "../components/home/PlantableCropCard";
-import CategoryShelf from "../components/home/CategoryShelf";
-import UpgradePrompt from "../components/freemium/UpgradePrompt";
+import ThisWeekCarousel from "../components/home/ThisWeekCarousel";
+import BrowsePanel from "../components/home/BrowsePanel";
 import { computePlantableToday } from "@/utils/plantingWindows";
 import { canAddPlant, getRemainingAdds, FREE_WEEKLY_ADD_LIMIT } from "@/utils/freemium";
 
 // Merged Home page: answers "what can I plant this week" immediately.
-// Replaces the old Dashboard + Plant Today split.
 const homeCategoryData = {
-  vegetables: { name: "Vegetables", icon: Leaf, color: "from-green-500 to-green-600" },
-  fruits: { name: "Fruits", icon: Sprout, color: "from-red-500 to-red-600" },
-  herbs: { name: "Herbs", icon: Leaf, color: "from-teal-500 to-teal-600" },
-  flowers: { name: "Flowers", icon: Leaf, color: "from-pink-500 to-pink-600" },
-  grains: { name: "Grains", icon: Sprout, color: "from-yellow-500 to-yellow-600" },
-  direct_sow: { name: "Direct Sow", icon: Sprout, color: "from-emerald-500 to-emerald-600" },
-  transplant: { name: "Transplant", icon: Leaf, color: "from-blue-500 to-blue-600" },
+  vegetables: { key: "vegetables", name: "Vegetables", icon: Sprout, color: "from-green-500 to-green-600" },
+  fruits: { key: "fruits", name: "Fruits", icon: Sprout, color: "from-red-500 to-red-600" },
+  herbs: { key: "herbs", name: "Herbs", icon: Sprout, color: "from-teal-500 to-teal-600" },
+  flowers: { key: "flowers", name: "Flowers", icon: Sprout, color: "from-pink-500 to-pink-600" },
+  grains: { key: "grains", name: "Grains", icon: Sprout, color: "from-yellow-500 to-yellow-600" },
+  direct_sow: { key: "direct_sow", name: "Direct Sow", icon: Sprout, color: "from-emerald-500 to-emerald-600" },
+  transplant: { key: "transplant", name: "Transplant", icon: Sprout, color: "from-blue-500 to-blue-600" },
 };
+
+// Categories used by the Browse tab (full library grouped by plant.category).
+const browseCategories = [
+  homeCategoryData.vegetables,
+  homeCategoryData.fruits,
+  homeCategoryData.herbs,
+  homeCategoryData.flowers,
+  homeCategoryData.grains,
+];
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -34,6 +41,7 @@ export default function Dashboard() {
   const [userPlants, setUserPlants] = useState([]);
   const [allPlants, setAllPlants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [view, setView] = useState("week");
 
   useEffect(() => {
     loadData();
@@ -96,7 +104,6 @@ export default function Dashboard() {
     ? computePlantableToday(allPlants, userZone, currentWeek, userPlantIds)
     : { plantsForToday: [], plantsByCategory: {} };
 
-  const topCrops = plantsForToday.slice(0, 3);
   const isPremium = !!user?.is_premium;
   const remaining = getRemainingAdds(user, userPlants);
   const atLimit = !isPremium && remaining <= 0;
@@ -106,8 +113,8 @@ export default function Dashboard() {
   const harvestedCount = userPlants.filter((p) => p.status === "harvested").length;
 
   return (
-    <div className="min-h-screen bg-background p-3 pb-20 md:p-6 md:pb-6">
-      <div className="mx-auto max-w-5xl space-y-4 md:space-y-6">
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-3xl px-3 pt-3 pb-24 md:px-6 md:pt-6 md:pb-6">
         <HomeHero
           user={user}
           currentWeek={currentWeek}
@@ -118,136 +125,93 @@ export default function Dashboard() {
 
         {/* Location setup warning */}
         {!user?.location && (
-          <Card className="border-orange-200 bg-orange-50/50 dark:bg-orange-950/20 dark:border-orange-900/50 backdrop-blur-sm">
-            <CardContent className="p-3 md:p-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-orange-500" />
-                <div className="min-w-0 flex-1">
-                  <h3 className="mb-1 text-sm font-semibold text-foreground">Set Your Location</h3>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Get accurate planting recommendations for your USDA zone.
-                  </p>
-                  <Link to={createPageUrl("Profile")}>
-                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-xs h-8">
-                      Set Location
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Compact stats row */}
-        <div className="grid grid-cols-3 gap-2 md:gap-4">
-          <StatChip label="Planned" value={plannedCount} icon={<Clock className="w-3.5 h-3.5" />} />
-          <StatChip label="Growing" value={plantedCount} icon={<Sprout className="w-3.5 h-3.5" />} />
-          <StatChip label="Harvested" value={harvestedCount} icon={<Sun className="w-3.5 h-3.5" />} />
-        </div>
-
-        {/* Top crops to plant this week */}
-        {topCrops.length > 0 && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-foreground md:text-lg">Plant this week</h2>
-              {!isPremium && (
-                <span className="text-xs text-muted-foreground">
-                  {remaining}/{FREE_WEEKLY_ADD_LIMIT} adds left
-                </span>
-              )}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {topCrops.map((plant) => (
-                <PlantableCropCard
-                  key={plant.id}
-                  plant={plant}
-                  onAdd={addPlant}
-                  disabled={atLimit}
-                  isPremium={isPremium}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Freemium limit reached */}
-        {atLimit && topCrops.length > 0 && (
-          <UpgradePrompt
-            title="You've used all 3 free adds this week"
-            description="Upgrade to Plantify Pro to add unlimited plants, set reminders, and sync your calendar."
-          />
-        )}
-
-        {/* No zone set */}
-        {!userZone && (
-          <Card className="border-border bg-card">
-            <CardContent className="p-6 text-center">
-              <Sprout className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm text-muted-foreground mb-4">
-                Set your location to see what you can plant this week.
-              </p>
+          <div className="mt-3 flex items-start gap-2.5 rounded-2xl border border-orange-200 bg-orange-50/50 dark:border-orange-900/50 dark:bg-orange-950/20 p-3">
+            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-500" />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs text-foreground"><span className="font-semibold">Set your location</span> for accurate USDA-zone planting recommendations.</p>
               <Link to={createPageUrl("Profile")}>
-                <Button size="sm">Set Location</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Category shelves */}
-        {userZone && (
-          <div className="space-y-3">
-            {Object.entries(homeCategoryData).map(([key, cat]) => {
-              const plants = plantsByCategory[key] || [];
-              if (plants.length === 0) return null;
-              return (
-                <CategoryShelf
-                  key={key}
-                  categoryKey={key}
-                  category={cat}
-                  plants={plants}
-                  onAdd={addPlant}
-                  disabled={atLimit}
-                  isPremium={isPremium}
-                />
-              );
-            })}
-          </div>
-        )}
-
-        {/* Nothing to plant right now */}
-        {userZone && plantsForToday.length === 0 && (
-          <Card className="border-border bg-card">
-            <CardContent className="p-6 text-center">
-              <Leaf className="w-10 h-10 mx-auto text-accent mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">Perfect timing, nothing urgent</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                No crops are optimal to plant this week. Check back during your next planting window.
-              </p>
-              <Link to={createPageUrl("PlantLibrary")}>
-                <Button variant="outline" size="sm">
-                  Browse Plant Library
+                <Button size="sm" className="mt-1.5 bg-orange-500 hover:bg-orange-600 text-xs h-7 px-2.5">
+                  Set Location
                 </Button>
               </Link>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+        )}
+
+        {/* Stats ribbon — single card, three segments */}
+        <div className="mt-3 grid grid-cols-3 rounded-2xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden">
+          <StatSegment label="Planned" value={plannedCount} icon={<Clock className="w-3.5 h-3.5" />} />
+          <StatSegment label="Growing" value={plantedCount} icon={<Sprout className="w-3.5 h-3.5" />} divider />
+          <StatSegment label="Harvested" value={harvestedCount} icon={<Sun className="w-3.5 h-3.5" />} divider />
+        </div>
+
+        {/* No zone set */}
+        {!userZone ? (
+          <div className="mt-3 rounded-2xl border border-border bg-card p-6 text-center">
+            <Sprout className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
+            <p className="text-sm text-muted-foreground mb-4">Set your location to see what you can plant this week.</p>
+            <Link to={createPageUrl("Profile")}>
+              <Button size="sm">Set Location</Button>
+            </Link>
+          </div>
+        ) : (
+          <>
+            {/* Segmented control */}
+            <div className="mt-3 flex p-1 rounded-2xl bg-muted/60 border border-border">
+              <button
+                onClick={() => setView("week")}
+                className={`flex-1 rounded-xl text-sm py-2 font-semibold transition-all ${
+                  view === "week" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                This Week
+              </button>
+              <button
+                onClick={() => setView("browse")}
+                className={`flex-1 rounded-xl text-sm py-2 font-semibold transition-all ${
+                  view === "browse" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Browse
+              </button>
+            </div>
+
+            {view === "week" ? (
+              <ThisWeekCarousel
+                plants={plantsForToday}
+                onAdd={addPlant}
+                disabled={atLimit}
+                isPremium={isPremium}
+                remaining={remaining}
+                limit={FREE_WEEKLY_ADD_LIMIT}
+              />
+            ) : (
+              <BrowsePanel
+                plants={allPlants}
+                categories={browseCategories}
+                excludeIds={userPlantIds}
+                onAdd={addPlant}
+                disabled={atLimit}
+                isPremium={isPremium}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
   );
 }
 
-function StatChip({ label, value, icon }) {
+function StatSegment({ label, value, icon, divider }) {
   return (
-    <Card className="border-border bg-card/80 backdrop-blur-sm">
-      <CardContent className="p-2.5 md:p-3 flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-primary flex-shrink-0">
-          {icon}
-        </div>
-        <div className="min-w-0">
-          <p className="text-lg font-bold text-foreground leading-none">{value}</p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
-        </div>
-      </CardContent>
-    </Card>
+    <div className={`p-2.5 md:p-3 flex items-center gap-2 ${divider ? "border-l border-border" : ""}`}>
+      <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-primary flex-shrink-0">
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <p className="text-lg font-bold text-foreground leading-none">{value}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
+      </div>
+    </div>
   );
 }
