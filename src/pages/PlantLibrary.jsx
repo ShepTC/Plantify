@@ -17,7 +17,6 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import { Reminder } from "@/entities/Reminder";
 import { getHardeningOffWindow } from "@/utils/hardeningOff";
 import { format } from "date-fns";
-import { canAddPlant } from "@/utils/freemium";
 
 const PLANTS_PER_PAGE = 24;
 
@@ -222,7 +221,6 @@ export default function PlantLibrary() {
   };
 
   const handleAddPlant = async (plant) => {
-    if (!canAddPlant(user, userPlants)) return;
     try {
       const newUserPlant = await UserPlant.create({
         plant_id: plant.id,
@@ -231,20 +229,19 @@ export default function PlantLibrary() {
       });
       setUserPlants((prev) => [...prev, newUserPlant]);
 
-      // Hardening-off reminders are a Plantify Pro feature.
-      if (user?.is_premium) {
-        const ho = getHardeningOffWindow(plant, user?.growing_zone);
-        if (ho) {
-          try {
-            await Reminder.create({
-              title: `Harden off your ${plant.name}`,
-              description: `Time to start hardening off your ${plant.name} - set seedlings outside in a sheltered spot for a few hours a day, increasing exposure over the next week before planting out on ${ho.transplantDateStr}.`,
-              due_date: format(ho.start, 'yyyy-MM-dd'),
-              type: 'general'
-            });
-          } catch (reminderError) {
-            console.error("Error creating hardening-off reminder:", reminderError);
-          }
+      // For transplanted crops, schedule a hardening-off reminder 10 days
+      // before the transplant-out date for the user's zone.
+      const ho = getHardeningOffWindow(plant, user?.growing_zone);
+      if (ho) {
+        try {
+          await Reminder.create({
+            title: `Harden off your ${plant.name}`,
+            description: `Time to start hardening off your ${plant.name} - set seedlings outside in a sheltered spot for a few hours a day, increasing exposure over the next week before planting out on ${ho.transplantDateStr}.`,
+            due_date: format(ho.start, 'yyyy-MM-dd'),
+            type: 'general'
+          });
+        } catch (reminderError) {
+          console.error("Error creating hardening-off reminder:", reminderError);
         }
       }
     } catch (error) {
@@ -584,7 +581,6 @@ export default function PlantLibrary() {
                   userZone={user?.growing_zone}
                   onClick={() => handlePlantSelect(plant)}
                   isPremium={user?.is_premium}
-                  canAdd={canAddPlant(user, userPlants)}
                   />
 
                       </motion.div>
@@ -686,8 +682,6 @@ export default function PlantLibrary() {
         onAddPlant={handleAddPlant}
         isAdded={selectedPlant ? userPlantIds.has(selectedPlant.id) : false}
         userPlantData={selectedUserPlantData}
-        canAdd={canAddPlant(user, userPlants)}
-        isPremium={user?.is_premium}
       />
     </div>);
 
